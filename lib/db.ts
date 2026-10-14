@@ -1,11 +1,7 @@
 import mongoose from 'mongoose';
 
 const MONGODB_URI = process.env.MONGODB_URI;
-
-if (!MONGODB_URI) {
-  // If not configured, provide clear warning
-  console.warn('⚠️ MONGODB_URI is not defined in environment variables.');
-}
+let hasWarnedMongo = false;
 
 /**
  * Global is used here to maintain a cached connection across hot reloads
