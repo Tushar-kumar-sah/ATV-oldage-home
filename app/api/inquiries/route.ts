@@ -28,8 +28,12 @@ export async function POST(req: NextRequest) {
     const validation = InquirySchema.safeParse(body);
 
     if (!validation.success) {
+      const firstIssue = validation.error.issues?.[0];
+      const friendlyMsg = firstIssue
+        ? firstIssue.message
+        : 'Validation failed. Please check your inputs and try again.';
       return NextResponse.json(
-        { error: 'Validation failed', details: validation.error.format() },
+        { error: friendlyMsg, details: validation.error.format() },
         { status: 400 }
       );
     }

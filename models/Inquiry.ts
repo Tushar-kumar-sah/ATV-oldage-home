@@ -41,7 +41,6 @@ const InquirySchema = new Schema<IInquiry>(
     },
     careNeeded: {
       type: String,
-      enum: ['Assisted Living', 'Memory / Dementia Care', 'Post-Surgery / Short Stay', 'Day Care', 'General Retirement'],
       default: 'Assisted Living',
     },
     subject: {

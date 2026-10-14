@@ -315,10 +315,18 @@ export default function LandingPage() {
     setSubmitting(true);
 
     try {
+      const submissionData = {
+        ...formData,
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        phone: formData.phone.trim(),
+        message: formData.message.trim() || 'Inquiry regarding elder care admission',
+      };
+
       const res = await fetch('/api/inquiries', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(submissionData),
       });
 
       const data = await res.json();

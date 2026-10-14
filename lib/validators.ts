@@ -10,19 +10,13 @@ export type LoginInput = z.infer<typeof LoginSchema>;
 
 // Public Inquiry Form Schema
 export const InquirySchema = z.object({
-  name: z.string().min(2, 'Name must be at least 2 characters'),
-  email: z.string().email('Please provide a valid email'),
-  phone: z.string().min(8, 'Please provide a valid contact number'),
-  relationshipToSenior: z.string().optional().default('Family Member'),
-  careNeeded: z.enum([
-    'Assisted Living',
-    'Memory / Dementia Care',
-    'Post-Surgery / Short Stay',
-    'Day Care',
-    'General Retirement',
-  ]).default('Assisted Living'),
+  name: z.string().min(1, 'Please enter your name'),
+  email: z.string().email('Please provide a valid email address'),
+  phone: z.string().min(6, 'Please provide a valid contact number'),
+  relationshipToSenior: z.string().optional().default('Son / Daughter'),
+  careNeeded: z.string().optional().default('Assisted Living'),
   subject: z.string().optional().default('General Inquiry for Admission'),
-  message: z.string().min(10, 'Message must be at least 10 characters long'),
+  message: z.string().min(1, 'Please enter a message or health conditions').default('Inquiry regarding elder admission'),
 });
 
 export type InquiryInput = z.infer<typeof InquirySchema>;

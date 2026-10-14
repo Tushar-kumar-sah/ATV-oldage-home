@@ -23,6 +23,19 @@
   ],
   "inquiries": [
     {
+      "_id": "inq-1792011090617",
+      "relationshipToSenior": "Son / Daughter",
+      "careNeeded": "Specialized Dementia & Alzheimer's Care",
+      "subject": "Inquiry for Elder Admission",
+      "status": "New",
+      "priority": "high",
+      "createdAt": "2026-10-14T20:51:30.617Z",
+      "name": "TUSHAR KUMAR SAH",
+      "email": "sah05tushar@gmail.com",
+      "phone": "+918100264108",
+      "message": "hi"
+    },
+    {
       "_id": "inq-1792008607497",
       "relationshipToSenior": "Son / Daughter",
       "careNeeded": "Assisted Living",
