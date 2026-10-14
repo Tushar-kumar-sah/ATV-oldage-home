@@ -156,15 +156,17 @@ export default function RegisteredUsersPage() {
           className="text-xs border border-stone-300 rounded-xl px-3 py-2 bg-[#FAF8F5] text-stone-700 focus:outline-hidden focus:ring-2 focus:ring-emerald-500"
         >
           <option value="all">All Login Methods</option>
-          <option value="credentials">Email & Password</option>
+          <option value="email">Email Login & Register</option>
+          <option value="phone">Phone & Password</option>
           <option value="google">Google Login</option>
+          <option value="credentials">Credentials</option>
         </select>
       </div>
 
       {/* Data Table */}
       <div className="bg-white rounded-2xl border border-stone-200 shadow-2xs overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse text-xs">
+          <table className="w-full min-w-[700px] text-left border-collapse text-xs">
             <thead>
               <tr className="bg-stone-50 border-b border-stone-200 text-stone-500 uppercase tracking-wider font-semibold text-[11px]">
                 <th className="py-3.5 px-4">User Details</th>
@@ -228,9 +230,14 @@ export default function RegisteredUsersPage() {
                           </svg>
                           Google Login
                         </span>
+                      ) : user.authProvider === 'phone' ? (
+                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-50 text-amber-900 border border-amber-200">
+                          <Phone className="w-3 h-3 text-amber-700" />
+                          Phone & Password
+                        </span>
                       ) : (
                         <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
-                          <KeyRound className="w-3 h-3 text-emerald-700" />
+                          <Mail className="w-3 h-3 text-emerald-700" />
                           Email & Password
                         </span>
                       )}

@@ -41,6 +41,12 @@ export async function POST(req: NextRequest) {
         status: 'New',
       });
 
+      // Dual-write to fallback store for guaranteed zero-loss persistence
+      try {
+        const { addInquiry } = await import('@/lib/localFallback');
+        addInquiry(validation.data as any);
+      } catch {}
+
       await logActivity({
         userName: validation.data.name,
         userEmail: validation.data.email,

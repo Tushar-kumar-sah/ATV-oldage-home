@@ -25,6 +25,22 @@ export async function middleware(req: NextRequest) {
       });
     }
 
+    if (!token && req.cookies.has('next-auth.session-token')) {
+      token = await getToken({
+        req,
+        secret: AUTH_SECRET,
+        cookieName: 'next-auth.session-token',
+      });
+    }
+
+    if (!token && req.cookies.has('__Secure-next-auth.session-token')) {
+      token = await getToken({
+        req,
+        secret: AUTH_SECRET,
+        cookieName: '__Secure-next-auth.session-token',
+      });
+    }
+
     console.log(
       `[Middleware] Path: ${pathname} | Token Found: ${!!token} (${token?.role || 'none'}) | Cookies: [${rawCookies.join(', ')}]`
     );

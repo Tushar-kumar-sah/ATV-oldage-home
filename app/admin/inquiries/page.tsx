@@ -180,7 +180,7 @@ export default function InquiriesManagementPage() {
       {/* Inquiries Table */}
       <div className="bg-white rounded-2xl border border-sage-200 shadow-xs overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm text-sage-800">
+          <table className="w-full min-w-[650px] text-left text-sm text-sage-800">
             <thead className="bg-sage-50 text-[11px] font-bold text-sage-700 uppercase tracking-wider border-b border-sage-200">
               <tr>
                 <th className="py-3.5 px-4">Prospective Family</th>

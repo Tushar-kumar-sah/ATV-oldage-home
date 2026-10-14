@@ -3,9 +3,13 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
-import { UserPlus, Bell, Shield, Sparkles } from 'lucide-react';
+import { UserPlus, Bell, Shield, Menu } from 'lucide-react';
 
-export default function AdminHeader() {
+interface AdminHeaderProps {
+  onMenuToggle?: () => void;
+}
+
+export default function AdminHeader({ onMenuToggle }: AdminHeaderProps) {
   const { data: session } = useSession();
   const [stats, setStats] = useState<{ pendingApprovals: number; newInquiries: number } | null>(null);
 
@@ -30,31 +34,43 @@ export default function AdminHeader() {
   const isSuperAdmin = session?.user?.role === 'super_admin';
 
   return (
-    <header className="h-16 bg-white border-b border-sage-200 px-6 flex items-center justify-between sticky top-0 z-30 shadow-xs">
-      {/* Left: Role and Organization status */}
-      <div className="flex items-center space-x-3">
-        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-sage-100 text-sage-800 border border-sage-200">
+    <header className="h-16 bg-white border-b border-stone-200 px-4 sm:px-6 flex items-center justify-between sticky top-0 z-30 shadow-2xs">
+      {/* Left: Mobile Hamburger & Live status */}
+      <div className="flex items-center space-x-2 sm:space-x-3">
+        {onMenuToggle && (
+          <button
+            type="button"
+            onClick={onMenuToggle}
+            className="md:hidden p-2 rounded-xl text-stone-700 hover:text-emerald-900 hover:bg-stone-100 transition-colors"
+            aria-label="Open navigation sidebar"
+          >
+            <Menu className="w-5 h-5" />
+          </button>
+        )}
+
+        <span className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-full text-[11px] sm:text-xs font-semibold bg-emerald-50 text-emerald-900 border border-emerald-200">
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-          System Live
+          <span>Live Operations</span>
         </span>
+
         {isSuperAdmin && (
-          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-terracotta-100 text-terracotta-800 border border-terracotta-200">
-            <Shield className="w-3.5 h-3.5" />
-            Super Admin Mode
+          <span className="hidden sm:inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-50 text-amber-900 border border-amber-200">
+            <Shield className="w-3.5 h-3.5 text-amber-700" />
+            <span>Super Admin</span>
           </span>
         )}
       </div>
 
       {/* Right: Alerts & Primary Action */}
-      <div className="flex items-center space-x-4">
+      <div className="flex items-center space-x-2 sm:space-x-3">
         {/* Pending Approvals Notice for Super Admin */}
         {isSuperAdmin && stats && stats.pendingApprovals > 0 && (
           <Link
             href="/admin/users"
-            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-amber-50 text-amber-800 border border-amber-300 hover:bg-amber-100 transition-colors"
+            className="hidden sm:flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-amber-50 text-amber-900 border border-amber-300 hover:bg-amber-100 transition-colors"
           >
-            <Bell className="w-3.5 h-3.5 text-amber-600 animate-bounce" />
-            <span>{stats.pendingApprovals} Pending Approval{stats.pendingApprovals > 1 ? 's' : ''}</span>
+            <Bell className="w-3.5 h-3.5 text-amber-700 animate-bounce" />
+            <span>{stats.pendingApprovals} Pending</span>
           </Link>
         )}
 
@@ -62,19 +78,20 @@ export default function AdminHeader() {
         {stats && stats.newInquiries > 0 && (
           <Link
             href="/admin/inquiries"
-            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-sage-100 text-sage-800 border border-sage-300 hover:bg-sage-200 transition-colors"
+            className="flex items-center space-x-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-semibold bg-emerald-50 text-emerald-900 border border-emerald-200 hover:bg-emerald-100 transition-colors"
           >
-            <span>{stats.newInquiries} New Inquir{stats.newInquiries > 1 ? 'ies' : 'y'}</span>
+            <span className="w-2 h-2 rounded-full bg-amber-500 inline-block"></span>
+            <span>{stats.newInquiries} <span className="hidden xs:inline">New Queries</span></span>
           </Link>
         )}
 
         {/* Primary Action: Admit Resident */}
         <Link
           href="/admin/residents/new"
-          className="flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-semibold text-white bg-sage-600 hover:bg-sage-700 shadow-sm transition-all focus:ring-2 focus:ring-sage-500"
+          className="flex items-center space-x-1.5 px-3 sm:px-4 py-2 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-emerald-800 to-emerald-700 hover:from-emerald-900 hover:to-emerald-800 shadow-xs transition-all"
         >
-          <UserPlus className="w-4 h-4" />
-          <span>+ Admit Resident</span>
+          <UserPlus className="w-3.5 h-3.5" />
+          <span>+ <span className="hidden sm:inline">Admit </span>Resident</span>
         </Link>
       </div>
     </header>

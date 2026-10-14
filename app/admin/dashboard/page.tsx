@@ -367,8 +367,8 @@ export default function AdminDashboardPage() {
             </div>
 
             {/* Visual SVG Chart */}
-            <div className="pt-4 pb-2">
-              <div className="h-64 flex items-end justify-between gap-2 sm:gap-4 px-2 border-b border-stone-200">
+            <div className="pt-4 pb-2 overflow-x-auto">
+              <div className="h-64 min-w-[300px] sm:min-w-full flex items-end justify-between gap-2 sm:gap-4 px-2 border-b border-stone-200">
                 {trends.map((t, idx) => {
                   const userHeightPercent = Math.min(100, Math.max(12, (t.users / maxVal) * 100));
                   const queryHeightPercent = Math.min(100, Math.max(10, (t.inquiries / maxVal) * 100));
@@ -649,7 +649,7 @@ export default function AdminDashboardPage() {
         {/* Tab 1: Customer Inquiries */}
         {activeTab === 'inquiries' && (
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs text-stone-800">
+            <table className="w-full min-w-[650px] text-left text-xs text-stone-800">
               <thead className="bg-[#FAF8F5] text-[11px] font-bold text-stone-700 uppercase tracking-wider border-b border-stone-200">
                 <tr>
                   <th className="py-3.5 px-4">Customer Contact</th>
@@ -713,7 +713,7 @@ export default function AdminDashboardPage() {
         {/* Tab 2: Tracked Registered Users */}
         {activeTab === 'users' && (
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs text-stone-800">
+            <table className="w-full min-w-[650px] text-left text-xs text-stone-800">
               <thead className="bg-[#FAF8F5] text-[11px] font-bold text-stone-700 uppercase tracking-wider border-b border-stone-200">
                 <tr>
                   <th className="py-3.5 px-4">Tracked User</th>
@@ -779,7 +779,7 @@ export default function AdminDashboardPage() {
         {/* Tab 3: Login Security Stream */}
         {activeTab === 'logins' && (
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs text-stone-800">
+            <table className="w-full min-w-[650px] text-left text-xs text-stone-800">
               <thead className="bg-[#FAF8F5] text-[11px] font-bold text-stone-700 uppercase tracking-wider border-b border-stone-200">
                 <tr>
                   <th className="py-3.5 px-4">Timestamp</th>
@@ -839,7 +839,7 @@ export default function AdminDashboardPage() {
         {/* Tab 4: Admissions Table */}
         {activeTab === 'admissions' && (
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs text-stone-800">
+            <table className="w-full min-w-[650px] text-left text-xs text-stone-800">
               <thead className="bg-[#FAF8F5] text-[11px] font-bold text-stone-700 uppercase tracking-wider border-b border-stone-200">
                 <tr>
                   <th className="py-3.5 px-4">Resident</th>

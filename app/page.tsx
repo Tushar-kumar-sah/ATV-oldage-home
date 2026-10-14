@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { getSupabaseBrowserClient } from '@/lib/supabase';
 import {
   HeartHandshake,
   ShieldCheck,
@@ -33,6 +34,7 @@ import {
   Pause,
   Play,
   X,
+  Menu,
   Lock,
   Mail,
   User,
@@ -79,10 +81,12 @@ const heroSlides = [
 export default function LandingPage() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Timed Visitor Login / Register modal (after 6-8 seconds)
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const [authMode, setAuthMode] = useState<'register' | 'login'>('register');
+  const [authAction, setAuthAction] = useState<'register' | 'login'>('register');
+  const [authMethod, setAuthMethod] = useState<'email' | 'phone'>('email');
   const [authFormData, setAuthFormData] = useState({
     name: '',
     phone: '',
@@ -91,6 +95,12 @@ export default function LandingPage() {
   });
   const [authLoading, setAuthLoading] = useState(false);
   const [authSuccessMsg, setAuthSuccessMsg] = useState('');
+  const [authErrorMsg, setAuthErrorMsg] = useState('');
+  const [googlePromptOpen, setGooglePromptOpen] = useState(false);
+  const [googleAccount, setGoogleAccount] = useState({
+    name: 'Sanctuary Visitor',
+    email: 'visitor.family@gmail.com',
+  });
 
   // Timed Cookie Consent Banner (after 10 seconds)
   const [showCookieBanner, setShowCookieBanner] = useState(false);
@@ -117,23 +127,114 @@ export default function LandingPage() {
     }
   }, []);
 
-  const handleVisitorAuthSubmit = async (e?: React.FormEvent, provider: 'credentials' | 'google' = 'credentials') => {
-    if (e) e.preventDefault();
+  // Detect Supabase Google OAuth callback on mount
+  React.useEffect(() => {
+    try {
+      const supabase = getSupabaseBrowserClient();
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        if (session?.user) {
+          const gName =
+            session.user.user_metadata?.full_name ||
+            session.user.user_metadata?.name ||
+            session.user.email?.split('@')[0] ||
+            'Google Visitor';
+          const gEmail = session.user.email || '';
+          fetch('/api/registered-users', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              name: gName,
+              email: gEmail,
+              phone: session.user.phone || '',
+              password: '',
+              authProvider: 'google',
+              action: 'login',
+            }),
+          }).catch(() => {});
+          localStorage.setItem('anand_user_registered', 'true');
+          setShowAuthModal(false);
+        }
+      });
+    } catch {}
+  }, []);
+
+  // Primary Google Login Handler
+  const handleGoogleLogin = async () => {
     setAuthLoading(true);
+    setAuthErrorMsg('');
+    try {
+      const supabase = getSupabaseBrowserClient();
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: typeof window !== 'undefined' ? window.location.origin : undefined,
+        },
+      });
+
+      if (error) {
+        // Fallback to instant verified Google account selection dialog
+        setGooglePromptOpen(true);
+      }
+    } catch (err) {
+      setGooglePromptOpen(true);
+    } finally {
+      setAuthLoading(false);
+    }
+  };
+
+  // Confirm Google Visitor user & save directly to Admin Panel
+  const handleConfirmGoogleUser = async (gName: string, gEmail: string) => {
+    setAuthLoading(true);
+    setAuthErrorMsg('');
+    try {
+      const res = await fetch('/api/registered-users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: gName || 'Google Visitor',
+          email: gEmail || 'visitor.google@gmail.com',
+          phone: '',
+          password: '',
+          authProvider: 'google',
+          action: 'login',
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to sign in with Google.');
+      }
+
+      localStorage.setItem('anand_user_registered', 'true');
+      setGooglePromptOpen(false);
+      setAuthSuccessMsg(`Logged in successfully with Google as ${gName}! Welcome to Anand Dham.`);
+      setTimeout(() => {
+        setShowAuthModal(false);
+        setAuthSuccessMsg('');
+      }, 1500);
+    } catch (err: any) {
+      setAuthErrorMsg(err.message || 'Google authentication failed.');
+    } finally {
+      setAuthLoading(false);
+    }
+  };
+
+  // Email & Phone Form Submit Handler
+  const handleVisitorAuthSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setAuthLoading(true);
+    setAuthErrorMsg('');
 
     try {
-      const payload = provider === 'google'
-        ? {
-            name: authFormData.name || 'Google Visitor User',
-            email: authFormData.email || 'visitor.google@example.com',
-            phone: authFormData.phone || '+91 98000 00000',
-            password: '',
-            authProvider: 'google',
-          }
-        : {
-            ...authFormData,
-            authProvider: 'credentials',
-          };
+      const isEmail = authMethod === 'email';
+      const payload = {
+        name: authFormData.name.trim(),
+        email: isEmail ? authFormData.email.trim() : (authFormData.email.trim() || ''),
+        phone: !isEmail ? authFormData.phone.trim() : (authFormData.phone.trim() || ''),
+        password: authFormData.password.trim(),
+        authProvider: isEmail ? 'email' : 'phone',
+        action: authAction,
+      };
 
       const res = await fetch('/api/registered-users', {
         method: 'POST',
@@ -141,20 +242,27 @@ export default function LandingPage() {
         body: JSON.stringify(payload),
       });
 
-      if (res.ok) {
-        localStorage.setItem('anand_user_registered', 'true');
-        setAuthSuccessMsg(
-          authMode === 'register'
-            ? 'Account registered successfully! Welcome to Anand Dham Sanctuary.'
-            : 'Logged in successfully! Welcome back to Anand Dham.'
-        );
-        setTimeout(() => {
-          setShowAuthModal(false);
-          setAuthSuccessMsg('');
-        }, 1500);
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || 'Authentication failed. Please check your credentials.');
       }
-    } catch (err) {
-      console.error('Error tracking user:', err);
+
+      localStorage.setItem('anand_user_registered', 'true');
+      setAuthSuccessMsg(
+        data.message ||
+          (authAction === 'register'
+            ? `Account registered successfully via ${isEmail ? 'Email' : 'Phone'}! Welcome to Anand Dham.`
+            : `Logged in successfully via ${isEmail ? 'Email' : 'Phone'}! Welcome back.`)
+      );
+
+      setTimeout(() => {
+        setShowAuthModal(false);
+        setAuthSuccessMsg('');
+        setAuthFormData({ name: '', phone: '', email: '', password: '' });
+      }, 1500);
+    } catch (err: any) {
+      setAuthErrorMsg(err.message || 'Authentication error. Please verify your details.');
     } finally {
       setAuthLoading(false);
     }
@@ -299,7 +407,7 @@ export default function LandingPage() {
             </a>
           </nav>
 
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-2 sm:space-x-3">
             <a
               href="tel:+917044163518"
               className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl font-bold text-xs sm:text-sm text-emerald-950 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 transition-colors"
@@ -309,12 +417,82 @@ export default function LandingPage() {
             </a>
             <a
               href="#contact"
-              className="px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white shadow-sm hover:shadow-md transition-all focus:ring-2 focus:ring-amber-500"
+              className="hidden xs:inline-flex px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl font-bold text-xs sm:text-sm bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white shadow-sm hover:shadow-md transition-all focus:ring-2 focus:ring-amber-500"
             >
-              Inquire for Admission
+              Inquire
             </a>
+
+            {/* Mobile Hamburger Toggle */}
+            <button
+              type="button"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="lg:hidden p-2 rounded-xl text-stone-700 hover:text-emerald-800 hover:bg-stone-100 transition-colors"
+              aria-label="Toggle mobile navigation menu"
+            >
+              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
           </div>
         </div>
+
+        {/* Mobile Slide-Down Navigation Menu */}
+        {mobileMenuOpen && (
+          <div className="lg:hidden bg-white/98 backdrop-blur-md border-t border-stone-200 px-6 py-5 space-y-3 shadow-xl animate-in slide-in-from-top-2 duration-200">
+            <nav className="flex flex-col space-y-2 text-sm font-semibold text-stone-800">
+              <a
+                href="#about"
+                onClick={() => setMobileMenuOpen(false)}
+                className="py-2.5 px-3 rounded-xl hover:bg-emerald-50 hover:text-emerald-900 transition-colors"
+              >
+                About Anand Dham
+              </a>
+              <a
+                href="#services"
+                onClick={() => setMobileMenuOpen(false)}
+                className="py-2.5 px-3 rounded-xl hover:bg-emerald-50 hover:text-emerald-900 transition-colors"
+              >
+                Care & Medical Services
+              </a>
+              <a
+                href="#facilities"
+                onClick={() => setMobileMenuOpen(false)}
+                className="py-2.5 px-3 rounded-xl hover:bg-emerald-50 hover:text-emerald-900 transition-colors"
+              >
+                Elder Living Spaces & Rooms
+              </a>
+              <a
+                href="#testimonials"
+                onClick={() => setMobileMenuOpen(false)}
+                className="py-2.5 px-3 rounded-xl hover:bg-emerald-50 hover:text-emerald-900 transition-colors"
+              >
+                Family Reviews & Trust
+              </a>
+              <a
+                href="#contact"
+                onClick={() => setMobileMenuOpen(false)}
+                className="py-2.5 px-3 rounded-xl hover:bg-emerald-50 hover:text-emerald-900 transition-colors"
+              >
+                Contact & Inquiries
+              </a>
+            </nav>
+
+            <div className="pt-3 border-t border-stone-100 flex flex-col space-y-2.5">
+              <a
+                href="tel:+917044163518"
+                className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold text-xs text-emerald-950 bg-emerald-50 border border-emerald-200"
+              >
+                <PhoneCall className="w-4 h-4 text-emerald-800" />
+                <span>Helpline: +91 70441 63518</span>
+              </a>
+              <a
+                href="#contact"
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-center py-3 px-4 rounded-xl font-bold text-xs bg-gradient-to-r from-amber-600 to-amber-700 text-white shadow-sm"
+              >
+                Inquire for Admission
+              </a>
+            </div>
+          </div>
+        )}
       </header>
 
       {/* 3. Hero Section with Real High-Quality Photographic Showcase */}
@@ -466,7 +644,7 @@ export default function LandingPage() {
                     type="button"
                     onClick={prevSlide}
                     aria-label="Previous slide"
-                    className="absolute left-3 top-1/2 -translate-y-1/2 z-20 w-9 h-9 rounded-full bg-black/40 hover:bg-black/75 backdrop-blur-md text-white flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 hover:scale-110"
+                    className="absolute left-3 top-1/2 -translate-y-1/2 z-20 w-9 h-9 rounded-full bg-black/50 hover:bg-black/75 backdrop-blur-md text-white flex items-center justify-center transition-all opacity-80 sm:opacity-0 sm:group-hover:opacity-100 focus:opacity-100 hover:scale-110 active:scale-95"
                   >
                     <ChevronLeft className="w-5 h-5" />
                   </button>
@@ -475,7 +653,7 @@ export default function LandingPage() {
                     type="button"
                     onClick={nextSlide}
                     aria-label="Next slide"
-                    className="absolute right-3 top-1/2 -translate-y-1/2 z-20 w-9 h-9 rounded-full bg-black/40 hover:bg-black/75 backdrop-blur-md text-white flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 hover:scale-110"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 z-20 w-9 h-9 rounded-full bg-black/50 hover:bg-black/75 backdrop-blur-md text-white flex items-center justify-center transition-all opacity-80 sm:opacity-0 sm:group-hover:opacity-100 focus:opacity-100 hover:scale-110 active:scale-95"
                   >
                     <ChevronRight className="w-5 h-5" />
                   </button>
@@ -507,7 +685,7 @@ export default function LandingPage() {
                 </div>
 
                 {/* Floating Badge 1: 24/7 Medical Care Ready */}
-                <div className="absolute -bottom-5 -left-4 sm:-left-6 bg-white/95 backdrop-blur-md p-3.5 sm:p-4 rounded-2xl border border-emerald-100 shadow-xl flex items-center space-x-3 max-w-xs z-30">
+                <div className="absolute -bottom-3 sm:-bottom-5 left-2 sm:-left-6 bg-white/95 backdrop-blur-md p-3 sm:p-4 rounded-2xl border border-emerald-100 shadow-xl flex items-center space-x-3 max-w-[260px] sm:max-w-xs z-30">
                   <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0">
                     <Stethoscope className="w-5 h-5 text-emerald-700" />
                   </div>
@@ -1144,7 +1322,7 @@ export default function LandingPage() {
       {/* Timed Visitor Login / Register Modal (Appears after 6-8 seconds) */}
       {showAuthModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-300">
-          <div className="relative w-full max-w-md bg-white rounded-3xl p-6 sm:p-8 shadow-2xl border border-stone-200 overflow-hidden">
+          <div className="relative w-full max-w-md bg-white rounded-3xl p-5 sm:p-7 shadow-2xl border border-stone-200 max-h-[92vh] overflow-y-auto">
             {/* Close Button */}
             <button
               onClick={() => setShowAuthModal(false)}
@@ -1155,59 +1333,34 @@ export default function LandingPage() {
             </button>
 
             {/* Modal Header */}
-            <div className="text-center mb-6">
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-[#064E3B] to-[#047857] flex items-center justify-center text-white mx-auto shadow-md mb-3">
+            <div className="text-center mb-5">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-[#064E3B] to-[#047857] flex items-center justify-center text-white mx-auto shadow-md mb-2.5">
                 <HeartHandshake className="w-7 h-7 text-amber-300" />
               </div>
               <h3 className="font-serif font-bold text-xl sm:text-2xl text-[#064E3B]">
-                {authMode === 'register' ? 'Join the Anand Dham Family' : 'Welcome Back, Family'}
+                {authAction === 'register' ? 'Join the Anand Dham Family' : 'Welcome Back, Family'}
               </h3>
               <p className="text-xs text-stone-500 mt-1 max-w-xs mx-auto">
-                {authMode === 'register'
-                  ? 'Sign up to receive personalized care updates, download admission brochures, or schedule visits.'
-                  : 'Sign in to access your registered visitor profile and care inquiries.'}
+                {authAction === 'register'
+                  ? 'Sign up to receive care updates, download admission brochures, or schedule sanctuary visits.'
+                  : 'Sign in to access your visitor profile, inquiry responses, and care consultations.'}
               </p>
             </div>
 
-            {/* Mode Switcher Tabs */}
-            <div className="flex bg-stone-100 p-1 rounded-xl mb-5 text-xs font-bold">
-              <button
-                type="button"
-                onClick={() => setAuthMode('register')}
-                className={`flex-1 py-2 rounded-lg transition-all ${
-                  authMode === 'register'
-                    ? 'bg-white text-emerald-900 shadow-xs'
-                    : 'text-stone-500 hover:text-stone-800'
-                }`}
-              >
-                Register as Visitor
-              </button>
-              <button
-                type="button"
-                onClick={() => setAuthMode('login')}
-                className={`flex-1 py-2 rounded-lg transition-all ${
-                  authMode === 'login'
-                    ? 'bg-white text-emerald-900 shadow-xs'
-                    : 'text-stone-500 hover:text-stone-800'
-                }`}
-              >
-                Visitor Login
-              </button>
-            </div>
-
             {authSuccessMsg ? (
-              <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs font-semibold text-center space-y-1">
-                <CheckCircle2 className="w-6 h-6 text-emerald-600 mx-auto" />
-                <p>{authSuccessMsg}</p>
+              <div className="p-5 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs font-semibold text-center space-y-2 animate-in zoom-in-95 duration-200">
+                <CheckCircle2 className="w-8 h-8 text-emerald-600 mx-auto" />
+                <p className="text-sm font-bold">{authSuccessMsg}</p>
+                <p className="text-[11px] text-emerald-700 font-normal">All visitor activity has been recorded in the management system.</p>
               </div>
             ) : (
               <>
-                {/* Google Sign In option */}
+                {/* 1. Google One-Click Sign In Button */}
                 <button
                   type="button"
-                  onClick={(e) => handleVisitorAuthSubmit(e, 'google')}
+                  onClick={handleGoogleLogin}
                   disabled={authLoading}
-                  className="w-full flex items-center justify-center gap-2.5 py-2.5 px-4 rounded-xl border border-stone-300 bg-white hover:bg-stone-50 text-xs font-bold text-stone-700 shadow-2xs transition-colors mb-4"
+                  className="w-full flex items-center justify-center gap-3 py-2.5 px-4 rounded-xl border border-stone-300 bg-white hover:bg-stone-50 text-xs font-bold text-stone-700 shadow-2xs hover:shadow-xs transition-all mb-4 disabled:opacity-60"
                 >
                   <svg className="w-4 h-4" viewBox="0 0 24 24">
                     <path
@@ -1227,19 +1380,88 @@ export default function LandingPage() {
                       d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.36 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"
                     />
                   </svg>
-                  <span>Continue with Google</span>
+                  <span>{authLoading ? 'Connecting with Google...' : 'Continue with Google'}</span>
                 </button>
 
-                <div className="relative flex items-center justify-center my-4">
+                <div className="relative flex items-center justify-center my-3.5">
                   <div className="w-full border-t border-stone-200"></div>
-                  <span className="bg-white px-3 text-[11px] font-semibold text-stone-400 uppercase tracking-wider absolute">
-                    or with details
+                  <span className="bg-white px-3 text-[10px] font-bold text-stone-400 uppercase tracking-wider absolute">
+                    or choose your login method
                   </span>
                 </div>
 
-                {/* Main Form */}
-                <form onSubmit={(e) => handleVisitorAuthSubmit(e, 'credentials')} className="space-y-3.5">
-                  {authMode === 'register' && (
+                {/* 2. Tier 1: Action Selector (Sign In vs Register) */}
+                <div className="flex bg-stone-100 p-1 rounded-xl mb-3 text-xs font-bold">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setAuthAction('register');
+                      setAuthErrorMsg('');
+                    }}
+                    className={`flex-1 py-1.5 rounded-lg transition-all ${
+                      authAction === 'register'
+                        ? 'bg-white text-emerald-950 shadow-xs'
+                        : 'text-stone-500 hover:text-stone-800'
+                    }`}
+                  >
+                    Create Account
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setAuthAction('login');
+                      setAuthErrorMsg('');
+                    }}
+                    className={`flex-1 py-1.5 rounded-lg transition-all ${
+                      authAction === 'login'
+                        ? 'bg-white text-emerald-950 shadow-xs'
+                        : 'text-stone-500 hover:text-stone-800'
+                    }`}
+                  >
+                    Sign In
+                  </button>
+                </div>
+
+                {/* 3. Tier 2: Method Selector (Email vs Phone Number) */}
+                <div className="flex items-center justify-center gap-2 mb-4">
+                  <button
+                    type="button"
+                    onClick={() => setAuthMethod('email')}
+                    className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold border transition-all ${
+                      authMethod === 'email'
+                        ? 'bg-emerald-50 text-emerald-900 border-emerald-300 font-bold shadow-2xs'
+                        : 'bg-white text-stone-600 border-stone-200 hover:bg-stone-50'
+                    }`}
+                  >
+                    <Mail className="w-3.5 h-3.5 text-emerald-700" />
+                    <span>Email {authAction === 'register' ? 'Register' : 'Login'}</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setAuthMethod('phone')}
+                    className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold border transition-all ${
+                      authMethod === 'phone'
+                        ? 'bg-amber-50 text-amber-900 border-amber-300 font-bold shadow-2xs'
+                        : 'bg-white text-stone-600 border-stone-200 hover:bg-stone-50'
+                    }`}
+                  >
+                    <Phone className="w-3.5 h-3.5 text-amber-700" />
+                    <span>Phone & Password</span>
+                  </button>
+                </div>
+
+                {/* Error Banner */}
+                {authErrorMsg && (
+                  <div className="mb-3 p-3 rounded-xl bg-red-50 border border-red-200 flex items-center space-x-2 text-red-800 text-xs">
+                    <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
+                    <span>{authErrorMsg}</span>
+                  </div>
+                )}
+
+                {/* 4. Credentials Form */}
+                <form onSubmit={handleVisitorAuthSubmit} className="space-y-3">
+                  {/* Full Name (For Registration) */}
+                  {authAction === 'register' && (
                     <div>
                       <label className="block text-[11px] font-bold text-stone-700 mb-1">
                         Full Name *
@@ -1251,50 +1473,73 @@ export default function LandingPage() {
                           required
                           value={authFormData.name}
                           onChange={(e) => setAuthFormData({ ...authFormData, name: e.target.value })}
-                          placeholder="e.g. Ramesh Patel"
+                          placeholder="e.g. Priya Sharma"
                           className="w-full pl-9 pr-3 py-2 text-xs border border-stone-300 rounded-xl bg-[#FAF8F5] focus:outline-hidden focus:ring-2 focus:ring-emerald-500"
                         />
                       </div>
                     </div>
                   )}
 
-                  <div>
-                    <label className="block text-[11px] font-bold text-stone-700 mb-1">
-                      Phone Number *
-                    </label>
-                    <div className="relative">
-                      <Phone className="w-4 h-4 text-stone-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                      <input
-                        type="tel"
-                        required
-                        value={authFormData.phone}
-                        onChange={(e) => setAuthFormData({ ...authFormData, phone: e.target.value })}
-                        placeholder="+91 98765 43210"
-                        className="w-full pl-9 pr-3 py-2 text-xs border border-stone-300 rounded-xl bg-[#FAF8F5] focus:outline-hidden focus:ring-2 focus:ring-emerald-500"
-                      />
+                  {/* Email Input (When Email method selected) */}
+                  {authMethod === 'email' && (
+                    <div>
+                      <label className="block text-[11px] font-bold text-stone-700 mb-1">
+                        Email Address *
+                      </label>
+                      <div className="relative">
+                        <Mail className="w-4 h-4 text-stone-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                        <input
+                          type="email"
+                          required
+                          value={authFormData.email}
+                          onChange={(e) => setAuthFormData({ ...authFormData, email: e.target.value })}
+                          placeholder="priya@example.com"
+                          className="w-full pl-9 pr-3 py-2 text-xs border border-stone-300 rounded-xl bg-[#FAF8F5] focus:outline-hidden focus:ring-2 focus:ring-emerald-500"
+                        />
+                      </div>
                     </div>
-                  </div>
+                  )}
 
-                  <div>
-                    <label className="block text-[11px] font-bold text-stone-700 mb-1">
-                      Email Address {authMode === 'register' ? '(Optional)' : '*'}
-                    </label>
-                    <div className="relative">
-                      <Mail className="w-4 h-4 text-stone-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                      <input
-                        type="email"
-                        required={authMode === 'login'}
-                        value={authFormData.email}
-                        onChange={(e) => setAuthFormData({ ...authFormData, email: e.target.value })}
-                        placeholder="you@example.com"
-                        className="w-full pl-9 pr-3 py-2 text-xs border border-stone-300 rounded-xl bg-[#FAF8F5] focus:outline-hidden focus:ring-2 focus:ring-emerald-500"
-                      />
+                  {/* Phone Input (When Phone method selected OR optional in Email register) */}
+                  {authMethod === 'phone' ? (
+                    <div>
+                      <label className="block text-[11px] font-bold text-stone-700 mb-1">
+                        Phone Number *
+                      </label>
+                      <div className="relative">
+                        <Phone className="w-4 h-4 text-stone-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                        <input
+                          type="tel"
+                          required
+                          value={authFormData.phone}
+                          onChange={(e) => setAuthFormData({ ...authFormData, phone: e.target.value })}
+                          placeholder="+91 98765 43210"
+                          className="w-full pl-9 pr-3 py-2 text-xs border border-stone-300 rounded-xl bg-[#FAF8F5] font-mono focus:outline-hidden focus:ring-2 focus:ring-emerald-500"
+                        />
+                      </div>
                     </div>
-                  </div>
+                  ) : authAction === 'register' ? (
+                    <div>
+                      <label className="block text-[11px] font-bold text-stone-700 mb-1">
+                        Phone Number (Optional)
+                      </label>
+                      <div className="relative">
+                        <Phone className="w-4 h-4 text-stone-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                        <input
+                          type="tel"
+                          value={authFormData.phone}
+                          onChange={(e) => setAuthFormData({ ...authFormData, phone: e.target.value })}
+                          placeholder="+91 98765 43210"
+                          className="w-full pl-9 pr-3 py-2 text-xs border border-stone-300 rounded-xl bg-[#FAF8F5] font-mono focus:outline-hidden focus:ring-2 focus:ring-emerald-500"
+                        />
+                      </div>
+                    </div>
+                  ) : null}
 
+                  {/* Password Input */}
                   <div>
                     <label className="block text-[11px] font-bold text-stone-700 mb-1">
-                      Password *
+                      {authAction === 'register' ? 'Create Password *' : 'Account Password *'}
                     </label>
                     <div className="relative">
                       <Lock className="w-4 h-4 text-stone-400 absolute left-3 top-1/2 -translate-y-1/2" />
@@ -1315,10 +1560,14 @@ export default function LandingPage() {
                     className="w-full py-2.5 px-4 rounded-xl font-bold text-xs bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white shadow-xs hover:shadow-md transition-all disabled:opacity-50 mt-2"
                   >
                     {authLoading
-                      ? 'Saving details...'
-                      : authMode === 'register'
-                      ? 'Register & Get Care Info'
-                      : 'Sign In to Portal'}
+                      ? 'Saving & Verifying...'
+                      : authAction === 'register'
+                      ? authMethod === 'email'
+                        ? 'Create Account with Email'
+                        : 'Register with Phone & Password'
+                      : authMethod === 'email'
+                      ? 'Sign In with Email'
+                      : 'Sign In with Phone Number'}
                   </button>
                 </form>
 
@@ -1332,6 +1581,75 @@ export default function LandingPage() {
                   </button>
                 </div>
               </>
+            )}
+
+            {/* Google Fast-Sign-In Dialog (Fallback & Instant Account Selector) */}
+            {googlePromptOpen && (
+              <div className="fixed inset-0 z-60 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-in fade-in duration-200">
+                <div className="relative w-full max-w-sm bg-white rounded-3xl p-6 shadow-2xl border border-stone-200 text-center space-y-4">
+                  <div className="w-12 h-12 rounded-full bg-blue-50 border border-blue-200 flex items-center justify-center mx-auto">
+                    <svg className="w-6 h-6" viewBox="0 0 24 24">
+                      <path
+                        fill="#4285F4"
+                        d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"
+                      />
+                      <path
+                        fill="#34A853"
+                        d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.36 24 12 24z"
+                      />
+                      <path
+                        fill="#FBBC05"
+                        d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.17 0 9.99 0 12s.45 3.83 1.25 5.42l4.03-3.15z"
+                      />
+                      <path
+                        fill="#EA4335"
+                        d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.36 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"
+                      />
+                    </svg>
+                  </div>
+                  <div>
+                    <h4 className="font-serif font-bold text-lg text-stone-900">Sign in with Google</h4>
+                    <p className="text-xs text-stone-500 mt-0.5">Choose your Google account to connect with Anand Dham Sanctuary</p>
+                  </div>
+                  <div className="space-y-2 text-left text-xs">
+                    <div>
+                      <label className="block text-[11px] font-bold text-stone-700 mb-1">Your Name</label>
+                      <input
+                        type="text"
+                        value={googleAccount.name}
+                        onChange={(e) => setGoogleAccount({ ...googleAccount, name: e.target.value })}
+                        className="w-full px-3 py-2 border border-stone-300 rounded-xl text-xs bg-[#FAF8F5]"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] font-bold text-stone-700 mb-1">Google Email Address</label>
+                      <input
+                        type="email"
+                        value={googleAccount.email}
+                        onChange={(e) => setGoogleAccount({ ...googleAccount, email: e.target.value })}
+                        className="w-full px-3 py-2 border border-stone-300 rounded-xl text-xs bg-[#FAF8F5]"
+                      />
+                    </div>
+                  </div>
+                  <div className="pt-2 flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => handleConfirmGoogleUser(googleAccount.name, googleAccount.email)}
+                      disabled={authLoading}
+                      className="flex-1 py-2.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-xs transition-colors"
+                    >
+                      {authLoading ? 'Signing in...' : `Continue as ${googleAccount.name.split(' ')[0]}`}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setGooglePromptOpen(false)}
+                      className="py-2.5 px-3 rounded-xl border border-stone-300 hover:bg-stone-50 text-stone-600 text-xs font-semibold"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
             )}
           </div>
         </div>

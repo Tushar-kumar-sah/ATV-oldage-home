@@ -9,27 +9,47 @@ import { logActivity } from '@/lib/audit';
 export async function GET(req: NextRequest) {
   try {
     await requireAuth();
-    await connectDB();
 
     const { searchParams } = new URL(req.url);
     const search = searchParams.get('search')?.trim() || '';
     const residentId = searchParams.get('residentId');
 
-    const query: any = {};
-    if (residentId && residentId !== 'all') {
-      query.residentId = residentId;
-    }
-    if (search) {
-      query.$or = [
-        { visitorName: { $regex: search, $options: 'i' } },
-        { residentName: { $regex: search, $options: 'i' } },
-        { phone: { $regex: search, $options: 'i' } },
-        { purpose: { $regex: search, $options: 'i' } },
-      ];
-    }
+    try {
+      await connectDB();
 
-    const visitors = await Visitor.find(query).sort({ checkIn: -1 }).limit(100);
-    return NextResponse.json({ visitors });
+      const query: any = {};
+      if (residentId && residentId !== 'all') {
+        query.residentId = residentId;
+      }
+      if (search) {
+        query.$or = [
+          { visitorName: { $regex: search, $options: 'i' } },
+          { residentName: { $regex: search, $options: 'i' } },
+          { phone: { $regex: search, $options: 'i' } },
+          { purpose: { $regex: search, $options: 'i' } },
+        ];
+      }
+
+      const visitors = await Visitor.find(query).sort({ checkIn: -1 }).limit(100);
+      return NextResponse.json({ visitors });
+    } catch (dbErr) {
+      const { getFallbackData } = await import('@/lib/localFallback');
+      const fallback = getFallbackData();
+      let visitors = fallback.visitors || [];
+      if (residentId && residentId !== 'all') {
+        visitors = visitors.filter((v: any) => v.residentId === residentId);
+      }
+      if (search) {
+        visitors = visitors.filter(
+          (v: any) =>
+            (v.visitorName && v.visitorName.toLowerCase().includes(search.toLowerCase())) ||
+            (v.residentName && v.residentName.toLowerCase().includes(search.toLowerCase())) ||
+            (v.phone && v.phone.includes(search)) ||
+            (v.purpose && v.purpose.toLowerCase().includes(search.toLowerCase()))
+        );
+      }
+      return NextResponse.json({ visitors });
+    }
   } catch (error: any) {
     return handleApiAuthError(error);
   }
@@ -38,7 +58,6 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const session = await requireAuth();
-    await connectDB();
 
     const body = await req.json();
     const validation = VisitorSchema.safeParse(body);
@@ -52,31 +71,45 @@ export async function POST(req: NextRequest) {
 
     const data = validation.data;
 
-    // Fetch resident to ensure name is populated accurately
-    const resident = await Resident.findById(data.residentId);
-    if (!resident) {
-      return NextResponse.json({ error: 'Resident not found' }, { status: 400 });
+    try {
+      await connectDB();
+
+      // Fetch resident to ensure name is populated accurately
+      const resident = await Resident.findById(data.residentId);
+      if (!resident) {
+        return NextResponse.json({ error: 'Resident not found' }, { status: 400 });
+      }
+
+      const visitor = await Visitor.create({
+        ...data,
+        residentName: resident.fullName,
+        checkIn: new Date(),
+        loggedBy: session.user.name || 'Staff Member',
+      });
+
+      await logActivity({
+        userId: session.user.id,
+        userName: session.user.name || '',
+        userEmail: session.user.email || '',
+        userRole: session.user.role,
+        action: 'LOG_VISITOR_CHECKIN',
+        entityType: 'Visitor',
+        entityId: visitor._id.toString(),
+        details: `Logged visitor ${visitor.visitorName} visiting ${resident.fullName} (${visitor.relation})`,
+      });
+
+      return NextResponse.json({ message: 'Visitor check-in logged', visitor }, { status: 201 });
+    } catch (dbErr) {
+      const { addVisitor, getFallbackData } = await import('@/lib/localFallback');
+      const fallback = getFallbackData();
+      const res = fallback.residents?.find((r: any) => r._id === data.residentId);
+      const visitor = addVisitor({
+        ...data,
+        residentName: res ? res.fullName || res.name : 'Resident',
+        loggedBy: session.user.name || 'Staff Member',
+      });
+      return NextResponse.json({ message: 'Visitor check-in logged (local store)', visitor }, { status: 201 });
     }
-
-    const visitor = await Visitor.create({
-      ...data,
-      residentName: resident.fullName,
-      checkIn: new Date(),
-      loggedBy: session.user.name || 'Staff Member',
-    });
-
-    await logActivity({
-      userId: session.user.id,
-      userName: session.user.name || '',
-      userEmail: session.user.email || '',
-      userRole: session.user.role,
-      action: 'LOG_VISITOR_CHECKIN',
-      entityType: 'Visitor',
-      entityId: visitor._id.toString(),
-      details: `Logged visitor ${visitor.visitorName} visiting ${resident.fullName} (${visitor.relation})`,
-    });
-
-    return NextResponse.json({ message: 'Visitor check-in logged', visitor }, { status: 201 });
   } catch (error: any) {
     return handleApiAuthError(error);
   }

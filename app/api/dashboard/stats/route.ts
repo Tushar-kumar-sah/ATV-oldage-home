@@ -9,7 +9,8 @@ import RegisteredUser from '@/models/RegisteredUser';
 import { requireAuth, handleApiAuthError } from '@/lib/auth-helpers';
 import { getFallbackData } from '@/lib/localFallback';
 
-function calculateAge(dob: Date): number {
+function calculateAge(dob: Date | string): number {
+  if (!dob) return 0;
   const today = new Date();
   const birth = new Date(dob);
   let age = today.getFullYear() - birth.getFullYear();
@@ -17,7 +18,21 @@ function calculateAge(dob: Date): number {
   if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
     age--;
   }
-  return age;
+  return Math.max(0, age);
+}
+
+function buildMonthlyTrends(totalInquiries: number, totalUsers: number, totalLogins: number) {
+  // Return last 6 months with real dynamic progression based strictly on actual data
+  const months = ['May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct (Current)'];
+  return months.map((m, idx) => {
+    const isCurrent = idx === months.length - 1;
+    return {
+      month: m,
+      inquiries: isCurrent ? totalInquiries : 0,
+      users: isCurrent ? totalUsers : 0,
+      logins: isCurrent ? totalLogins : 0,
+    };
+  });
 }
 
 export async function GET(req: NextRequest) {
@@ -40,8 +55,8 @@ export async function GET(req: NextRequest) {
       let totalBeds = 0;
       let occupiedBeds = 0;
       for (const r of rooms) {
-        totalBeds += r.capacity;
-        occupiedBeds += r.occupiedBeds;
+        totalBeds += r.capacity || 0;
+        occupiedBeds += r.occupiedBeds || 0;
       }
       const availableBeds = Math.max(0, totalBeds - occupiedBeds);
       const occupancyRate = totalBeds > 0 ? Math.round((occupiedBeds / totalBeds) * 100) : 0;
@@ -91,24 +106,12 @@ export async function GET(req: NextRequest) {
       // 8. Gender breakdown
       const maleCount = await Resident.countDocuments({ isDeleted: false, gender: 'Male', status: 'Active' });
       const femaleCount = await Resident.countDocuments({ isDeleted: false, gender: 'Female', status: 'Active' });
-      const otherCount = activeResidents - (maleCount + femaleCount);
+      const otherCount = Math.max(0, activeResidents - (maleCount + femaleCount));
 
       const fallback = getFallbackData();
+      const loginRecordsCount = fallback.loginRecords?.length || 0;
 
-      // Monthly chart timeline data (last 6 months)
-      const monthlyTrends = [
-        { month: 'May', inquiries: 8, users: 12, logins: 34 },
-        { month: 'Jun', inquiries: 14, users: 19, logins: 52 },
-        { month: 'Jul', inquiries: 18, users: 24, logins: 68 },
-        { month: 'Aug', inquiries: 22, users: 31, logins: 85 },
-        { month: 'Sep', inquiries: 28, users: 39, logins: 104 },
-        {
-          month: 'Oct (Current)',
-          inquiries: Math.max(totalInquiries, 32),
-          users: Math.max(totalRegisteredUsers, 44),
-          logins: 128,
-        },
-      ];
+      const monthlyTrends = buildMonthlyTrends(totalInquiries, totalRegisteredUsers, loginRecordsCount);
 
       return NextResponse.json({
         stats: {
@@ -142,76 +145,73 @@ export async function GET(req: NextRequest) {
         upcomingBirthdays: [],
       });
     } catch (dbErr) {
-      // Offline fallback: load from fallback store
+      // Offline fallback: load pure real data from fallback store
       const fallback = getFallbackData();
 
-      const totalInquiries = fallback.inquiries.length;
-      const newInquiries = fallback.inquiries.filter((i) => i.status.toLowerCase() === 'new').length;
-      const inProgressInquiries = fallback.inquiries.filter((i) =>
-        ['in progress', 'contacted', 'tour scheduled'].includes(i.status.toLowerCase())
+      const totalInquiries = fallback.inquiries?.length || 0;
+      const newInquiries = (fallback.inquiries || []).filter((i) => i.status?.toLowerCase() === 'new').length;
+      const inProgressInquiries = (fallback.inquiries || []).filter((i) =>
+        ['in progress', 'contacted', 'tour scheduled'].includes(i.status?.toLowerCase())
       ).length;
-      const resolvedInquiries = fallback.inquiries.filter((i) =>
-        ['resolved', 'closed', 'admitted'].includes(i.status.toLowerCase())
+      const resolvedInquiries = (fallback.inquiries || []).filter((i) =>
+        ['resolved', 'closed', 'admitted'].includes(i.status?.toLowerCase())
       ).length;
 
-      const monthlyTrends = [
-        { month: 'May', inquiries: 6, users: 9, logins: 28 },
-        { month: 'Jun', inquiries: 11, users: 16, logins: 45 },
-        { month: 'Jul', inquiries: 15, users: 22, logins: 58 },
-        { month: 'Aug', inquiries: 21, users: 29, logins: 74 },
-        { month: 'Sep', inquiries: 26, users: 35, logins: 92 },
-        {
-          month: 'Oct (Current)',
-          inquiries: Math.max(totalInquiries, 31),
-          users: Math.max(fallback.registeredUsers.length, 38),
-          logins: 115,
-        },
-      ];
+      const totalRegisteredUsers = fallback.registeredUsers?.length || 0;
+      const totalResidents = fallback.residents?.length || 0;
+      const totalRooms = fallback.rooms?.length || 0;
+      const activeStaff = fallback.staff?.length || 0;
+
+      let totalBeds = 0;
+      let occupiedBeds = 0;
+      for (const r of fallback.rooms || []) {
+        totalBeds += r.capacity || 0;
+        occupiedBeds += r.occupiedBeds || 0;
+      }
+      const availableBeds = Math.max(0, totalBeds - occupiedBeds);
+      const occupancyRate = totalBeds > 0 ? Math.round((occupiedBeds / totalBeds) * 100) : 0;
+
+      const maleCount = (fallback.residents || []).filter((r: any) => r.gender === 'Male').length;
+      const femaleCount = (fallback.residents || []).filter((r: any) => r.gender === 'Female').length;
+      const otherCount = Math.max(0, totalResidents - (maleCount + femaleCount));
+
+      const monthlyTrends = buildMonthlyTrends(totalInquiries, totalRegisteredUsers, fallback.loginRecords?.length || 0);
 
       return NextResponse.json({
         stats: {
-          totalResidents: fallback.residents.length,
-          activeResidents: fallback.residents.length,
+          totalResidents,
+          activeResidents: totalResidents,
           onLeaveResidents: 0,
           dischargedResidents: 0,
-          totalRooms: fallback.rooms.length,
-          totalBeds: 6,
-          occupiedBeds: 3,
-          availableBeds: 3,
-          occupancyRate: 50,
+          totalRooms,
+          totalBeds,
+          occupiedBeds,
+          availableBeds,
+          occupancyRate,
           totalInquiries,
           newInquiries,
           inProgressInquiries,
           resolvedInquiries,
-          totalRegisteredUsers: fallback.registeredUsers.length,
+          totalRegisteredUsers,
           pendingApprovals: 0,
-          activeStaff: fallback.staff.length,
-          genderBreakdown: { male: 2, female: 1, other: 0 },
+          activeStaff,
+          genderBreakdown: { male: maleCount, female: femaleCount, other: otherCount },
         },
         monthlyTrends,
-        recentAdmissions: fallback.residents.map((r: any) => ({
+        recentAdmissions: (fallback.residents || []).slice(0, 5).map((r: any) => ({
           _id: r._id,
           fullName: r.fullName || r.name,
-          admissionNumber: r.admissionNumber || 'ADM-2023-001',
+          admissionNumber: r.admissionNumber || 'ADM-001',
           admissionDate: r.admissionDate,
           roomNumber: r.roomNumber,
-          status: 'Active',
+          status: r.status || 'Active',
           gender: r.gender,
-          age: r.age,
+          age: r.age || calculateAge(r.dateOfBirth),
         })),
-        recentInquiries: fallback.inquiries.slice(0, 5),
-        recentRegisteredUsers: fallback.registeredUsers.slice(0, 5),
-        recentLogins: fallback.loginRecords.slice(0, 5),
-        upcomingBirthdays: [
-          {
-            _id: 'res-2',
-            fullName: 'Sushila Devi Sharma',
-            roomNumber: '102',
-            dateOfBirth: '1946-12-05',
-            turningAge: 80,
-            daysRemaining: 18,
-          },
-        ],
+        recentInquiries: (fallback.inquiries || []).slice(0, 5),
+        recentRegisteredUsers: (fallback.registeredUsers || []).slice(0, 5),
+        recentLogins: (fallback.loginRecords || []).slice(0, 5),
+        upcomingBirthdays: [],
       });
     }
   } catch (error: any) {

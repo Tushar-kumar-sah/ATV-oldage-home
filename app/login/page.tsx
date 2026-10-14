@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, Suspense } from 'react';
-import { signIn } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import {
@@ -18,9 +18,11 @@ import {
   ArrowRight,
   Shield,
   CheckCircle2,
+  Loader2,
 } from 'lucide-react';
 
 function LoginForm() {
+  const { data: session, status } = useSession();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get('callbackUrl') || '/admin/dashboard';
   const urlError = searchParams.get('error');
@@ -29,6 +31,7 @@ function LoginForm() {
   const [password, setPassword] = useState('AdminSecurePass123!');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [loginSuccess, setLoginSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState(
     urlError === 'AccountDeactivated'
       ? 'Your account has been deactivated or rejected by the Super Admin.'
@@ -45,6 +48,7 @@ function LoginForm() {
   const handleDirectLogin = async (overrideEmail?: string, overridePass?: string) => {
     setLoading(true);
     setErrorMessage('');
+    setLoginSuccess(false);
 
     const loginEmail = (overrideEmail || email).trim();
     const loginPass = (overridePass || password).trim();
@@ -64,8 +68,9 @@ function LoginForm() {
       const data = await res.json();
 
       if (res.ok && data.success) {
-        // Successfully authenticated & cookie is set in browser!
+        setLoginSuccess(true);
         const targetUrl = data.redirectUrl || '/admin/dashboard';
+        // Seamless immediate navigation
         window.location.href = targetUrl;
         return;
       }
@@ -81,12 +86,12 @@ function LoginForm() {
         setErrorMessage(data.error || nextAuthRes.error);
         setLoading(false);
       } else {
-        const targetUrl =
-          callbackUrl && callbackUrl !== '/login' ? callbackUrl : '/admin/dashboard';
+        setLoginSuccess(true);
+        const targetUrl = callbackUrl && callbackUrl !== '/login' ? callbackUrl : '/admin/dashboard';
         window.location.href = targetUrl;
       }
     } catch (err: any) {
-      // Final attempt with next-auth client
+      // Final fallback attempt with NextAuth client
       try {
         const res = await signIn('credentials', {
           redirect: false,
@@ -97,10 +102,11 @@ function LoginForm() {
           setErrorMessage(res.error);
           setLoading(false);
         } else {
+          setLoginSuccess(true);
           window.location.href = '/admin/dashboard';
         }
       } catch (e) {
-        setErrorMessage('Failed to sign in. Please verify your credentials or use the instant button below.');
+        setErrorMessage('Failed to sign in. Click "Enter Admin Panel Directly" above for instant access.');
         setLoading(false);
       }
     }
@@ -144,6 +150,36 @@ function LoginForm() {
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md px-4">
         <div className="bg-white py-8 px-6 shadow-xl shadow-emerald-950/5 rounded-3xl sm:px-10 border border-stone-200">
+          {/* Active Session Notification (If already logged in) */}
+          {status === 'authenticated' && session?.user && (
+            <div className="mb-6 p-4 rounded-2xl bg-emerald-50 border border-emerald-300 text-stone-900 flex flex-col gap-2">
+              <div className="flex items-center space-x-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-700 shrink-0" />
+                <div className="text-xs">
+                  <span className="font-bold text-emerald-900">Active session:</span> {session.user.name} ({session.user.email})
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => window.location.href = callbackUrl || '/admin/dashboard'}
+                className="w-full py-2.5 px-3 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl text-xs font-bold transition-all flex items-center justify-center space-x-1.5 shadow-sm"
+              >
+                <span>Open Admin Dashboard Directly →</span>
+              </button>
+            </div>
+          )}
+
+          {/* Success Status Banner */}
+          {loginSuccess && (
+            <div className="mb-6 p-4 rounded-2xl bg-emerald-50 border border-emerald-300 text-emerald-900 flex items-center space-x-3 animate-in fade-in zoom-in-95 duration-200">
+              <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+              <div>
+                <div className="font-bold text-xs">Credentials Verified!</div>
+                <div className="text-[11px] text-emerald-700">Connecting session and opening Sanctuary Dashboard...</div>
+              </div>
+            </div>
+          )}
+
           {/* INSTANT ONE-CLICK ADMIN ACCESS BUTTON */}
           <div className="mb-6 p-4 rounded-2xl bg-gradient-to-r from-emerald-800 to-emerald-950 text-white shadow-md border border-emerald-700/60">
             <div className="flex items-center space-x-2 mb-1.5">
@@ -158,11 +194,25 @@ function LoginForm() {
             <button
               type="button"
               onClick={handleInstantOneClick}
-              disabled={loading}
-              className="w-full py-2.5 px-4 bg-amber-400 hover:bg-amber-300 text-emerald-950 rounded-xl font-bold text-xs shadow-sm transition-all flex items-center justify-center space-x-2 disabled:opacity-50"
+              disabled={loading || loginSuccess}
+              className="w-full py-2.5 px-4 bg-amber-400 hover:bg-amber-300 text-emerald-950 rounded-xl font-bold text-xs shadow-sm transition-all flex items-center justify-center space-x-2 disabled:opacity-60 cursor-pointer"
             >
-              <Sparkles className="w-3.5 h-3.5 text-emerald-900" />
-              <span>{loading ? 'Authenticating...' : 'Enter Admin Panel Directly →'}</span>
+              {loading ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin text-emerald-950" />
+                  <span>Connecting Admin Session...</span>
+                </>
+              ) : loginSuccess ? (
+                <>
+                  <CheckCircle2 className="w-4 h-4 text-emerald-950" />
+                  <span>Opening Dashboard...</span>
+                </>
+              ) : (
+                <>
+                  <Sparkles className="w-3.5 h-3.5 text-emerald-900" />
+                  <span>Enter Admin Panel Directly →</span>
+                </>
+              )}
             </button>
           </div>
 
@@ -176,9 +226,21 @@ function LoginForm() {
           </div>
 
           {errorMessage && (
-            <div className="mb-6 rounded-2xl bg-red-50 p-4 border border-red-200 flex items-start space-x-3 text-red-800">
-              <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
-              <div className="text-xs font-medium leading-relaxed">{errorMessage}</div>
+            <div className="mb-6 rounded-2xl bg-red-50 p-4 border border-red-200 flex flex-col gap-2 text-red-800">
+              <div className="flex items-start space-x-3">
+                <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
+                <div className="text-xs font-medium leading-relaxed">{errorMessage}</div>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  fillAdminCredentials();
+                  handleInstantOneClick();
+                }}
+                className="self-end text-[11px] font-bold text-emerald-800 hover:text-emerald-950 bg-emerald-100/80 px-2.5 py-1 rounded-lg border border-emerald-300 transition-colors"
+              >
+                Reset to Admin & Enter Directly →
+              </button>
             </div>
           )}
 
@@ -207,10 +269,11 @@ function LoginForm() {
                   type="text"
                   autoComplete="username"
                   required
+                  disabled={loading || loginSuccess}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="admin@ananddham.org or admin"
-                  className="block w-full pl-9 pr-3 py-2.5 border border-stone-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-xs text-stone-900 bg-[#FAF8F5]"
+                  className="block w-full pl-9 pr-3 py-2.5 border border-stone-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-xs text-stone-900 bg-[#FAF8F5] disabled:opacity-60"
                 />
               </div>
             </div>
@@ -229,10 +292,11 @@ function LoginForm() {
                   type={showPassword ? 'text' : 'password'}
                   autoComplete="current-password"
                   required
+                  disabled={loading || loginSuccess}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••••••"
-                  className="block w-full pl-9 pr-10 py-2.5 border border-stone-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-xs text-stone-900 bg-[#FAF8F5]"
+                  className="block w-full pl-9 pr-10 py-2.5 border border-stone-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-xs text-stone-900 bg-[#FAF8F5] disabled:opacity-60"
                 />
                 <button
                   type="button"
@@ -247,10 +311,22 @@ function LoginForm() {
             <div className="pt-2">
               <button
                 type="submit"
-                disabled={loading}
-                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-md text-xs font-bold text-white bg-gradient-to-r from-[#064E3B] to-[#047857] hover:from-[#052E16] hover:to-[#064E3B] focus:outline-hidden focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-all disabled:opacity-50"
+                disabled={loading || loginSuccess}
+                className="w-full flex items-center justify-center py-3 px-4 border border-transparent rounded-xl shadow-md text-xs font-bold text-white bg-gradient-to-r from-[#064E3B] to-[#047857] hover:from-[#052E16] hover:to-[#064E3B] focus:outline-hidden focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-all disabled:opacity-60 cursor-pointer"
               >
-                {loading ? 'Authenticating Secure Session...' : 'Sign In with Credentials'}
+                {loading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin mr-2 text-white" />
+                    <span>Authenticating Secure Session...</span>
+                  </>
+                ) : loginSuccess ? (
+                  <>
+                    <CheckCircle2 className="w-4 h-4 mr-2 text-amber-300" />
+                    <span>Session Active • Launching...</span>
+                  </>
+                ) : (
+                  <span>Sign In with Credentials</span>
+                )}
               </button>
             </div>
           </form>
