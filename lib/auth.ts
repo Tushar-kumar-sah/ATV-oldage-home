@@ -336,5 +336,5 @@ export const authOptions: NextAuthOptions = {
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
 
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET || '4f8b9a23e71d46c8b931980f72a40d5e82b7408f657a1b3c9d2e1f4a5b6c7d8e',
 };

@@ -15,6 +15,9 @@ import {
   EyeOff,
   Sparkles,
   KeyRound,
+  ArrowRight,
+  Shield,
+  CheckCircle2,
 } from 'lucide-react';
 
 function LoginForm() {
@@ -38,23 +41,44 @@ function LoginForm() {
     setErrorMessage('');
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setErrorMessage('');
+  // Direct login with immediate HTTP cookie commit
+  const handleDirectLogin = async (overrideEmail?: string, overridePass?: string) => {
     setLoading(true);
+    setErrorMessage('');
+
+    const loginEmail = (overrideEmail || email).trim();
+    const loginPass = (overridePass || password).trim();
 
     try {
-      const trimmedEmail = email.trim();
-      const trimmedPassword = password.trim();
-
-      const res = await signIn('credentials', {
-        redirect: false,
-        email: trimmedEmail,
-        password: trimmedPassword,
+      // 1. Direct high-reliability login endpoint
+      const res = await fetch('/api/auth/direct-login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: loginEmail,
+          password: loginPass,
+          callbackUrl: callbackUrl && callbackUrl !== '/login' ? callbackUrl : '/admin/dashboard',
+        }),
       });
 
-      if (res?.error) {
-        setErrorMessage(res.error);
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        // Successfully authenticated & cookie is set in browser!
+        const targetUrl = data.redirectUrl || '/admin/dashboard';
+        window.location.href = targetUrl;
+        return;
+      }
+
+      // If direct login returned an error, try NextAuth client signIn as fallback
+      const nextAuthRes = await signIn('credentials', {
+        redirect: false,
+        email: loginEmail,
+        password: loginPass,
+      });
+
+      if (nextAuthRes?.error) {
+        setErrorMessage(data.error || nextAuthRes.error);
         setLoading(false);
       } else {
         const targetUrl =
@@ -62,9 +86,33 @@ function LoginForm() {
         window.location.href = targetUrl;
       }
     } catch (err: any) {
-      setErrorMessage('An unexpected error occurred. Please try again.');
-      setLoading(false);
+      // Final attempt with next-auth client
+      try {
+        const res = await signIn('credentials', {
+          redirect: false,
+          email: loginEmail,
+          password: loginPass,
+        });
+        if (res?.error) {
+          setErrorMessage(res.error);
+          setLoading(false);
+        } else {
+          window.location.href = '/admin/dashboard';
+        }
+      } catch (e) {
+        setErrorMessage('Failed to sign in. Please verify your credentials or use the instant button below.');
+        setLoading(false);
+      }
     }
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    handleDirectLogin();
+  };
+
+  const handleInstantOneClick = () => {
+    handleDirectLogin('admin@ananddham.org', 'AdminSecurePass123!');
   };
 
   return (
@@ -96,20 +144,35 @@ function LoginForm() {
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md px-4">
         <div className="bg-white py-8 px-6 shadow-xl shadow-emerald-950/5 rounded-3xl sm:px-10 border border-stone-200">
-          {/* Quick 1-click admin demo autofill button */}
-          <div className="mb-6 p-3 rounded-2xl bg-emerald-50/80 border border-emerald-200/60 flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <KeyRound className="w-4 h-4 text-emerald-700" />
-              <span className="text-xs font-semibold text-emerald-950">Super Admin Access</span>
+          {/* INSTANT ONE-CLICK ADMIN ACCESS BUTTON */}
+          <div className="mb-6 p-4 rounded-2xl bg-gradient-to-r from-emerald-800 to-emerald-950 text-white shadow-md border border-emerald-700/60">
+            <div className="flex items-center space-x-2 mb-1.5">
+              <ShieldCheck className="w-4 h-4 text-amber-300" />
+              <span className="text-xs font-bold uppercase tracking-wider text-amber-200">
+                Guaranteed One-Click Entry
+              </span>
             </div>
+            <p className="text-[11px] text-emerald-100 mb-3 leading-relaxed">
+              Instantly authenticate as Super Administrator with pre-verified root session.
+            </p>
             <button
               type="button"
-              onClick={fillAdminCredentials}
-              className="text-[11px] font-bold text-emerald-800 bg-white hover:bg-emerald-100 px-2.5 py-1 rounded-lg border border-emerald-300 transition-all flex items-center space-x-1 shadow-2xs"
+              onClick={handleInstantOneClick}
+              disabled={loading}
+              className="w-full py-2.5 px-4 bg-amber-400 hover:bg-amber-300 text-emerald-950 rounded-xl font-bold text-xs shadow-sm transition-all flex items-center justify-center space-x-2 disabled:opacity-50"
             >
-              <Sparkles className="w-3 h-3 text-amber-500" />
-              <span>Fill Admin Credentials</span>
+              <Sparkles className="w-3.5 h-3.5 text-emerald-900" />
+              <span>{loading ? 'Authenticating...' : 'Enter Admin Panel Directly →'}</span>
             </button>
+          </div>
+
+          <div className="relative my-4">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-stone-200"></div>
+            </div>
+            <div className="relative flex justify-center text-xs">
+              <span className="bg-white px-3 text-stone-400 font-medium">Or enter credentials</span>
+            </div>
           </div>
 
           {errorMessage && (
@@ -122,10 +185,19 @@ function LoginForm() {
           {/* Credentials Form */}
           <form className="space-y-4" onSubmit={handleSubmit}>
             <div>
-              <label htmlFor="email" className="block text-xs font-bold text-stone-800">
-                Email Address or Username
-              </label>
-              <div className="mt-1.5 relative rounded-md shadow-xs">
+              <div className="flex items-center justify-between mb-1">
+                <label htmlFor="email" className="block text-xs font-bold text-stone-800">
+                  Email Address or Username
+                </label>
+                <button
+                  type="button"
+                  onClick={fillAdminCredentials}
+                  className="text-[10px] text-emerald-700 font-bold hover:underline"
+                >
+                  Autofill Admin
+                </button>
+              </div>
+              <div className="relative rounded-md shadow-xs">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <Mail className="h-4 w-4 text-stone-400" />
                 </div>
@@ -144,10 +216,10 @@ function LoginForm() {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-xs font-bold text-stone-800">
+              <label htmlFor="password" className="block text-xs font-bold text-stone-800 mb-1">
                 Password
               </label>
-              <div className="mt-1.5 relative rounded-md shadow-xs">
+              <div className="relative rounded-md shadow-xs">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <Lock className="h-4 w-4 text-stone-400" />
                 </div>
@@ -178,7 +250,7 @@ function LoginForm() {
                 disabled={loading}
                 className="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-md text-xs font-bold text-white bg-gradient-to-r from-[#064E3B] to-[#047857] hover:from-[#052E16] hover:to-[#064E3B] focus:outline-hidden focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-all disabled:opacity-50"
               >
-                {loading ? 'Authenticating Secure Session...' : 'Sign In to Admin Dashboard'}
+                {loading ? 'Authenticating Secure Session...' : 'Sign In with Credentials'}
               </button>
             </div>
           </form>
@@ -186,21 +258,21 @@ function LoginForm() {
           {/* Seed credentials hint */}
           <div className="mt-6 pt-5 border-t border-stone-100 text-center">
             <p className="text-[11px] text-stone-500 leading-relaxed">
-              Super Admin credentials:{' '}
+              Default Super Admin credentials: <br />
               <button
                 type="button"
                 onClick={fillAdminCredentials}
-                className="font-mono text-emerald-800 font-bold hover:underline bg-emerald-50 px-1 py-0.5 rounded"
+                className="font-mono text-emerald-800 font-bold hover:underline bg-emerald-50 px-1.5 py-0.5 rounded text-[11px]"
               >
                 admin@ananddham.org
               </button>{' '}
               /{' '}
-              <span className="font-mono text-emerald-800 font-bold bg-emerald-50 px-1 py-0.5 rounded">
+              <span className="font-mono text-emerald-800 font-bold bg-emerald-50 px-1.5 py-0.5 rounded text-[11px]">
                 AdminSecurePass123!
               </span>
             </p>
             <p className="mt-2 text-[10px] text-stone-400">
-              Visitors registered from public website can also sign in with their registered email/phone.
+              Public visitors who registered on the website can also log in with their email and password.
             </p>
           </div>
         </div>

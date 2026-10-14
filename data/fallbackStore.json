@@ -143,6 +143,50 @@
   ],
   "loginRecords": [
     {
+      "_id": "log-1792005763521-rg5r",
+      "email": "admin@ananddham.org",
+      "name": "Super Administrator",
+      "role": "super_admin",
+      "status": "SUCCESS",
+      "method": "credentials",
+      "ipAddress": "::1",
+      "userAgent": "node",
+      "timestamp": "2026-10-14T19:22:43.521Z"
+    },
+    {
+      "_id": "log-1792005714518-929e",
+      "email": "admin@ananddham.org",
+      "name": "Super Administrator",
+      "role": "super_admin",
+      "status": "SUCCESS",
+      "method": "credentials",
+      "ipAddress": "::1",
+      "userAgent": "node",
+      "timestamp": "2026-10-14T19:21:54.518Z"
+    },
+    {
+      "_id": "log-1792005642333-evcj",
+      "email": "admin@ananddham.org",
+      "name": "Super Administrator",
+      "role": "super_admin",
+      "status": "SUCCESS",
+      "method": "credentials",
+      "ipAddress": "::1",
+      "userAgent": "node",
+      "timestamp": "2026-10-14T19:20:42.333Z"
+    },
+    {
+      "_id": "log-1792005588912-o07f",
+      "email": "admin@ananddham.org",
+      "name": "Super Administrator",
+      "role": "super_admin",
+      "status": "SUCCESS",
+      "method": "credentials",
+      "ipAddress": "::ffff:127.0.0.1",
+      "userAgent": "node",
+      "timestamp": "2026-10-14T19:19:48.912Z"
+    },
+    {
       "_id": "log-1792005173749-2h2d",
       "email": "admin@ananddham.org",
       "name": "Super Administrator",
@@ -424,6 +468,58 @@
     }
   ],
   "activityLogs": [
+    {
+      "_id": "act-1792005763522-0p9n",
+      "userName": "Super Administrator",
+      "userEmail": "admin@ananddham.org",
+      "userRole": "super_admin",
+      "action": "LOGIN_DIRECT_SUPER_ADMIN",
+      "entityType": "Auth",
+      "entityId": "",
+      "details": "Direct Super Admin authenticated and session cookie committed.",
+      "ipAddress": "::1",
+      "userAgent": "node",
+      "createdAt": "2026-10-14T19:22:43.522Z"
+    },
+    {
+      "_id": "act-1792005714519-1ydx",
+      "userName": "Super Administrator",
+      "userEmail": "admin@ananddham.org",
+      "userRole": "super_admin",
+      "action": "LOGIN_DIRECT_SUPER_ADMIN",
+      "entityType": "Auth",
+      "entityId": "",
+      "details": "Direct Super Admin authenticated and session cookie committed.",
+      "ipAddress": "::1",
+      "userAgent": "node",
+      "createdAt": "2026-10-14T19:21:54.519Z"
+    },
+    {
+      "_id": "act-1792005642334-crbf",
+      "userName": "Super Administrator",
+      "userEmail": "admin@ananddham.org",
+      "userRole": "super_admin",
+      "action": "LOGIN_SUPER_ADMIN",
+      "entityType": "Auth",
+      "entityId": "",
+      "details": "Super Administrator authenticated via credentials.",
+      "ipAddress": "::1",
+      "userAgent": "node",
+      "createdAt": "2026-10-14T19:20:42.334Z"
+    },
+    {
+      "_id": "act-1792005588914-wt9a",
+      "userName": "Super Administrator",
+      "userEmail": "admin@ananddham.org",
+      "userRole": "super_admin",
+      "action": "LOGIN_SUPER_ADMIN",
+      "entityType": "Auth",
+      "entityId": "",
+      "details": "Super Administrator authenticated via credentials.",
+      "ipAddress": "::ffff:127.0.0.1",
+      "userAgent": "node",
+      "createdAt": "2026-10-14T19:19:48.914Z"
+    },
     {
       "_id": "act-1792005173750-lnql",
       "userName": "Super Administrator",
