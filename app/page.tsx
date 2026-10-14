@@ -244,9 +244,9 @@ export default function LandingPage() {
           <div className="flex items-center space-x-6">
             <span className="flex items-center gap-1.5 font-medium">
               <PhoneCall className="w-3.5 h-3.5 text-amber-400" />
-              24/7 Senior Helpline:{' '}
-              <a href="tel:+919876543210" className="hover:underline font-mono text-white font-bold">
-                +91 98765 43210
+              Official Query & Helpline:{' '}
+              <a href="tel:+917044163518" className="hover:underline font-mono text-white font-bold">
+                +91 70441 63518
               </a>
             </span>
             <span className="hidden md:flex items-center gap-1.5 text-emerald-300">
@@ -300,6 +300,13 @@ export default function LandingPage() {
           </nav>
 
           <div className="flex items-center space-x-3">
+            <a
+              href="tel:+917044163518"
+              className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl font-bold text-xs sm:text-sm text-emerald-950 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 transition-colors"
+            >
+              <PhoneCall className="w-3.5 h-3.5 text-emerald-800" />
+              <span>Call: 70441 63518</span>
+            </a>
             <a
               href="#contact"
               className="px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white shadow-sm hover:shadow-md transition-all focus:ring-2 focus:ring-amber-500"
@@ -916,9 +923,9 @@ export default function LandingPage() {
                     <PhoneCall className="w-5 h-5 text-amber-700" />
                   </div>
                   <div>
-                    <span className="font-bold block">Helpline Numbers</span>
-                    <a href="tel:+919876543210" className="text-xs font-mono font-bold text-[#064E3B] hover:underline block">
-                      +91 98765 43210 / +91 98765 43211
+                    <span className="font-bold block">Official Query & Admissions Line</span>
+                    <a href="tel:+917044163518" className="text-sm font-mono font-bold text-[#064E3B] hover:underline block">
+                      +91 70441 63518
                     </a>
                   </div>
                 </div>
@@ -1119,7 +1126,9 @@ export default function LandingPage() {
               </p>
               <div className="p-3 bg-emerald-950/60 rounded-xl border border-emerald-800 text-[11px] space-y-1">
                 <p className="text-amber-300 font-bold">Helpline & Walk-ins:</p>
-                <p className="text-emerald-200">+91 98765 43210 (24/7)</p>
+                <a href="tel:+917044163518" className="text-emerald-200 hover:text-white font-mono font-bold block">
+                  +91 70441 63518 (Official Query)
+                </a>
                 <p className="text-emerald-300/80">Visiting Hours: 10:00 AM – 6:30 PM</p>
               </div>
             </div>
