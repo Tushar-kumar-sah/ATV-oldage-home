@@ -1,5 +1,6 @@
 import { connectDB } from './db';
 import ActivityLog from '@/models/ActivityLog';
+import { addActivityLog } from './localFallback';
 
 interface LogOptions {
   userId?: any;
@@ -15,6 +16,24 @@ interface LogOptions {
 }
 
 export async function logActivity(options: LogOptions): Promise<void> {
+  // 1. Always record in fallback store for persistence & instant zero-lag query
+  try {
+    addActivityLog({
+      userName: options.userName,
+      userEmail: options.userEmail,
+      userRole: options.userRole,
+      action: options.action,
+      entityType: options.entityType,
+      entityId: options.entityId,
+      details: options.details,
+      ipAddress: options.ipAddress,
+      userAgent: options.userAgent,
+    });
+  } catch (localErr) {
+    // ignore
+  }
+
+  // 2. Sync to MongoDB if database is running
   try {
     await connectDB();
     await ActivityLog.create({
@@ -31,6 +50,5 @@ export async function logActivity(options: LogOptions): Promise<void> {
     });
   } catch (error) {
     // Fail silently so activity logging doesn't block critical database actions
-    console.error('Failed to log activity:', error);
   }
 }

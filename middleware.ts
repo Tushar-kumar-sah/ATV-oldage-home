@@ -15,7 +15,7 @@ export async function middleware(req: NextRequest) {
     // 1. Not signed in
     if (!token) {
       const loginUrl = new URL('/login', req.url);
-      loginUrl.searchParams.set('callbackUrl', pathname);
+      loginUrl.searchParams.set('callbackUrl', pathname === '/admin' ? '/admin/dashboard' : pathname);
       return NextResponse.redirect(loginUrl);
     }
 
@@ -30,6 +30,11 @@ export async function middleware(req: NextRequest) {
       const loginUrl = new URL('/login', req.url);
       loginUrl.searchParams.set('error', 'AccountDeactivated');
       return NextResponse.redirect(loginUrl);
+    }
+
+    // Redirect root /admin directly to /admin/dashboard
+    if (pathname === '/admin') {
+      return NextResponse.redirect(new URL('/admin/dashboard', req.url));
     }
 
     // 4. Role-based restrictions (Super Admin only sections)
