@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <defs>
+    <linearGradient id="emeraldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#064E3B" />
+      <stop offset="100%" stop-color="#047857" />
+    </linearGradient>
+    <linearGradient id="amberGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FDE047" />
+      <stop offset="100%" stop-color="#F59E0B" />
+    </linearGradient>
+  </defs>
+  <!-- Background with smooth rounded corners -->
+  <rect width="32" height="32" rx="8" fill="url(#emeraldGrad)" />
+  
+  <!-- Heart and Sanctuary Care motif in radiant gold -->
+  <path fill="url(#amberGrad)" d="M16 26s-8.5-5.2-8.5-11.5a5 5 0 0 1 8.5-3.5 5 5 0 0 1 8.5 3.5C24.5 20.8 16 26 16 26z" />
+  
+  <!-- Gentle protective inner halo -->
+  <circle cx="16" cy="14" r="2.2" fill="#064E3B" />
+</svg>
