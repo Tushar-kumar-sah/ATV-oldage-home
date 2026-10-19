@@ -712,76 +712,76 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
                 adVisible ? 'scale-100 opacity-100' : 'scale-75 opacity-0'
               }`}
             >
-              {/* Irritating "Sticker" badges in corner */}
-              <div className="absolute -top-4 -left-3 rotate-[-12deg] bg-red-600 text-white font-extrabold text-xs uppercase px-3 py-1 rounded-full shadow-lg border-2 border-white animate-bounce">
-                🔥 100% FREE!
+              {/* Minimal Offer Badge in corner */}
+              <div className="absolute -top-3.5 -left-2 rotate-[-6deg] bg-amber-500 text-stone-950 font-black text-[11px] uppercase px-3 py-1 rounded-full shadow-lg border border-amber-300 animate-pulse">
+                🎁 MINIMAL OFFER
               </div>
 
-              <div className="absolute -top-4 -right-2 rotate-[10deg] bg-amber-400 text-stone-950 font-black text-xs uppercase px-3 py-1 rounded-full shadow-lg border-2 border-black">
-                ⚡ EXCLUSIVE!
+              <div className="absolute -top-3.5 -right-2 rotate-[6deg] bg-emerald-600 text-white font-bold text-[11px] uppercase px-3 py-1 rounded-full shadow-lg border border-emerald-400">
+                ✓ 100% FREE
               </div>
 
               {/* Fake close button ("Irritating" tiny button) */}
               <button
                 onClick={() => setPhase('step4_list')}
-                className="absolute top-3 right-3 text-stone-400 hover:text-white p-1 rounded-full bg-black/40 hover:bg-black/80 text-[10px] flex items-center gap-1 border border-stone-700"
-                title="Skip ad"
+                className="absolute top-3 right-3 text-stone-400 hover:text-white p-1 rounded-full bg-black/40 hover:bg-black/80 text-[10px] flex items-center gap-1 border border-stone-700 cursor-pointer"
+                title="Skip to list"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
 
-              {/* Flashing Top Announcement */}
+              {/* Top Announcement */}
               <div className="mt-2 mb-3">
-                <span className="inline-block px-3 py-1 rounded-full bg-red-500/20 border border-red-500/40 text-red-400 text-[11px] font-black tracking-wider uppercase animate-pulse">
-                  ⚠️ URGENT POP-UP NOTIFICATION ⚠️
+                <span className="inline-block px-3 py-1 rounded-full bg-amber-500/15 border border-amber-500/40 text-amber-300 text-[11px] font-bold tracking-wider uppercase">
+                  ⚡ TODAY&apos;S VISITOR PRIVILEGE ⚡
                 </span>
               </div>
 
               {/* Attention Grabbing Icon */}
-              <div className="relative w-20 h-20 mx-auto my-3 flex items-center justify-center">
-                <div className="absolute inset-0 bg-amber-500/20 rounded-full animate-ping" />
-                <div className="relative w-16 h-16 rounded-2xl bg-gradient-to-tr from-amber-500 to-yellow-300 text-stone-950 flex items-center justify-center shadow-xl shadow-amber-500/40">
-                  <Bell className="w-8 h-8 animate-wiggle" />
+              <div className="relative w-16 h-16 mx-auto my-2 flex items-center justify-center">
+                <div className="absolute inset-0 bg-amber-500/15 rounded-full animate-ping" />
+                <div className="relative w-14 h-14 rounded-2xl bg-gradient-to-tr from-amber-500 to-yellow-300 text-stone-950 flex items-center justify-center shadow-lg shadow-amber-500/30">
+                  <Ticket className="w-7 h-7" />
                 </div>
               </div>
 
-              {/* Bold Ad Headline */}
-              <h3 className="text-2xl sm:text-3xl font-black text-yellow-300 tracking-tight leading-tight uppercase font-sans">
-                Claim Your Free VIP Sanctuary Subscription!
+              {/* Minimal Offer Headline */}
+              <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight leading-snug">
+                Free 1-Day Sanctuary Pass
               </h3>
 
-              <p className="text-xs sm:text-sm text-stone-200 mt-2 font-medium">
-                Congratulations! You scanned our beacon. You have unlocked a{' '}
-                <span className="text-amber-300 font-bold underline decoration-amber-400">
-                  1-Year Complimentary VIP Access Pass
-                </span>{' '}
-                worth ₹25,000 — at <strong className="text-white">₹0 FREE</strong>!
+              <p className="text-xs text-stone-300 mt-1.5 font-normal leading-relaxed">
+                A simple, minimal welcome gift for scanning our beacon today. Experience Anand Dham&apos;s peace and satvik living with <strong className="text-amber-300">zero payment</strong>.
               </p>
 
-              {/* Irritating Countdown Timer */}
-              <div className="my-4 py-2.5 px-4 rounded-xl bg-black/60 border border-amber-500/30 flex items-center justify-center gap-3">
-                <Clock className="w-4 h-4 text-amber-400 animate-spin" />
-                <span className="text-xs uppercase tracking-wider text-stone-400 font-semibold">
-                  Free Claim Expires In:
+              {/* Countdown Timer */}
+              <div className="my-3.5 py-2 px-3 rounded-xl bg-black/50 border border-amber-500/30 flex items-center justify-center gap-2.5">
+                <Clock className="w-3.5 h-3.5 text-amber-400" />
+                <span className="text-[11px] uppercase tracking-wider text-stone-400 font-semibold">
+                  Complimentary Claim Window:
                 </span>
-                <span className="font-mono text-lg font-black text-red-400 bg-red-950/60 px-2 py-0.5 rounded border border-red-500/40">
+                <span className="font-mono text-base font-bold text-amber-300 bg-amber-950/60 px-2 py-0.5 rounded border border-amber-500/30">
                   {formatTimer(timerSeconds)}
                 </span>
               </div>
 
-              {/* Features bullets */}
-              <div className="text-left bg-black/30 rounded-xl p-3 space-y-1.5 border border-amber-500/20 text-xs mb-5">
+              {/* Minimal Features bullets */}
+              <div className="text-left bg-black/30 rounded-xl p-3 space-y-1.5 border border-emerald-500/20 text-xs mb-4">
                 <div className="flex items-center gap-2 text-stone-200">
-                  <Check className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                  <span>Free Full-Day Sanctuary Trial for Parents</span>
+                  <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                  <span>Free 1-Day Guided Sanctuary Tour for 2</span>
                 </div>
                 <div className="flex items-center gap-2 text-stone-200">
-                  <Check className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                  <span>Complimentary Senior Geriatric Health Checkup</span>
+                  <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                  <span>Complimentary Satvik Lunch & Herbal Tea</span>
                 </div>
                 <div className="flex items-center gap-2 text-stone-200">
-                  <Check className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                  <span>Guaranteed spot on the Early Checkers List</span>
+                  <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                  <span>Free Senior Physician Health Consultation</span>
+                </div>
+                <div className="flex items-center gap-2 text-stone-200">
+                  <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                  <span>₹0 Registration Fee Waiver (Save ₹1,500)</span>
                 </div>
               </div>
 
@@ -789,18 +789,18 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
               <button
                 id="claim-free-subscription-ad-btn"
                 onClick={() => setPhase('step4_list')}
-                className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 text-stone-950 font-black text-base sm:text-lg tracking-wide uppercase shadow-2xl shadow-amber-500/60 hover:scale-[1.02] active:scale-95 transition flex items-center justify-center gap-2 cursor-pointer border-2 border-yellow-200 animate-pulse"
+                className="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-500 text-stone-950 font-bold text-sm tracking-wide uppercase shadow-lg shadow-amber-500/30 hover:scale-[1.02] active:scale-98 transition flex items-center justify-center gap-2 cursor-pointer border border-yellow-200"
               >
-                <Zap className="w-5 h-5 fill-stone-950" />
-                <span>Claim Free Pass & View List</span>
-                <ArrowRight className="w-5 h-5" />
+                <Sparkles className="w-4 h-4 fill-stone-950" />
+                <span>Claim Minimal Offer & View List</span>
+                <ArrowRight className="w-4 h-4" />
               </button>
 
               <button
                 onClick={() => setPhase('step4_list')}
-                className="mt-3 text-[11px] text-stone-400 hover:text-stone-300 underline underline-offset-2 cursor-pointer block mx-auto"
+                className="mt-2.5 text-[11px] text-stone-400 hover:text-stone-300 underline underline-offset-2 cursor-pointer block mx-auto"
               >
-                or proceed to the Early Checkers Roster directly →
+                or proceed to Early Checkers List directly →
               </button>
             </div>
           </div>
@@ -851,9 +851,9 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
               </div>
               <div className="bg-emerald-950/40 border border-emerald-800/30 rounded-xl p-3.5 text-center">
                 <Shield className="w-5 h-5 text-emerald-400 mx-auto mb-1.5" />
-                <h4 className="text-xs font-bold text-white">Tariff Lock</h4>
+                <h4 className="text-xs font-bold text-white">₹0 Reg. Fee</h4>
                 <p className="text-[11px] text-stone-400 mt-0.5">
-                  Lifetime 15% rate protection
+                  100% waiver on registration
                 </p>
               </div>
               <div className="bg-emerald-950/40 border border-emerald-800/30 rounded-xl p-3.5 text-center">
@@ -914,7 +914,7 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-2xl bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-500 text-stone-950 font-black text-base tracking-wide uppercase shadow-xl shadow-amber-500/30 hover:scale-105 active:scale-95 transition cursor-pointer"
               >
                 <Sparkles className="w-5 h-5 fill-stone-950" />
-                <span>Join Early Checkers List — Go to Sign Up</span>
+                <span>Claim Minimal Offer — Go to Sign Up</span>
                 <ChevronRight className="w-5 h-5" />
               </button>
               <p className="text-xs text-stone-400 mt-2">
@@ -935,11 +935,10 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
                 <span>Step 5: Official Registration</span>
               </div>
               <h2 className="text-2xl sm:text-3xl font-serif font-bold text-white tracking-tight">
-                Secure Your Early Checker Pass
+                Claim Your Free 1-Day Pass
               </h2>
               <p className="text-xs sm:text-sm text-stone-300 mt-1">
-                Fill in your details to claim spot #{101 - spotsLeft} on the central
-                roster.
+                Minimal details to claim spot #{101 - spotsLeft} and confirm your complimentary sanctuary visit.
               </p>
             </div>
 
@@ -1057,7 +1056,7 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
                   ) : (
                     <>
                       <CheckCircle2 className="w-5 h-5 text-amber-300" />
-                      <span>Submit & Confirm Early Checker Pass</span>
+                      <span>Submit & Confirm Free 1-Day Pass</span>
                     </>
                   )}
                 </button>
