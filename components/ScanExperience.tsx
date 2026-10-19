@@ -349,7 +349,7 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
         </div>
 
         {/* Phase step indicator */}
-        <div className="hidden sm:flex items-center gap-1.5 text-xs text-emerald-400/80 bg-emerald-950/60 px-3 py-1.5 rounded-full border border-emerald-800/40">
+        <div className="flex items-center gap-1.5 text-xs text-emerald-400/80 bg-emerald-950/60 px-3 py-1.5 rounded-full border border-emerald-800/40">
           <span
             className={`w-2 h-2 rounded-full ${
               phase === 'scan'
@@ -357,7 +357,7 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
                 : 'bg-emerald-400'
             }`}
           />
-          <span className="font-medium">
+          <span className="font-medium text-[11px] sm:text-xs">
             {phase === 'scan' && 'Scanning Code...'}
             {phase === 'step1_questions' && 'Step 1: Perspectives'}
             {phase === 'step1_loading' && 'Step 1: Loading Sanctuary'}
@@ -368,14 +368,6 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
             {phase === 'step5_success' && 'VIP Pass Confirmed ✓'}
           </span>
         </div>
-
-        <button
-          onClick={handleExitToMain}
-          className="text-xs text-stone-400 hover:text-white transition flex items-center gap-1 border border-stone-800 hover:border-stone-600 px-3 py-1.5 rounded-lg bg-stone-900/40 cursor-pointer"
-        >
-          <span>Main Site</span>
-          <ChevronRight className="w-3.5 h-3.5" />
-        </button>
       </header>
 
       {/* Main interactive viewport container */}
