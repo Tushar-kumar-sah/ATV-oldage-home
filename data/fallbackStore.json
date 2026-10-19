@@ -1,6 +1,16 @@
 {
   "registeredUsers": [
     {
+      "_id": "reg-1792397807951",
+      "name": "tushar",
+      "email": "s@dd",
+      "phone": "-09876543",
+      "password": "",
+      "authProvider": "early-checker",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+      "createdAt": "2026-10-19T08:16:47.951Z"
+    },
+    {
       "_id": "reg-1792008597447",
       "name": "Tushar Sah",
       "email": "tushar.sah@gmail.com",
@@ -50,6 +60,17 @@
     }
   ],
   "loginRecords": [
+    {
+      "_id": "log-1792397807954-rv37",
+      "email": "s@dd",
+      "name": "tushar",
+      "role": "visitor",
+      "status": "SUCCESS",
+      "method": "credentials",
+      "ipAddress": "::1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+      "timestamp": "2026-10-19T08:16:47.954Z"
+    },
     {
       "_id": "log-1792009537866-u1qg",
       "email": "admin@ananddham.org",
@@ -144,6 +165,19 @@
   "staff": [],
   "visitors": [],
   "activityLogs": [
+    {
+      "_id": "act-1792397807956-a8ta",
+      "userName": "tushar",
+      "userEmail": "s@dd",
+      "userRole": "visitor",
+      "action": "VISITOR_REGISTER",
+      "entityType": "User",
+      "entityId": "",
+      "details": "Website visitor \"tushar\" registered via EARLY-CHECKER (Phone: -09876543).",
+      "ipAddress": "::1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+      "createdAt": "2026-10-19T08:16:47.956Z"
+    },
     {
       "_id": "act-1792009537869-26mr",
       "userName": "Super Administrator",
