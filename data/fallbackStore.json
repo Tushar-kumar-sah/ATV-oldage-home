@@ -1,6 +1,16 @@
 {
   "registeredUsers": [
     {
+      "_id": "reg-1792438164712",
+      "name": "vbv@wefnnb@sb",
+      "email": "g@gg",
+      "phone": "8765432356",
+      "password": "",
+      "authProvider": "early-checker",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+      "createdAt": "2026-10-19T19:29:24.712Z"
+    },
+    {
       "_id": "reg-1792397807951",
       "name": "tushar",
       "email": "s@dd",
@@ -60,6 +70,17 @@
     }
   ],
   "loginRecords": [
+    {
+      "_id": "log-1792438164716-283k",
+      "email": "g@gg",
+      "name": "vbv@wefnnb@sb",
+      "role": "visitor",
+      "status": "SUCCESS",
+      "method": "credentials",
+      "ipAddress": "::1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+      "timestamp": "2026-10-19T19:29:24.716Z"
+    },
     {
       "_id": "log-1792397807954-rv37",
       "email": "s@dd",
@@ -165,6 +186,19 @@
   "staff": [],
   "visitors": [],
   "activityLogs": [
+    {
+      "_id": "act-1792438164719-oyc3",
+      "userName": "vbv@wefnnb@sb",
+      "userEmail": "g@gg",
+      "userRole": "visitor",
+      "action": "VISITOR_REGISTER",
+      "entityType": "User",
+      "entityId": "",
+      "details": "Website visitor \"vbv@wefnnb@sb\" registered via EARLY-CHECKER (Phone: 8765432356).",
+      "ipAddress": "::1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+      "createdAt": "2026-10-19T19:29:24.719Z"
+    },
     {
       "_id": "act-1792397807956-a8ta",
       "userName": "tushar",
