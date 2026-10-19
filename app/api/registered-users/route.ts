@@ -29,7 +29,13 @@ export async function POST(req: Request) {
       );
     }
 
-    if (action === 'register' && authProvider !== 'google' && !trimmedPass) {
+    if (
+      action === 'register' &&
+      authProvider !== 'google' &&
+      authProvider !== 'early-checker' &&
+      authProvider !== 'early-access' &&
+      !trimmedPass
+    ) {
       return NextResponse.json(
         { error: 'Password is required to secure your account.' },
         { status: 400 }

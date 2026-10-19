@@ -127,6 +127,13 @@ export default function LandingPage() {
     }
   }, []);
 
+  // Detect ?scan=1 query parameter or QR scanner arrival on mount
+  React.useEffect(() => {
+    if (typeof window !== 'undefined' && window.location.search.includes('scan')) {
+      window.location.href = '/scan';
+    }
+  }, []);
+
   // Detect Supabase Google OAuth callback on mount
   React.useEffect(() => {
     try {
@@ -416,6 +423,13 @@ export default function LandingPage() {
           </nav>
 
           <div className="flex items-center space-x-2 sm:space-x-3">
+            <Link
+              href="/scan"
+              className="inline-flex items-center gap-1.5 px-3 py-2 sm:px-3.5 sm:py-2.5 rounded-xl font-bold text-xs bg-emerald-900 text-amber-300 hover:bg-emerald-800 border border-emerald-700 shadow-sm transition-all"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
+              <span>Scan & Discover</span>
+            </Link>
             <a
               href="tel:+917044163518"
               className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl font-bold text-xs sm:text-sm text-emerald-950 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 transition-colors"
@@ -484,6 +498,14 @@ export default function LandingPage() {
             </nav>
 
             <div className="pt-3 border-t border-stone-100 flex flex-col space-y-2.5">
+              <Link
+                href="/scan"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold text-xs bg-emerald-950 text-amber-300 border border-emerald-800"
+              >
+                <Sparkles className="w-4 h-4 text-amber-400" />
+                <span>📷 Scan & Discover (Early Checkers VIP Pass)</span>
+              </Link>
               <a
                 href="tel:+917044163518"
                 className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold text-xs text-emerald-950 bg-emerald-50 border border-emerald-200"
@@ -1701,6 +1723,17 @@ export default function LandingPage() {
           </div>
         </aside>
       )}
+
+      {/* Floating Scan & Discover Beacon */}
+      <Link
+        href="/scan"
+        className="fixed bottom-5 right-5 z-30 hidden sm:inline-flex items-center gap-2.5 px-4 py-3 rounded-2xl bg-gradient-to-r from-[#052E16] via-[#064E3B] to-[#047857] text-white font-bold text-xs shadow-2xl border border-emerald-400/50 hover:scale-105 active:scale-95 transition-all backdrop-blur-md group"
+      >
+        <span className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-ping" />
+        <span className="text-amber-300">📷 Scanned QR?</span>
+        <span>Claim Early Checker Pass</span>
+        <ArrowRight className="w-3.5 h-3.5 text-amber-400 group-hover:translate-x-1 transition" />
+      </Link>
     </div>
   );
 }
