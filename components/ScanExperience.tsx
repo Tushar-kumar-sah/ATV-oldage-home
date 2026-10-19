@@ -87,8 +87,20 @@ const INITIAL_CHECKERS = [
   { id: 'AD-EC-006', name: 'Ananya Deshmukh', city: 'Pune', time: '4 hours ago', spot: '#06 VIP' },
 ];
 
-export default function ScanExperience() {
+interface ScanExperienceProps {
+  onEnterMainWebsite?: () => void;
+}
+
+export default function ScanExperience({ onEnterMainWebsite }: ScanExperienceProps = {}) {
   const router = useRouter();
+
+  const handleExitToMain = () => {
+    if (onEnterMainWebsite) {
+      onEnterMainWebsite();
+    } else {
+      router.push('/');
+    }
+  };
 
   // Navigation state:
   // 'scan' -> 'step1_questions' -> 'step1_loading' -> 'step2_slides' -> 'step3_ad' -> 'step4_list' -> 'step5_form' -> 'step5_success'
@@ -357,12 +369,13 @@ export default function ScanExperience() {
           </span>
         </div>
 
-        <Link
-          href="/"
-          className="text-xs text-stone-400 hover:text-white transition flex items-center gap-1 border border-stone-800 hover:border-stone-600 px-3 py-1.5 rounded-lg bg-stone-900/40"
+        <button
+          onClick={handleExitToMain}
+          className="text-xs text-stone-400 hover:text-white transition flex items-center gap-1 border border-stone-800 hover:border-stone-600 px-3 py-1.5 rounded-lg bg-stone-900/40 cursor-pointer"
         >
-          Main Site <ChevronRight className="w-3.5 h-3.5" />
-        </Link>
+          <span>Main Site</span>
+          <ChevronRight className="w-3.5 h-3.5" />
+        </button>
       </header>
 
       {/* Main interactive viewport container */}
@@ -1116,13 +1129,13 @@ export default function ScanExperience() {
             </div>
 
             <div className="space-y-3">
-              <Link
-                href="/"
-                className="w-full inline-flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-500 text-stone-950 font-bold text-sm shadow-md hover:scale-[1.02] active:scale-95 transition"
+              <button
+                onClick={handleExitToMain}
+                className="w-full inline-flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-500 text-stone-950 font-bold text-sm shadow-md hover:scale-[1.02] active:scale-95 transition cursor-pointer"
               >
                 <span>Enter Full Sanctuary Website</span>
                 <ChevronRight className="w-4 h-4" />
-              </Link>
+              </button>
 
               <button
                 onClick={() => setPhase('step1_questions')}

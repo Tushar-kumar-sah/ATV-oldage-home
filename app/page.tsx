@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import ScanExperience from '@/components/ScanExperience';
 import { getSupabaseBrowserClient } from '@/lib/supabase';
 import {
   HeartHandshake,
@@ -79,6 +80,8 @@ const heroSlides = [
 ];
 
 export default function LandingPage() {
+  // Scan intro is presented in the starting before entering the main website
+  const [showScanIntro, setShowScanIntro] = useState<boolean>(true);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -127,10 +130,13 @@ export default function LandingPage() {
     }
   }, []);
 
-  // Detect ?scan=1 query parameter or QR scanner arrival on mount
+  // Check URL query parameters: allow skipping via ?skip_scan=true or ?direct=true
   React.useEffect(() => {
-    if (typeof window !== 'undefined' && window.location.search.includes('scan')) {
-      window.location.href = '/scan';
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('direct') === 'true' || params.get('skip_scan') === 'true') {
+        setShowScanIntro(false);
+      }
     }
   }, []);
 
@@ -359,6 +365,11 @@ export default function LandingPage() {
     }
   };
 
+  // Render Scan Experience first in the starting before entering the main website
+  if (showScanIntro) {
+    return <ScanExperience onEnterMainWebsite={() => setShowScanIntro(false)} />;
+  }
+
   return (
     <div className="min-h-screen bg-[#FBF9F5] text-stone-900 selection:bg-emerald-200 selection:text-emerald-950">
       {/* 1. Top Emergency / Info Bar (Deep Noble Emerald) */}
@@ -423,13 +434,14 @@ export default function LandingPage() {
           </nav>
 
           <div className="flex items-center space-x-2 sm:space-x-3">
-            <Link
-              href="/scan"
-              className="inline-flex items-center gap-1.5 px-3 py-2 sm:px-3.5 sm:py-2.5 rounded-xl font-bold text-xs bg-emerald-900 text-amber-300 hover:bg-emerald-800 border border-emerald-700 shadow-sm transition-all"
+            <button
+              type="button"
+              onClick={() => setShowScanIntro(true)}
+              className="inline-flex items-center gap-1.5 px-3 py-2 sm:px-3.5 sm:py-2.5 rounded-xl font-bold text-xs bg-emerald-900 text-amber-300 hover:bg-emerald-800 border border-emerald-700 shadow-sm transition-all cursor-pointer"
             >
               <Sparkles className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
               <span>Scan & Discover</span>
-            </Link>
+            </button>
             <a
               href="tel:+917044163518"
               className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl font-bold text-xs sm:text-sm text-emerald-950 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 transition-colors"
@@ -498,14 +510,17 @@ export default function LandingPage() {
             </nav>
 
             <div className="pt-3 border-t border-stone-100 flex flex-col space-y-2.5">
-              <Link
-                href="/scan"
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold text-xs bg-emerald-950 text-amber-300 border border-emerald-800"
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  setShowScanIntro(true);
+                }}
+                className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold text-xs bg-emerald-950 text-amber-300 border border-emerald-800 cursor-pointer"
               >
                 <Sparkles className="w-4 h-4 text-amber-400" />
-                <span>📷 Scan & Discover (Early Checkers VIP Pass)</span>
-              </Link>
+                <span>📷 Replay Scan Beacon (Early Checkers VIP Pass)</span>
+              </button>
               <a
                 href="tel:+917044163518"
                 className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold text-xs text-emerald-950 bg-emerald-50 border border-emerald-200"
@@ -1725,15 +1740,16 @@ export default function LandingPage() {
       )}
 
       {/* Floating Scan & Discover Beacon */}
-      <Link
-        href="/scan"
-        className="fixed bottom-5 right-5 z-30 hidden sm:inline-flex items-center gap-2.5 px-4 py-3 rounded-2xl bg-gradient-to-r from-[#052E16] via-[#064E3B] to-[#047857] text-white font-bold text-xs shadow-2xl border border-emerald-400/50 hover:scale-105 active:scale-95 transition-all backdrop-blur-md group"
+      <button
+        type="button"
+        onClick={() => setShowScanIntro(true)}
+        className="fixed bottom-5 right-5 z-30 hidden sm:inline-flex items-center gap-2.5 px-4 py-3 rounded-2xl bg-gradient-to-r from-[#052E16] via-[#064E3B] to-[#047857] text-white font-bold text-xs shadow-2xl border border-emerald-400/50 hover:scale-105 active:scale-95 transition-all backdrop-blur-md group cursor-pointer"
       >
         <span className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-ping" />
         <span className="text-amber-300">📷 Scanned QR?</span>
         <span>Claim Early Checker Pass</span>
         <ArrowRight className="w-3.5 h-3.5 text-amber-400 group-hover:translate-x-1 transition" />
-      </Link>
+      </button>
     </div>
   );
 }
