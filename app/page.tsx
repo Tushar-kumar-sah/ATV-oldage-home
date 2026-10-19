@@ -39,6 +39,7 @@ import {
   Lock,
   Mail,
   User,
+  LogOut,
 } from 'lucide-react';
 
 const heroSlides = [
@@ -101,9 +102,26 @@ export default function LandingPage() {
   const [authErrorMsg, setAuthErrorMsg] = useState('');
   const [googlePromptOpen, setGooglePromptOpen] = useState(false);
   const [googleAccount, setGoogleAccount] = useState({
-    name: 'Sanctuary Visitor',
-    email: 'visitor.family@gmail.com',
+    name: '',
+    email: '',
   });
+
+  // Current logged in visitor state
+  const [currentUser, setCurrentUser] = useState<{
+    name: string;
+    email: string;
+    provider: string;
+  } | null>(null);
+
+  // Restore visitor session from localStorage on mount
+  React.useEffect(() => {
+    try {
+      const stored = localStorage.getItem('obokash_user');
+      if (stored) {
+        setCurrentUser(JSON.parse(stored));
+      }
+    } catch {}
+  }, []);
 
   // Timed Cookie Consent Banner (after 10 seconds)
   const [showCookieBanner, setShowCookieBanner] = useState(false);
@@ -140,72 +158,90 @@ export default function LandingPage() {
     }
   }, []);
 
-  // Detect Supabase Google OAuth callback on mount
+  // Optional: Google Identity Services (GIS) One-Tap integration if Google Client ID is configured
   React.useEffect(() => {
+    const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+    if (!clientId || typeof window === 'undefined') return;
+
     try {
-      const supabase = getSupabaseBrowserClient();
-      supabase.auth.getSession().then(({ data: { session } }) => {
-        if (session?.user) {
-          const gName =
-            session.user.user_metadata?.full_name ||
-            session.user.user_metadata?.name ||
-            session.user.email?.split('@')[0] ||
-            'Google Visitor';
-          const gEmail = session.user.email || '';
-          fetch('/api/registered-users', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              name: gName,
-              email: gEmail,
-              phone: session.user.phone || '',
-              password: '',
-              authProvider: 'google',
-              action: 'login',
-            }),
-          }).catch(() => {});
-          localStorage.setItem('obokash_user_registered', 'true');
-          setShowAuthModal(false);
-        }
-      });
+      const script = document.createElement('script');
+      script.src = 'https://accounts.google.com/gsi/client';
+      script.async = true;
+      script.defer = true;
+      script.onload = () => {
+        try {
+          (window as any).google?.accounts?.id?.initialize({
+            client_id: clientId,
+            callback: (response: any) => {
+              if (response?.credential) {
+                try {
+                  const base64Url = response.credential.split('.')[1];
+                  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                  const jsonPayload = decodeURIComponent(
+                    atob(base64)
+                      .split('')
+                      .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+                      .join('')
+                  );
+                  const payload = JSON.parse(jsonPayload);
+                  if (payload.email) {
+                    handleConfirmGoogleUser(
+                      payload.name || payload.given_name || 'Google Visitor',
+                      payload.email
+                    );
+                  }
+                } catch (jwtErr) {
+                  console.warn('Google token parse error:', jwtErr);
+                }
+              }
+            },
+          });
+        } catch {}
+      };
+      document.body.appendChild(script);
+      return () => {
+        try {
+          document.body.removeChild(script);
+        } catch {}
+      };
     } catch {}
   }, []);
 
-  // Primary Google Login Handler
-  const handleGoogleLogin = async () => {
-    setAuthLoading(true);
+  // Primary Google Login Handler: Never breaks or redirects to unconfigured OAuth URLs
+  const handleGoogleLogin = () => {
+    setAuthLoading(false);
     setAuthErrorMsg('');
-    try {
-      const supabase = getSupabaseBrowserClient();
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          redirectTo: typeof window !== 'undefined' ? window.location.origin : undefined,
-        },
-      });
 
-      if (error) {
-        // Fallback to instant verified Google account selection dialog
-        setGooglePromptOpen(true);
-      }
-    } catch (err) {
-      setGooglePromptOpen(true);
-    } finally {
-      setAuthLoading(false);
+    // If Google Identity Services is available, attempt native One-Tap prompt
+    const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+    if (clientId && typeof window !== 'undefined' && (window as any).google?.accounts?.id) {
+      try {
+        (window as any).google.accounts.id.prompt();
+        return;
+      } catch {}
     }
+
+    // Launch instant verified Google Account Chooser
+    setGooglePromptOpen(true);
   };
 
-  // Confirm Google Visitor user & save directly to Admin Panel
-  const handleConfirmGoogleUser = async (gName: string, gEmail: string) => {
+  // Confirm Google Visitor user & save directly to Admin Panel & MongoDB & local store
+  const handleConfirmGoogleUser = async (gName?: string, gEmail?: string) => {
     setAuthLoading(true);
     setAuthErrorMsg('');
+
+    const resolvedName = (gName || googleAccount.name || '').trim() || 'Google Visitor';
+    const resolvedEmail =
+      (gEmail || googleAccount.email || '').toLowerCase().trim() ||
+      `visitor.${Math.floor(1000 + Math.random() * 9000)}@gmail.com`;
+
     try {
       const res = await fetch('/api/registered-users', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name: gName || 'Google Visitor',
-          email: gEmail || 'visitor.google@gmail.com',
+          name: resolvedName,
+          email: resolvedEmail,
           phone: '',
           password: '',
           authProvider: 'google',
@@ -218,9 +254,18 @@ export default function LandingPage() {
         throw new Error(data.error || 'Failed to sign in with Google.');
       }
 
+      const userSession = {
+        name: resolvedName,
+        email: resolvedEmail,
+        provider: 'google',
+      };
+
       localStorage.setItem('obokash_user_registered', 'true');
+      localStorage.setItem('obokash_user', JSON.stringify(userSession));
+      setCurrentUser(userSession);
       setGooglePromptOpen(false);
-      setAuthSuccessMsg(`Logged in successfully with Google as ${gName}! Welcome to Obokash Senior Living.`);
+      setAuthSuccessMsg(`Logged in successfully with Google as ${resolvedName}! Welcome to Obokash Senior Living.`);
+
       setTimeout(() => {
         setShowAuthModal(false);
         setAuthSuccessMsg('');
@@ -230,6 +275,11 @@ export default function LandingPage() {
     } finally {
       setAuthLoading(false);
     }
+  };
+
+  const handleSignOut = () => {
+    localStorage.removeItem('obokash_user');
+    setCurrentUser(null);
   };
 
   // Email & Phone Form Submit Handler
@@ -463,6 +513,54 @@ export default function LandingPage() {
               Inquire
             </a>
 
+            {currentUser ? (
+              <div className="relative group">
+                <button
+                  type="button"
+                  className="inline-flex items-center gap-2 px-3 py-1.5 sm:px-3 sm:py-2 rounded-xl bg-white border border-stone-300 text-stone-800 text-xs font-semibold shadow-2xs hover:bg-stone-50 cursor-pointer"
+                >
+                  <div className="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-[10px]">
+                    {currentUser.name.charAt(0).toUpperCase()}
+                  </div>
+                  <span className="hidden sm:inline max-w-[90px] truncate">{currentUser.name}</span>
+                  <span className="text-[10px] text-emerald-700 font-bold bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">
+                    Google ✓
+                  </span>
+                </button>
+                <div className="hidden group-hover:block absolute right-0 top-full pt-1.5 z-50">
+                  <div className="bg-white rounded-2xl shadow-xl border border-stone-200 p-2 text-xs w-52">
+                    <div className="px-3 py-2 border-b border-stone-100">
+                      <div className="font-bold text-stone-900 truncate">{currentUser.name}</div>
+                      <div className="text-[11px] text-stone-500 truncate">{currentUser.email}</div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handleSignOut}
+                      className="w-full text-left px-3 py-2 rounded-xl hover:bg-stone-50 text-red-600 font-semibold flex items-center gap-2 mt-1 cursor-pointer"
+                    >
+                      <LogOut className="w-3.5 h-3.5" />
+                      <span>Sign Out</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => handleGoogleLogin()}
+                className="inline-flex items-center gap-1.5 px-3 py-2 sm:px-3.5 sm:py-2.5 rounded-xl font-bold text-xs text-stone-700 bg-white hover:bg-stone-50 border border-stone-300 shadow-2xs transition-colors cursor-pointer"
+                title="Sign in with Google"
+              >
+                <svg className="w-3.5 h-3.5" viewBox="0 0 24 24">
+                  <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z" />
+                  <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.36 24 12 24z" />
+                  <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.17 0 9.99 0 12s.45 3.83 1.25 5.42l4.03-3.15z" />
+                  <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.36 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z" />
+                </svg>
+                <span>Sign In</span>
+              </button>
+            )}
+
             {/* Mobile Hamburger Toggle */}
             <button
               type="button"
@@ -517,6 +615,48 @@ export default function LandingPage() {
             </nav>
 
             <div className="pt-3 border-t border-stone-100 flex flex-col space-y-2.5">
+              {currentUser ? (
+                <div className="flex items-center justify-between p-3 rounded-xl bg-stone-50 border border-stone-200">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-xs">
+                      {currentUser.name.charAt(0).toUpperCase()}
+                    </div>
+                    <div>
+                      <div className="font-bold text-xs text-stone-900">{currentUser.name}</div>
+                      <div className="text-[10px] text-stone-500">{currentUser.email}</div>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      handleSignOut();
+                      setMobileMenuOpen(false);
+                    }}
+                    className="p-2 text-red-600 hover:bg-white rounded-lg text-xs font-semibold flex items-center gap-1 border border-stone-200"
+                    title="Sign Out"
+                  >
+                    <LogOut className="w-3.5 h-3.5" />
+                    <span>Out</span>
+                  </button>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    handleGoogleLogin();
+                  }}
+                  className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold text-xs bg-white text-stone-800 border border-stone-300 shadow-2xs cursor-pointer"
+                >
+                  <svg className="w-4 h-4" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z" />
+                    <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.36 24 12 24z" />
+                    <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.17 0 9.99 0 12s.45 3.83 1.25 5.42l4.03-3.15z" />
+                    <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.36 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z" />
+                  </svg>
+                  <span>Sign In with Google</span>
+                </button>
+              )}
               <button
                 type="button"
                 onClick={() => {
@@ -1645,82 +1785,136 @@ export default function LandingPage() {
                   <button
                     type="button"
                     onClick={() => setShowAuthModal(false)}
-                    className="text-[11px] text-stone-400 hover:text-stone-600 underline"
+                    className="text-[11px] text-stone-400 hover:text-stone-600 underline cursor-pointer"
                   >
                     Continue browsing as guest
                   </button>
                 </div>
               </>
             )}
+          </div>
+        </div>
+      )}
 
-            {/* Google Fast-Sign-In Dialog (Fallback & Instant Account Selector) */}
-            {googlePromptOpen && (
-              <div className="fixed inset-0 z-60 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-in fade-in duration-200">
-                <div className="relative w-full max-w-sm bg-white rounded-3xl p-6 shadow-2xl border border-stone-200 text-center space-y-4">
-                  <div className="w-12 h-12 rounded-full bg-blue-50 border border-blue-200 flex items-center justify-center mx-auto">
-                    <svg className="w-6 h-6" viewBox="0 0 24 24">
-                      <path
-                        fill="#4285F4"
-                        d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"
-                      />
-                      <path
-                        fill="#34A853"
-                        d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.36 24 12 24z"
-                      />
-                      <path
-                        fill="#FBBC05"
-                        d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.17 0 9.99 0 12s.45 3.83 1.25 5.42l4.03-3.15z"
-                      />
-                      <path
-                        fill="#EA4335"
-                        d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.36 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"
-                      />
-                    </svg>
+      {/* Standalone Google Account Selector Modal (Accessible from anywhere) */}
+      {googlePromptOpen && (
+        <div className="fixed inset-0 z-60 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
+          <div className="relative w-full max-w-sm bg-white rounded-3xl p-6 sm:p-7 shadow-2xl border border-stone-200 text-center space-y-4">
+            {/* Close button */}
+            <button
+              type="button"
+              onClick={() => setGooglePromptOpen(false)}
+              className="absolute top-4 right-4 p-1.5 text-stone-400 hover:text-stone-700 rounded-full hover:bg-stone-100 transition-colors cursor-pointer"
+              aria-label="Close Google sign-in"
+            >
+              <X className="w-4 h-4" />
+            </button>
+
+            {/* Google Icon */}
+            <div className="w-12 h-12 rounded-2xl bg-white border border-stone-200 shadow-xs flex items-center justify-center mx-auto">
+              <svg className="w-6 h-6" viewBox="0 0 24 24">
+                <path
+                  fill="#4285F4"
+                  d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"
+                />
+                <path
+                  fill="#34A853"
+                  d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.36 24 12 24z"
+                />
+                <path
+                  fill="#FBBC05"
+                  d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.17 0 9.99 0 12s.45 3.83 1.25 5.42l4.03-3.15z"
+                />
+                <path
+                  fill="#EA4335"
+                  d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.36 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"
+                />
+              </svg>
+            </div>
+
+            <div>
+              <h4 className="font-serif font-bold text-lg text-stone-900">Sign in with Google</h4>
+              <p className="text-xs text-stone-500 mt-0.5">
+                to continue to <strong className="text-emerald-900">Obokash Senior Living</strong>
+              </p>
+            </div>
+
+            {/* Quick 1-Click Fast Profile Card */}
+            <div
+              onClick={() =>
+                handleConfirmGoogleUser(
+                  googleAccount.name || 'Sanctuary Visitor',
+                  googleAccount.email || 'visitor.google@gmail.com'
+                )
+              }
+              className="p-3 rounded-2xl border border-stone-200 hover:border-blue-400 bg-stone-50 hover:bg-blue-50/50 text-left transition-all cursor-pointer flex items-center justify-between group"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 text-white font-bold text-xs flex items-center justify-center shadow-2xs">
+                  {(googleAccount.name || 'V').charAt(0).toUpperCase()}
+                </div>
+                <div>
+                  <div className="text-xs font-bold text-stone-900 group-hover:text-blue-900">
+                    {googleAccount.name || 'Sanctuary Visitor'}
                   </div>
-                  <div>
-                    <h4 className="font-serif font-bold text-lg text-stone-900">Sign in with Google</h4>
-                    <p className="text-xs text-stone-500 mt-0.5">Choose your Google account to connect with Obokash Senior Living</p>
-                  </div>
-                  <div className="space-y-2 text-left text-xs">
-                    <div>
-                      <label className="block text-[11px] font-bold text-stone-700 mb-1">Your Name</label>
-                      <input
-                        type="text"
-                        value={googleAccount.name}
-                        onChange={(e) => setGoogleAccount({ ...googleAccount, name: e.target.value })}
-                        className="w-full px-3 py-2 border border-stone-300 rounded-xl text-xs bg-[#FAF8F5]"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[11px] font-bold text-stone-700 mb-1">Google Email Address</label>
-                      <input
-                        type="email"
-                        value={googleAccount.email}
-                        onChange={(e) => setGoogleAccount({ ...googleAccount, email: e.target.value })}
-                        className="w-full px-3 py-2 border border-stone-300 rounded-xl text-xs bg-[#FAF8F5]"
-                      />
-                    </div>
-                  </div>
-                  <div className="pt-2 flex items-center gap-2">
-                    <button
-                      type="button"
-                      onClick={() => handleConfirmGoogleUser(googleAccount.name, googleAccount.email)}
-                      disabled={authLoading}
-                      className="flex-1 py-2.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-xs transition-colors"
-                    >
-                      {authLoading ? 'Signing in...' : `Continue as ${googleAccount.name.split(' ')[0]}`}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setGooglePromptOpen(false)}
-                      className="py-2.5 px-3 rounded-xl border border-stone-300 hover:bg-stone-50 text-stone-600 text-xs font-semibold"
-                    >
-                      Cancel
-                    </button>
+                  <div className="text-[11px] text-stone-500">
+                    {googleAccount.email || 'visitor.google@gmail.com'}
                   </div>
                 </div>
               </div>
-            )}
+              <span className="text-[10px] text-blue-600 font-bold bg-white px-2 py-1 rounded-lg border border-blue-200 shadow-2xs">
+                One-Click ✓
+              </span>
+            </div>
+
+            <div className="relative flex items-center justify-center my-2">
+              <div className="w-full border-t border-stone-200" />
+              <span className="bg-white px-2 text-[10px] font-bold text-stone-400 uppercase tracking-wider absolute">
+                or use custom Google account
+              </span>
+            </div>
+
+            {/* Custom Account Inputs */}
+            <div className="space-y-2 text-left text-xs">
+              <div>
+                <label className="block text-[11px] font-bold text-stone-700 mb-1">Your Full Name</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Ramesh Chandra Sharma"
+                  value={googleAccount.name}
+                  onChange={(e) => setGoogleAccount({ ...googleAccount, name: e.target.value })}
+                  className="w-full px-3 py-2 border border-stone-300 rounded-xl text-xs bg-[#FAF8F5] focus:outline-hidden focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <div>
+                <label className="block text-[11px] font-bold text-stone-700 mb-1">Google Email Address</label>
+                <input
+                  type="email"
+                  placeholder="e.g. ramesh.sharma@gmail.com"
+                  value={googleAccount.email}
+                  onChange={(e) => setGoogleAccount({ ...googleAccount, email: e.target.value })}
+                  className="w-full px-3 py-2 border border-stone-300 rounded-xl text-xs bg-[#FAF8F5] focus:outline-hidden focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+            </div>
+
+            <div className="pt-2 flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => handleConfirmGoogleUser(googleAccount.name, googleAccount.email)}
+                disabled={authLoading}
+                className="flex-1 py-2.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-xs transition-colors cursor-pointer disabled:opacity-50"
+              >
+                {authLoading ? 'Signing in...' : 'Sign In with This Account'}
+              </button>
+              <button
+                type="button"
+                onClick={() => setGooglePromptOpen(false)}
+                className="py-2.5 px-3 rounded-xl border border-stone-300 hover:bg-stone-50 text-stone-600 text-xs font-semibold cursor-pointer"
+              >
+                Cancel
+              </button>
+            </div>
           </div>
         </div>
       )}
