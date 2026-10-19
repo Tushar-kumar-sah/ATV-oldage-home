@@ -526,7 +526,7 @@ export default function LandingPage() {
                 className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold text-xs bg-emerald-950 text-amber-300 border border-emerald-800 cursor-pointer"
               >
                 <Sparkles className="w-4 h-4 text-amber-400" />
-                <span>Replay Introduction & Inquire</span>
+                <span>📷 Replay Scan Beacon (Early Checkers VIP Pass)</span>
               </button>
               <a
                 href="tel:+917044163518"
@@ -1771,8 +1771,8 @@ export default function LandingPage() {
         className="fixed bottom-5 right-5 z-30 hidden sm:inline-flex items-center gap-2.5 px-4 py-3 rounded-2xl bg-gradient-to-r from-[#052E16] via-[#064E3B] to-[#047857] text-white font-bold text-xs shadow-2xl border border-emerald-400/50 hover:scale-105 active:scale-95 transition-all backdrop-blur-md group cursor-pointer"
       >
         <span className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-ping" />
-        <span className="text-amber-300">Scanned QR?</span>
-        <span>Register Your Details</span>
+        <span className="text-amber-300">📷 Scanned QR?</span>
+        <span>Claim Early Checker Pass</span>
         <ArrowRight className="w-3.5 h-3.5 text-amber-400 group-hover:translate-x-1 transition" />
       </button>
     </div>

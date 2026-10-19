@@ -2,23 +2,34 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
   ChevronRight,
   ChevronLeft,
+  X,
   Sparkles,
   Heart,
+  Info,
+  Bell,
+  ArrowRight,
   Check,
   Loader2,
+  Star,
+  Users,
+  Shield,
   Clock,
   QrCode,
+  Flame,
+  Award,
+  Zap,
+  Ticket,
+  Calendar,
   Phone,
   Mail,
   User,
   HeartHandshake,
   CheckCircle2,
-  Building,
-  HelpCircle,
 } from 'lucide-react';
 
 const QUESTIONS = [
@@ -66,6 +77,16 @@ const SLIDES = [
   },
 ];
 
+// Pre-seeded early checkers roster to showcase social proof
+const INITIAL_CHECKERS = [
+  { id: 'AD-EC-001', name: 'Dr. Ramesh Chandra Verma', city: 'South Delhi', time: '12 mins ago', spot: '#01 VIP' },
+  { id: 'AD-EC-002', name: 'Sunita & Ashok Kapoor', city: 'Gurugram', time: '34 mins ago', spot: '#02 VIP' },
+  { id: 'AD-EC-003', name: 'Col. Virendra Saxena (Retd.)', city: 'Noida', time: '1 hour ago', spot: '#03 VIP' },
+  { id: 'AD-EC-004', name: 'Meenakshi Sundaram', city: 'Bengaluru', time: '2 hours ago', spot: '#04 VIP' },
+  { id: 'AD-EC-005', name: 'Rajesh & Priti Patel', city: 'Ahmedabad', time: '3 hours ago', spot: '#05 VIP' },
+  { id: 'AD-EC-006', name: 'Ananya Deshmukh', city: 'Pune', time: '4 hours ago', spot: '#06 VIP' },
+];
+
 interface ScanExperienceProps {
   onEnterMainWebsite?: () => void;
 }
@@ -81,15 +102,17 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
     }
   };
 
-  // Simplified 3-step sequence:
-  // 'scan' -> 'step1_questions' -> 'step1_loading' -> 'step2_slides' -> 'form' -> 'success'
+  // Navigation state:
+  // 'scan' -> 'step1_questions' -> 'step1_loading' -> 'step2_slides' -> 'step3_ad' -> 'step4_list' -> 'step5_form' -> 'step5_success'
   const [phase, setPhase] = useState<
     | 'scan'
     | 'step1_questions'
     | 'step1_loading'
     | 'step2_slides'
-    | 'form'
-    | 'success'
+    | 'step3_ad'
+    | 'step4_list'
+    | 'step5_form'
+    | 'step5_success'
   >('scan');
 
   // Scanner state
@@ -109,18 +132,24 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
   const [slideFade, setSlideFade] = useState(true);
   const [autoPlay, setAutoPlay] = useState(true);
 
-  // Details Form state (Core data collection to store in DB & Admin Panel)
+  // Step 3: Irritating Ad state
+  const [adVisible, setAdVisible] = useState(false);
+  const [timerSeconds, setTimerSeconds] = useState(179); // 2m 59s
+
+  // Step 4: Early Checkers List state
+  const [spotsLeft] = useState(47);
+
+  // Step 5: Sign Up Form state
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
     reason: 'parents',
-    roomPreference: 'deluxe_suite',
     notes: '',
   });
   const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState('');
-  const [submittedLead, setSubmittedLead] = useState<{ id: string; name: string; phone: string } | null>(null);
+  const [issuedPass, setIssuedPass] = useState<{ passId: string; name: string } | null>(null);
 
   // -------------------------------------------------------------
   // SCAN PHASE: Auto-run scanner animation
@@ -134,12 +163,12 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
           setScanComplete(true);
           setTimeout(() => {
             setPhase('step1_questions');
-          }, 900);
+          }, 1000);
           return 100;
         }
         return prev + 12;
       });
-    }, 110);
+    }, 120);
     return () => clearInterval(interval);
   }, [phase]);
 
@@ -207,8 +236,9 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
           setSlideFade(true);
         }, 400);
       } else {
-        // After final slide, proceed directly to Details Form!
-        setPhase('form');
+        // After final slide, proceed to step 3 irritating ad!
+        setPhase('step3_ad');
+        setTimeout(() => setAdVisible(true), 200);
       }
     }, 4500);
 
@@ -216,79 +246,65 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
   }, [phase, currentSlide, autoPlay]);
 
   // -------------------------------------------------------------
-  // FORM SUBMISSION HANDLER -> Database & Admin Panel
+  // STEP 3: Irritating Ad Timer
+  // -------------------------------------------------------------
+  useEffect(() => {
+    if (phase !== 'step3_ad') return;
+    const interval = setInterval(() => {
+      setTimerSeconds((prev) => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [phase]);
+
+  // -------------------------------------------------------------
+  // FORM SUBMISSION HANDLER (Step 5)
   // -------------------------------------------------------------
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormError('');
 
-    if (!formData.name.trim() || !formData.phone.trim()) {
-      setFormError('Please provide your full name and phone number.');
+    if (!formData.name.trim() || !formData.email.trim()) {
+      setFormError('Please provide your name and email to secure your early checker pass.');
       return;
     }
 
     setSubmitting(true);
-    const leadRefId = `OBK-INQ-${Math.floor(10000 + Math.random() * 90000)}`;
+    const passNumber = `AD-EC-${Math.floor(1000 + Math.random() * 9000)}`;
 
     try {
-      // 1. Save visitor lead to registered users registry (Admin Panel -> /admin/registered-users)
-      const userRes = await fetch('/api/registered-users', {
+      // 1. Save user to central registered users registry (Admin Panel)
+      await fetch('/api/registered-users', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: formData.name.trim(),
-          email: formData.email.trim() || `${formData.phone.trim().replace(/\D/g, '')}@lead.obokash.com`,
-          phone: formData.phone.trim(),
+          email: formData.email.trim(),
+          phone: formData.phone.trim() || '',
           password: '',
-          authProvider: 'scan-lead',
+          authProvider: 'early-checker',
           action: 'register',
         }),
       });
 
-      if (!userRes.ok) {
-        const userErr = await userRes.json();
-        console.warn('User registration note:', userErr.error);
+      // 2. Also record an inquiry entry with their requirements
+      if (formData.notes || formData.phone) {
+        await fetch('/api/inquiries', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: formData.name.trim(),
+            email: formData.email.trim(),
+            phone: formData.phone.trim() || '',
+            subject: `Early Checker Pass Claimed (${formData.reason})`,
+            message: formData.notes
+              ? `[Reason: ${formData.reason}] Notes: ${formData.notes}`
+              : `Claimed Early Checker Pass ${passNumber} for ${formData.reason}.`,
+          }),
+        }).catch(() => {});
       }
 
-      // 2. Also record an inquiry entry with full requirements (Admin Panel -> /admin/inquiries & dashboard)
-      const careLabelMap: Record<string, string> = {
-        parents: 'Care for Elderly Parents / Relatives',
-        myself: 'Assisted Living for Self / Partner',
-        tour: 'Personal Sanctuary Visit & Tour',
-        general: 'General Consultation & Admission Details',
-      };
-
-      const roomLabelMap: Record<string, string> = {
-        deluxe_suite: 'Private Deluxe Suite',
-        twin_sharing: 'Twin Sharing Room',
-        cottage: 'Executive Garden Cottage',
-        day_care: 'Day Care / Respite Stay',
-      };
-
-      const careNeeded = careLabelMap[formData.reason] || formData.reason;
-      const roomPreference = roomLabelMap[formData.roomPreference] || formData.roomPreference;
-
-      await fetch('/api/inquiries', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: formData.name.trim(),
-          email: formData.email.trim() || 'inquiry@lead.obokash.com',
-          phone: formData.phone.trim(),
-          subject: `Visitor Registration: ${careNeeded}`,
-          careNeeded: careNeeded,
-          message: `Looking for: ${careNeeded}\nPreferred Accommodation: ${roomPreference}${
-            formData.notes ? `\nAdditional Notes: ${formData.notes.trim()}` : ''
-          }`,
-        }),
-      }).catch(() => {});
-
-      setSubmittedLead({
-        id: leadRefId,
-        name: formData.name.trim(),
-        phone: formData.phone.trim(),
-      });
-      setPhase('success');
+      setIssuedPass({ passId: passNumber, name: formData.name.trim() });
+      setPhase('step5_success');
     } catch {
       setFormError('Submission failed. Please check your network and try again.');
     } finally {
@@ -296,11 +312,19 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
     }
   };
 
+  const formatTimer = (totalSeconds: number) => {
+    const mins = Math.floor(totalSeconds / 60);
+    const secs = totalSeconds % 60;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#03150D] via-[#052316] to-[#010B07] text-white flex flex-col justify-between selection:bg-amber-400 selection:text-stone-950 relative overflow-hidden font-sans">
-      {/* Subtle ambient light glows */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-emerald-600/10 rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-amber-500/5 rounded-full blur-[160px] pointer-events-none" />
+    <div className="min-h-screen bg-[#0A1811] text-white flex flex-col justify-between selection:bg-amber-500 selection:text-black font-sans relative overflow-x-hidden">
+      {/* Ambient background glow elements */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+        <div className="absolute -top-32 -left-32 w-96 h-96 bg-emerald-600/15 rounded-full blur-[100px]" />
+        <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-amber-600/15 rounded-full blur-[100px]" />
+      </div>
 
       {/* Top micro-navigation */}
       <header className="relative z-20 w-full max-w-6xl mx-auto px-4 py-4 flex items-center justify-between border-b border-emerald-900/30">
@@ -337,10 +361,12 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
           <span className="font-medium text-[11px] sm:text-xs">
             {phase === 'scan' && 'Scanning Code...'}
             {phase === 'step1_questions' && 'Step 1: Perspectives'}
-            {phase === 'step1_loading' && 'Loading Sanctuary...'}
+            {phase === 'step1_loading' && 'Step 1: Loading Sanctuary'}
             {phase === 'step2_slides' && 'Step 2: Sanctuary Experience'}
-            {phase === 'form' && 'Step 3: Register Your Details'}
-            {phase === 'success' && 'Details Recorded ✓'}
+            {phase === 'step3_ad' && 'Step 3: Exclusive Pass'}
+            {phase === 'step4_list' && 'Step 4: Early Checkers List'}
+            {phase === 'step5_form' && 'Step 5: Reserve Pass'}
+            {phase === 'step5_success' && 'VIP Pass Confirmed ✓'}
           </span>
         </div>
       </header>
@@ -356,22 +382,21 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
             <div className="relative w-48 h-48 mx-auto mb-8 bg-black/60 rounded-2xl border-2 border-emerald-500/40 p-4 flex items-center justify-center overflow-hidden shadow-inner">
               <QrCode className="w-36 h-36 text-emerald-400/70" />
 
-              {/* Moving laser beam */}
+              {/* Laser line moving vertically */}
               <div
-                className="absolute inset-x-0 h-1 bg-gradient-to-r from-transparent via-amber-400 to-transparent shadow-[0_0_15px_#F59E0B] transition-all duration-100 ease-linear pointer-events-none"
+                className="absolute left-0 right-0 h-1 bg-gradient-to-r from-transparent via-amber-400 to-transparent shadow-[0_0_15px_#F59E0B] transition-all duration-100 ease-linear"
                 style={{ top: `${scanProgress}%` }}
               />
 
-              {/* Corner brackets */}
+              {/* Viewfinder corner brackets */}
               <div className="absolute top-2 left-2 w-4 h-4 border-t-2 border-l-2 border-amber-400" />
               <div className="absolute top-2 right-2 w-4 h-4 border-t-2 border-r-2 border-amber-400" />
               <div className="absolute bottom-2 left-2 w-4 h-4 border-b-2 border-l-2 border-amber-400" />
               <div className="absolute bottom-2 right-2 w-4 h-4 border-b-2 border-r-2 border-amber-400" />
             </div>
 
-            {/* Scan text & progress */}
             <div className="space-y-3">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-900/60 border border-emerald-700/50 text-emerald-300 text-xs font-mono">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-semibold">
                 {scanComplete ? (
                   <>
                     <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
@@ -395,7 +420,7 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
                 moment.
               </p>
 
-              {/* Quick proceed button */}
+              {/* Skip scan button */}
               <div className="pt-4">
                 <button
                   onClick={() => setPhase('step1_questions')}
@@ -417,6 +442,11 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-bold uppercase tracking-widest mb-8 shadow-sm">
               <Sparkles className="w-3.5 h-3.5 text-amber-400" />
               <span>Some Questions Changes Perspectives</span>
+            </div>
+
+            {/* Big quote mark */}
+            <div className="text-emerald-500/20 font-serif text-8xl leading-none select-none mb-2">
+              &ldquo;
             </div>
 
             {/* Rotating philosophical question */}
@@ -453,37 +483,33 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
               className={`transition-all duration-700 transform ${
                 knowMoreVisible
                   ? 'opacity-100 translate-y-0 scale-100'
-                  : 'opacity-0 translate-y-8 scale-90 pointer-events-none'
+                  : 'opacity-0 translate-y-8 scale-75 pointer-events-none'
               }`}
             >
               <button
-                id="know-more-btn"
+                id="know-more-trigger-btn"
                 onClick={() => setPhase('step1_loading')}
-                className="group relative inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-400 text-stone-950 font-bold text-base shadow-[0_0_35px_rgba(245,158,11,0.4)] hover:shadow-[0_0_50px_rgba(245,158,11,0.7)] hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer border border-yellow-200"
+                className="group relative inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold text-base sm:text-lg shadow-xl shadow-emerald-950/60 hover:shadow-emerald-600/30 hover:scale-105 active:scale-95 transition cursor-pointer border border-emerald-400/30"
               >
-                <span className="relative flex h-3 w-3">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-stone-950 opacity-75" />
-                  <span className="relative inline-flex rounded-full h-3 w-3 bg-stone-950" />
-                </span>
+                {/* Ping glow ring around button */}
+                <span className="absolute -inset-1 rounded-2xl bg-amber-400/20 blur-sm group-hover:bg-amber-400/40 transition" />
 
-                <span className="tracking-wide uppercase font-black text-sm">
-                  Know More
-                </span>
-
-                <div className="w-7 h-7 rounded-full bg-stone-950/15 flex items-center justify-center group-hover:translate-x-1 transition-transform">
-                  <ChevronRight className="w-4 h-4 text-stone-950" />
+                <div className="relative w-7 h-7 rounded-lg bg-amber-400/20 text-amber-300 flex items-center justify-center border border-amber-400/40">
+                  <Info className="w-4 h-4" />
                 </div>
+                <span className="relative">Know More</span>
+                <ChevronRight className="relative w-5 h-5 text-amber-300 group-hover:translate-x-1 transition" />
               </button>
 
-              <p className="text-xs text-stone-400 mt-3 font-medium">
-                Click to explore Obokash Senior Living
+              <p className="text-xs text-stone-500 mt-3 font-medium">
+                Tap above to uncover the sanctuary story
               </p>
             </div>
           </div>
         )}
 
         {/* ========================================================================= */}
-        {/* STEP 1 (SUB-PART): THE LOGO COMES UP + LOADING 0 -> 100%                   */}
+        {/* STEP 1 (SUB-PART): PEOPLE CLICK ON IT -> THE LOGO COMES UP + LOADING...    */}
         {/* ========================================================================= */}
         {phase === 'step1_loading' && (
           <div className="w-full max-w-md text-center py-16 px-6 bg-emerald-950/30 border border-emerald-500/20 rounded-3xl backdrop-blur-xl shadow-2xl relative">
@@ -528,7 +554,7 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
         )}
 
         {/* ========================================================================= */}
-        {/* STEP 2: PHOTO SLIDESHOW + TEXTUAL INFORMATION                             */}
+        {/* STEP 2: SMALL PHOTO SLIDESHOW + TEXTUAL INFORMATION                       */}
         {/* ========================================================================= */}
         {phase === 'step2_slides' && (
           <div className="w-full max-w-4xl bg-emerald-950/40 border border-emerald-700/30 rounded-3xl overflow-hidden shadow-2xl backdrop-blur-md">
@@ -552,41 +578,62 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
                       priority={idx === 0}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-
-                    <div className="absolute bottom-4 left-4 right-4 z-20">
-                      <span className="inline-block px-3 py-1 rounded-full text-[11px] font-bold bg-amber-400 text-stone-950 uppercase tracking-wider mb-1.5 shadow-md">
-                        {s.badge}
-                      </span>
-                      <p className="text-white text-xs sm:text-sm font-medium drop-shadow">
-                        Perspective {idx + 1} of {SLIDES.length}
-                      </p>
-                    </div>
                   </div>
                 ))}
+
+                {/* Tag pill atop image */}
+                <div className="absolute top-4 left-4 z-20">
+                  <span className="px-3 py-1 rounded-full text-xs font-bold bg-amber-500 text-stone-950 shadow-md">
+                    {SLIDES[currentSlide].tag}
+                  </span>
+                </div>
+
+                {/* Badge at bottom of image */}
+                <div className="absolute bottom-4 left-4 right-4 z-20 flex items-center justify-between">
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-black/70 backdrop-blur-md text-[11px] font-semibold text-emerald-300 border border-emerald-500/30">
+                    <Shield className="w-3.5 h-3.5 text-amber-400" />
+                    <span>{SLIDES[currentSlide].badge}</span>
+                  </div>
+
+                  <span className="text-xs font-mono font-bold bg-black/70 px-2.5 py-1 rounded-md text-amber-300">
+                    0{currentSlide + 1} / 0{SLIDES.length}
+                  </span>
+                </div>
               </div>
 
               {/* Textual Information Column (5 cols on desktop) */}
-              <div className="md:col-span-5 p-6 sm:p-8 flex flex-col justify-between bg-gradient-to-b from-[#062419] to-[#041a12]">
-                <div className="space-y-4">
-                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider bg-emerald-500/10 border border-emerald-500/30 text-emerald-300">
-                    <Heart className="w-3 h-3 text-emerald-400" />
-                    <span>{SLIDES[currentSlide].tag}</span>
+              <div className="md:col-span-5 p-6 sm:p-8 flex flex-col justify-between bg-gradient-to-br from-[#0D241A] to-[#0A1A12] border-t md:border-t-0 md:border-l border-emerald-800/30">
+                <div>
+                  <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-amber-400 mb-2">
+                    <Sparkles className="w-3.5 h-3.5" />
+                    <span>Sanctuary Tour</span>
                   </div>
 
-                  <h3 className="text-xl sm:text-2xl font-serif font-bold text-white leading-snug">
+                  <h3 className="font-serif text-xl sm:text-2xl font-bold text-white leading-snug mb-3">
                     {SLIDES[currentSlide].headline}
                   </h3>
 
                   <p className="text-xs sm:text-sm text-stone-300 leading-relaxed">
                     {SLIDES[currentSlide].body}
                   </p>
+
+                  {/* Highlights list */}
+                  <div className="mt-5 space-y-2 pt-4 border-t border-emerald-900/50">
+                    <div className="flex items-center gap-2 text-xs text-stone-300">
+                      <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                      <span>Dedicated geriatric personal companion</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-xs text-stone-300">
+                      <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                      <span>Regular family video calls & medical logs</span>
+                    </div>
+                  </div>
                 </div>
 
-                {/* Controls and Direct Details Button */}
-                <div className="pt-6 border-t border-emerald-900/50 space-y-4">
-                  <div className="flex items-center justify-between">
-                    {/* Navigation Dots */}
-                    <div className="flex items-center gap-1.5">
+                {/* Slideshow controls */}
+                <div className="pt-6 mt-4 border-t border-emerald-900/40">
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="flex gap-1.5">
                       {SLIDES.map((_, i) => (
                         <button
                           key={i}
@@ -594,10 +641,10 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
                             setAutoPlay(false);
                             setCurrentSlide(i);
                           }}
-                          className={`h-1.5 rounded-full transition-all duration-300 ${
+                          className={`h-1.5 rounded-full transition-all ${
                             i === currentSlide
                               ? 'w-6 bg-amber-400'
-                              : 'w-2 bg-stone-700 hover:bg-stone-500'
+                              : 'w-2 bg-stone-700'
                           }`}
                           aria-label={`Slide ${i + 1}`}
                         />
@@ -612,7 +659,7 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
                             prev > 0 ? prev - 1 : SLIDES.length - 1
                           );
                         }}
-                        className="p-2 rounded-xl bg-emerald-900/40 hover:bg-emerald-800/60 text-stone-300 hover:text-white transition cursor-pointer"
+                        className="p-2 rounded-xl bg-emerald-900/40 hover:bg-emerald-800/60 text-stone-300 hover:text-white transition"
                         aria-label="Previous Slide"
                       >
                         <ChevronLeft className="w-4 h-4" />
@@ -624,29 +671,23 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
                             setAutoPlay(false);
                             setCurrentSlide((prev) => prev + 1);
                           }}
-                          className="px-4 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer"
+                          className="px-4 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-semibold flex items-center gap-1.5 transition"
                         >
                           Next <ChevronRight className="w-4 h-4" />
                         </button>
                       ) : (
                         <button
-                          onClick={() => setPhase('form')}
-                          className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 text-xs font-bold flex items-center gap-1.5 transition shadow-md shadow-amber-500/20 cursor-pointer"
+                          onClick={() => {
+                            setPhase('step3_ad');
+                            setTimeout(() => setAdVisible(true), 150);
+                          }}
+                          className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 text-xs font-bold flex items-center gap-1.5 transition shadow-md shadow-amber-500/20"
                         >
-                          Register Details <ChevronRight className="w-4 h-4" />
+                          Continue <ChevronRight className="w-4 h-4" />
                         </button>
                       )}
                     </div>
                   </div>
-
-                  {/* Immediate proceed button available on any slide */}
-                  <button
-                    onClick={() => setPhase('form')}
-                    className="w-full py-2.5 px-4 rounded-xl bg-emerald-900/80 hover:bg-emerald-800 text-amber-300 border border-emerald-700/60 font-semibold text-xs transition flex items-center justify-center gap-2 cursor-pointer"
-                  >
-                    <span>Ready? Share Your Details Now</span>
-                    <ChevronRight className="w-3.5 h-3.5" />
-                  </button>
                 </div>
               </div>
             </div>
@@ -654,30 +695,254 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
         )}
 
         {/* ========================================================================= */}
-        {/* STEP 3: DETAILS FORM -> SAVES TO DATABASE & ADMIN PANEL                   */}
+        {/* STEP 3: FREE SUBSCRIPTION POP UP COMES, LIKE AN IRRITATING AD             */}
         {/* ========================================================================= */}
-        {phase === 'form' && (
+        {phase === 'step3_ad' && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-300">
+            {/* The "Irritating Ad" container with flashing borders & urgency styling */}
+            <div
+              className={`relative w-full max-w-md bg-gradient-to-b from-[#1c1306] via-[#241708] to-[#120a02] border-4 border-amber-400 rounded-3xl p-6 sm:p-7 shadow-[0_0_50px_rgba(245,158,11,0.5)] text-center transition-all duration-500 transform ${
+                adVisible ? 'scale-100 opacity-100' : 'scale-75 opacity-0'
+              }`}
+            >
+              {/* Minimal Offer Badge in corner */}
+              <div className="absolute -top-3.5 -left-2 rotate-[-6deg] bg-amber-500 text-stone-950 font-black text-[11px] uppercase px-3 py-1 rounded-full shadow-lg border border-amber-300 animate-pulse">
+                🎁 MINIMAL OFFER
+              </div>
+
+              <div className="absolute -top-3.5 -right-2 rotate-[6deg] bg-emerald-600 text-white font-bold text-[11px] uppercase px-3 py-1 rounded-full shadow-lg border border-emerald-400">
+                ✓ 100% FREE
+              </div>
+
+              {/* Fake close button ("Irritating" tiny button) */}
+              <button
+                onClick={() => setPhase('step4_list')}
+                className="absolute top-3 right-3 text-stone-400 hover:text-white p-1 rounded-full bg-black/40 hover:bg-black/80 text-[10px] flex items-center gap-1 border border-stone-700 cursor-pointer"
+                title="Skip to list"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+
+              {/* Top Announcement */}
+              <div className="mt-2 mb-3">
+                <span className="inline-block px-3 py-1 rounded-full bg-amber-500/15 border border-amber-500/40 text-amber-300 text-[11px] font-bold tracking-wider uppercase">
+                  ⚡ TODAY&apos;S VISITOR PRIVILEGE ⚡
+                </span>
+              </div>
+
+              {/* Attention Grabbing Icon */}
+              <div className="relative w-16 h-16 mx-auto my-2 flex items-center justify-center">
+                <div className="absolute inset-0 bg-amber-500/15 rounded-full animate-ping" />
+                <div className="relative w-14 h-14 rounded-2xl bg-gradient-to-tr from-amber-500 to-yellow-300 text-stone-950 flex items-center justify-center shadow-lg shadow-amber-500/30">
+                  <Ticket className="w-7 h-7" />
+                </div>
+              </div>
+
+              {/* Minimal Offer Headline */}
+              <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight leading-snug">
+                Free 1-Day Sanctuary Pass
+              </h3>
+
+              <p className="text-xs text-stone-300 mt-1.5 font-normal leading-relaxed">
+                A simple, minimal welcome gift for scanning our beacon today. Experience Obokash Senior Living&apos;s peace and satvik living with <strong className="text-amber-300">zero payment</strong>.
+              </p>
+
+              {/* Countdown Timer */}
+              <div className="my-3.5 py-2 px-3 rounded-xl bg-black/50 border border-amber-500/30 flex items-center justify-center gap-2.5">
+                <Clock className="w-3.5 h-3.5 text-amber-400" />
+                <span className="text-[11px] uppercase tracking-wider text-stone-400 font-semibold">
+                  Complimentary Claim Window:
+                </span>
+                <span className="font-mono text-base font-bold text-amber-300 bg-amber-950/60 px-2 py-0.5 rounded border border-amber-500/30">
+                  {formatTimer(timerSeconds)}
+                </span>
+              </div>
+
+              {/* Minimal Features bullets */}
+              <div className="text-left bg-black/30 rounded-xl p-3 space-y-1.5 border border-emerald-500/20 text-xs mb-4">
+                <div className="flex items-center gap-2 text-stone-200">
+                  <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                  <span>Free 1-Day Guided Sanctuary Tour for 2</span>
+                </div>
+                <div className="flex items-center gap-2 text-stone-200">
+                  <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                  <span>Complimentary Satvik Lunch & Herbal Tea</span>
+                </div>
+                <div className="flex items-center gap-2 text-stone-200">
+                  <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                  <span>Free Senior Physician Health Consultation</span>
+                </div>
+                <div className="flex items-center gap-2 text-stone-200">
+                  <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                  <span>₹0 Registration Fee Waiver (Save ₹1,500)</span>
+                </div>
+              </div>
+
+              {/* CLICKING THE AD GETS YOU TO THE EARLY CHECKERS LIST */}
+              <button
+                id="claim-free-subscription-ad-btn"
+                onClick={() => setPhase('step4_list')}
+                className="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-500 text-stone-950 font-bold text-sm tracking-wide uppercase shadow-lg shadow-amber-500/30 hover:scale-[1.02] active:scale-98 transition flex items-center justify-center gap-2 cursor-pointer border border-yellow-200"
+              >
+                <Sparkles className="w-4 h-4 fill-stone-950" />
+                <span>Claim Minimal Offer & View List</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+
+              <button
+                onClick={() => setPhase('step4_list')}
+                className="mt-2.5 text-[11px] text-stone-400 hover:text-stone-300 underline underline-offset-2 cursor-pointer block mx-auto"
+              >
+                or proceed to Early Checkers List directly →
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* ========================================================================= */}
+        {/* STEP 4: YOU CLICK ON IT YOU GET TO THE EARLY CHECKERS LIST                */}
+        {/* ========================================================================= */}
+        {phase === 'step4_list' && (
+          <div className="w-full max-w-3xl bg-[#0D241A] border border-emerald-600/30 rounded-3xl p-6 sm:p-8 shadow-2xl backdrop-blur-xl">
+            {/* Header banner */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-emerald-800/40">
+              <div>
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-bold uppercase tracking-wider mb-2">
+                  <Award className="w-3.5 h-3.5 text-amber-400" />
+                  <span>Founding VIP Cohort</span>
+                </div>
+                <h2 className="text-2xl sm:text-3xl font-serif font-bold text-white tracking-tight">
+                  Early Checkers List
+                </h2>
+                <p className="text-xs sm:text-sm text-stone-300 mt-1">
+                  Verified roster of families and individuals who scanned early and reserved VIP priority.
+                </p>
+              </div>
+
+              {/* Spots Counter Badge */}
+              <div className="bg-amber-400/10 border border-amber-400/30 rounded-2xl p-3.5 text-center shrink-0">
+                <span className="text-[10px] uppercase tracking-wider text-amber-300 font-bold block">
+                  Limited Spots Left
+                </span>
+                <span className="font-mono text-3xl font-black text-amber-400">
+                  {spotsLeft} / 100
+                </span>
+                <span className="text-[10px] text-stone-400 block mt-0.5">
+                  53 already claimed
+                </span>
+              </div>
+            </div>
+
+            {/* VIP Privileges for Early Checkers */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 my-6">
+              <div className="bg-emerald-950/40 border border-emerald-800/30 rounded-xl p-3.5 text-center">
+                <Ticket className="w-5 h-5 text-amber-400 mx-auto mb-1.5" />
+                <h4 className="text-xs font-bold text-white">Free Day Pass</h4>
+                <p className="text-[11px] text-stone-400 mt-0.5">
+                  Full access & lunch for 2 guests
+                </p>
+              </div>
+              <div className="bg-emerald-950/40 border border-emerald-800/30 rounded-xl p-3.5 text-center">
+                <Shield className="w-5 h-5 text-emerald-400 mx-auto mb-1.5" />
+                <h4 className="text-xs font-bold text-white">₹0 Reg. Fee</h4>
+                <p className="text-[11px] text-stone-400 mt-0.5">
+                  100% waiver on registration
+                </p>
+              </div>
+              <div className="bg-emerald-950/40 border border-emerald-800/30 rounded-xl p-3.5 text-center">
+                <Star className="w-5 h-5 text-amber-400 mx-auto mb-1.5" />
+                <h4 className="text-xs font-bold text-white">Suite Selection</h4>
+                <p className="text-[11px] text-stone-400 mt-0.5">
+                  First pick of garden suites
+                </p>
+              </div>
+            </div>
+
+            {/* The Live Early Checkers Feed / Table */}
+            <div className="bg-black/30 border border-emerald-900/40 rounded-2xl p-4 mb-6">
+              <div className="flex items-center justify-between text-xs text-stone-400 font-semibold mb-3 px-1">
+                <span>Recent Early Checkers</span>
+                <span className="text-emerald-400 flex items-center gap-1">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  Live Sync
+                </span>
+              </div>
+
+              <div className="divide-y divide-emerald-900/30 max-h-56 overflow-y-auto pr-1">
+                {INITIAL_CHECKERS.map((checker) => (
+                  <div
+                    key={checker.id}
+                    className="py-2.5 px-2 flex items-center justify-between hover:bg-emerald-900/20 rounded-lg transition"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-7 h-7 rounded-full bg-emerald-800/60 text-emerald-200 text-xs font-bold flex items-center justify-center">
+                        {checker.name.charAt(0)}
+                      </div>
+                      <div>
+                        <div className="text-xs font-semibold text-white">
+                          {checker.name}
+                        </div>
+                        <div className="text-[10px] text-stone-400">
+                          {checker.city} • {checker.time}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] font-mono font-bold bg-amber-400/10 text-amber-400 px-2 py-0.5 rounded border border-amber-400/20">
+                        {checker.spot}
+                      </span>
+                      <Check className="w-3.5 h-3.5 text-emerald-400" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* BUTTON PROCEEDING TO SIGN UP PAGE */}
+            <div className="text-center pt-2">
+              <button
+                id="join-early-checkers-list-btn"
+                onClick={() => setPhase('step5_form')}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-2xl bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-500 text-stone-950 font-black text-base tracking-wide uppercase shadow-xl shadow-amber-500/30 hover:scale-105 active:scale-95 transition cursor-pointer"
+              >
+                <Sparkles className="w-5 h-5 fill-stone-950" />
+                <span>Claim Minimal Offer — Go to Sign Up</span>
+                <ChevronRight className="w-5 h-5" />
+              </button>
+              <p className="text-xs text-stone-400 mt-2">
+                Takes 30 seconds • No credit card or payment required
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* ========================================================================= */}
+        {/* STEP 5: SIGN UP PAGE WHICH HAVE THE FORM AND THEY SUBMIT                  */}
+        {/* ========================================================================= */}
+        {phase === 'step5_form' && (
           <div className="w-full max-w-xl bg-[#0D241A] border border-emerald-600/30 rounded-3xl p-6 sm:p-8 shadow-2xl backdrop-blur-xl">
             <div className="text-center mb-6">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-bold uppercase tracking-wider mb-2">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Visitor Registration</span>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-bold uppercase tracking-wider mb-2">
+                <Ticket className="w-3.5 h-3.5 text-amber-400" />
+                <span>Step 5: Official Registration</span>
               </div>
               <h2 className="text-2xl sm:text-3xl font-serif font-bold text-white tracking-tight">
-                Register Your Details
+                Claim Your Free 1-Day Pass
               </h2>
               <p className="text-xs sm:text-sm text-stone-300 mt-1">
-                Please share your details below. Our care management desk will save your profile and contact you promptly.
+                Minimal details to claim spot #{101 - spotsLeft} and confirm your complimentary sanctuary visit.
               </p>
             </div>
 
             {formError && (
-              <div className="mb-4 p-3 rounded-xl bg-red-950/80 border border-red-500/50 text-red-300 text-xs text-center">
-                {formError}
+              <div className="mb-4 p-3 rounded-xl bg-red-950/60 border border-red-500/40 text-red-200 text-xs flex items-center gap-2">
+                <X className="w-4 h-4 text-red-400 shrink-0" />
+                <span>{formError}</span>
               </div>
             )}
 
-            <form onSubmit={handleFormSubmit} className="space-y-4 text-left">
+            <form onSubmit={handleFormSubmit} className="space-y-4">
               <div>
                 <label className="block text-xs font-semibold uppercase tracking-wider text-stone-300 mb-1.5">
                   Full Name <span className="text-amber-400">*</span>
@@ -687,7 +952,7 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
                   <input
                     type="text"
                     required
-                    placeholder="e.g. Ramesh Chandra Sharma"
+                    placeholder="e.g. Ramesh Kumar Sharma"
                     value={formData.name}
                     onChange={(e) =>
                       setFormData({ ...formData, name: e.target.value })
@@ -697,16 +962,34 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-semibold uppercase tracking-wider text-stone-300 mb-1.5">
-                    Phone / WhatsApp <span className="text-amber-400">*</span>
+                    Email Address <span className="text-amber-400">*</span>
+                  </label>
+                  <div className="relative">
+                    <Mail className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                    <input
+                      type="email"
+                      required
+                      placeholder="e.g. ramesh@gmail.com"
+                      value={formData.email}
+                      onChange={(e) =>
+                        setFormData({ ...formData, email: e.target.value })
+                      }
+                      className="w-full pl-10 pr-4 py-3 rounded-xl bg-black/40 border border-emerald-800/60 text-white placeholder:text-stone-500 text-sm focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold uppercase tracking-wider text-stone-300 mb-1.5">
+                    Phone / WhatsApp Number
                   </label>
                   <div className="relative">
                     <Phone className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                     <input
                       type="tel"
-                      required
                       placeholder="e.g. +91 98765 43210"
                       value={formData.phone}
                       onChange={(e) =>
@@ -716,81 +999,44 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
                     />
                   </div>
                 </div>
-
-                <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-stone-300 mb-1.5">
-                    Email Address
-                  </label>
-                  <div className="relative">
-                    <Mail className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                    <input
-                      type="email"
-                      placeholder="e.g. ramesh@example.com"
-                      value={formData.email}
-                      onChange={(e) =>
-                        setFormData({ ...formData, email: e.target.value })
-                      }
-                      className="w-full pl-10 pr-4 py-3 rounded-xl bg-black/40 border border-emerald-800/60 text-white placeholder:text-stone-500 text-sm focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-stone-300 mb-1.5">
-                    I Am Inquiring For
-                  </label>
-                  <select
-                    value={formData.reason}
-                    onChange={(e) =>
-                      setFormData({ ...formData, reason: e.target.value })
-                    }
-                    className="w-full px-3.5 py-3 rounded-xl bg-black/40 border border-emerald-800/60 text-white text-sm focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition"
-                  >
-                    <option value="parents">Elderly Parents / Relatives</option>
-                    <option value="myself">Self / Partner (Retirement Living)</option>
-                    <option value="tour">Schedule Personal Sanctuary Visit</option>
-                    <option value="general">General Consultation & Tariff</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-stone-300 mb-1.5">
-                    Preferred Living Space
-                  </label>
-                  <select
-                    value={formData.roomPreference}
-                    onChange={(e) =>
-                      setFormData({ ...formData, roomPreference: e.target.value })
-                    }
-                    className="w-full px-3.5 py-3 rounded-xl bg-black/40 border border-emerald-800/60 text-white text-sm focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition"
-                  >
-                    <option value="deluxe_suite">Private Deluxe Suite</option>
-                    <option value="twin_sharing">Twin Sharing Room</option>
-                    <option value="cottage">Executive Garden Cottage</option>
-                    <option value="day_care">Day Care / Respite Stay</option>
-                  </select>
-                </div>
               </div>
 
               <div>
                 <label className="block text-xs font-semibold uppercase tracking-wider text-stone-300 mb-1.5">
-                  Care Needs or Questions (Optional)
+                  Looking For?
+                </label>
+                <select
+                  value={formData.reason}
+                  onChange={(e) =>
+                    setFormData({ ...formData, reason: e.target.value })
+                  }
+                  className="w-full px-4 py-3 rounded-xl bg-black/40 border border-emerald-800/60 text-white text-sm focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition"
+                >
+                  <option value="parents">For Elderly Parents / Relatives</option>
+                  <option value="myself">For Myself & Partner (Retirement Living)</option>
+                  <option value="tour">Free Sanctuary Tour & Consultation First</option>
+                  <option value="general">General Inquiry & Tariff Details</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-stone-300 mb-1.5">
+                  Specific Care or Medical Preferences (Optional)
                 </label>
                 <textarea
-                  rows={3}
-                  placeholder="Tell us about mobility needs, medical conditions, dietary preferences, or questions..."
+                  rows={2}
+                  placeholder="e.g. Needs mobility support, vegetarian diet, room with garden view..."
                   value={formData.notes}
                   onChange={(e) =>
                     setFormData({ ...formData, notes: e.target.value })
                   }
-                  className="w-full px-4 py-3 rounded-xl bg-black/40 border border-emerald-800/60 text-white placeholder:text-stone-500 text-sm focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition resize-none"
+                  className="w-full px-4 py-2.5 rounded-xl bg-black/40 border border-emerald-800/60 text-white placeholder:text-stone-500 text-sm focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition"
                 />
               </div>
 
               <div className="pt-2">
                 <button
+                  id="submit-early-checker-form-btn"
                   type="submit"
                   disabled={submitting}
                   className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-500 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-base tracking-wide shadow-xl shadow-emerald-950/60 hover:scale-[1.01] active:scale-98 transition flex items-center justify-center gap-2 cursor-pointer border border-emerald-400/40 disabled:opacity-50"
@@ -798,53 +1044,54 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
                   {submitting ? (
                     <>
                       <Loader2 className="w-5 h-5 animate-spin text-amber-400" />
-                      <span>Saving Your Details in Database...</span>
+                      <span>Recording Your Registration...</span>
                     </>
                   ) : (
                     <>
                       <CheckCircle2 className="w-5 h-5 text-amber-300" />
-                      <span>Submit Details to Obokash Registry</span>
+                      <span>Submit & Confirm Free 1-Day Pass</span>
                     </>
                   )}
                 </button>
               </div>
 
               <p className="text-[11px] text-stone-400 text-center">
-                🔒 Your information is saved directly to the Obokash Admin Registry. No spam, ever.
+                🔒 Your information is saved directly to the Obokash Admin
+                Registry. No spam, ever.
               </p>
             </form>
           </div>
         )}
 
         {/* ========================================================================= */}
-        {/* SUCCESS CONFIRMATION: SAVED IN DATABASE AND SHOWN IN ADMIN PANEL          */}
+        {/* STEP 5 SUCCESS: VERIFIED EARLY CHECKER PASS ISSUED                        */}
         {/* ========================================================================= */}
-        {phase === 'success' && (
-          <div className="w-full max-w-md bg-[#0D241A] border-2 border-emerald-400/60 rounded-3xl p-6 sm:p-8 text-center shadow-[0_0_50px_rgba(16,185,129,0.2)] animate-in zoom-in-95 duration-300">
+        {phase === 'step5_success' && (
+          <div className="w-full max-w-md bg-[#0D241A] border-2 border-amber-400/60 rounded-3xl p-6 sm:p-8 text-center shadow-[0_0_50px_rgba(245,158,11,0.2)]">
             <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-500 text-white flex items-center justify-center mx-auto mb-4 shadow-lg shadow-emerald-900/50">
               <Check className="w-8 h-8" />
             </div>
 
-            <span className="inline-block px-3 py-1 rounded-full bg-emerald-400/10 border border-emerald-400/30 text-emerald-300 text-xs font-bold uppercase tracking-wider mb-2">
-              Registration Saved
+            <span className="inline-block px-3 py-1 rounded-full bg-amber-400/10 border border-amber-400/30 text-amber-300 text-xs font-bold uppercase tracking-wider mb-2">
+              Registration Successful
             </span>
 
             <h2 className="text-2xl font-serif font-bold text-white">
-              Details Received!
+              VIP Pass Confirmed!
             </h2>
             <p className="text-xs text-stone-300 mt-1 mb-6">
-              Thank you, <strong>{submittedLead?.name}</strong>. Your profile has been securely recorded in our database.
+              Welcome to the Obokash Senior Living family, <strong>{issuedPass?.name}</strong>.
             </p>
 
-            {/* Confirmation Card */}
-            <div className="bg-gradient-to-br from-[#1A3326] to-[#0A1A12] border border-emerald-500/40 rounded-2xl p-4 text-left relative overflow-hidden mb-6 shadow-inner">
+            {/* Digital Pass Card */}
+            <div className="bg-gradient-to-br from-[#1A3326] to-[#0A1A12] border border-amber-400/40 rounded-2xl p-4 text-left relative overflow-hidden mb-6 shadow-inner">
               <div className="flex justify-between items-start mb-3">
                 <div>
-                  <span className="text-[10px] text-emerald-400 font-bold uppercase tracking-widest block">
-                    Inquiry Reference
+                  <span className="text-[10px] text-amber-400 font-bold uppercase tracking-widest block">
+                    OBOKASH VIP Pass
                   </span>
                   <span className="font-mono text-base font-bold text-white">
-                    {submittedLead?.id}
+                    {issuedPass?.passId}
                   </span>
                 </div>
                 <div className="w-12 h-7 rounded-lg overflow-hidden border border-emerald-500/40 relative bg-black flex items-center justify-center p-1">
@@ -859,16 +1106,16 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
 
               <div className="space-y-1 text-xs border-t border-emerald-900/50 pt-2 text-stone-300">
                 <div className="flex justify-between">
-                  <span className="text-stone-500">Name:</span>
-                  <span className="font-semibold text-white">{submittedLead?.name}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-stone-500">Contact:</span>
-                  <span className="font-mono text-stone-200">{submittedLead?.phone}</span>
+                  <span className="text-stone-500">Holder:</span>
+                  <span className="font-semibold text-white">{issuedPass?.name}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-stone-500">Status:</span>
-                  <span className="text-emerald-400 font-bold">✓ Logged in Admin Panel</span>
+                  <span className="text-emerald-400 font-bold">✓ VERIFIED EARLY CHECKER</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-stone-500">Access:</span>
+                  <span className="text-amber-300 font-medium">Free 1-Day Trial + Tariff Lock</span>
                 </div>
               </div>
             </div>
@@ -876,17 +1123,14 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
             <div className="space-y-3">
               <button
                 onClick={handleExitToMain}
-                className="w-full inline-flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white font-bold text-sm shadow-md hover:scale-[1.02] active:scale-95 transition cursor-pointer"
+                className="w-full inline-flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-500 text-stone-950 font-bold text-sm shadow-md hover:scale-[1.02] active:scale-95 transition cursor-pointer"
               >
                 <span>Enter Full Sanctuary Website</span>
                 <ChevronRight className="w-4 h-4" />
               </button>
 
               <button
-                onClick={() => {
-                  setFormData({ name: '', email: '', phone: '', reason: 'parents', roomPreference: 'deluxe_suite', notes: '' });
-                  setPhase('step1_questions');
-                }}
+                onClick={() => setPhase('step1_questions')}
                 className="text-xs text-stone-400 hover:text-stone-200 underline underline-offset-2 block mx-auto cursor-pointer"
               >
                 Replay discovery sequence
