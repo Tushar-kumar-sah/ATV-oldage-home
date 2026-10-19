@@ -494,10 +494,11 @@ export default function LandingPage() {
             <button
               type="button"
               onClick={() => setShowScanIntro(true)}
-              className="inline-flex items-center gap-1.5 px-3 py-2 sm:px-3.5 sm:py-2.5 rounded-xl font-bold text-xs bg-emerald-900 text-amber-300 hover:bg-emerald-800 border border-emerald-700 shadow-sm transition-all cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-2.5 py-2 sm:px-3.5 sm:py-2.5 rounded-xl font-bold text-xs bg-emerald-900 text-amber-300 hover:bg-emerald-800 border border-emerald-700 shadow-sm transition-all cursor-pointer"
             >
-              <Sparkles className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
-              <span>Scan & Discover</span>
+              <Sparkles className="w-3.5 h-3.5 text-amber-400 animate-pulse shrink-0" />
+              <span className="hidden xs:inline">Scan & Discover</span>
+              <span className="xs:hidden">Scan</span>
             </button>
             <a
               href="tel:+917044163518"
@@ -876,30 +877,35 @@ export default function LandingPage() {
                   </div>
                 </div>
 
-                {/* Floating Badge 1: 24/7 Medical Care Ready */}
-                <div className="absolute -bottom-3 sm:-bottom-5 left-2 sm:-left-6 bg-white/95 backdrop-blur-md p-3 sm:p-4 rounded-2xl border border-emerald-100 shadow-xl flex items-center space-x-3 max-w-[260px] sm:max-w-xs z-30">
-                  <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0">
-                    <Stethoscope className="w-5 h-5 text-emerald-700" />
-                  </div>
-                  <div>
-                    <div className="flex items-center space-x-1.5">
-                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                      <span className="font-bold text-xs text-stone-900">24/7 Nursing On-Duty</span>
+                {/* Dedicated 2-Card Feature Grid Below Slideshow - 100% Responsive, Zero Overlap */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
+                  <div className="bg-white/95 backdrop-blur-md p-3.5 sm:p-4 rounded-2xl border border-emerald-100 shadow-sm flex items-center space-x-3 transition-shadow hover:shadow-md">
+                    <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0">
+                      <Stethoscope className="w-5 h-5 text-emerald-700" />
                     </div>
-                    <p className="text-[11px] text-stone-500">
-                      Emergency response & daily health vitals
-                    </p>
+                    <div className="min-w-0">
+                      <div className="flex items-center space-x-1.5">
+                        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                        <span className="font-bold text-xs text-stone-900 truncate">24/7 Nursing On-Duty</span>
+                      </div>
+                      <p className="text-[11px] text-stone-500 truncate">
+                        Emergency response & daily health vitals
+                      </p>
+                    </div>
                   </div>
-                </div>
 
-                {/* Floating Badge 2: Certified Staff */}
-                <div className="absolute -top-4 -right-2 sm:-right-4 bg-white/95 backdrop-blur-md px-4 py-2.5 rounded-2xl border border-amber-100 shadow-xl hidden sm:flex items-center space-x-2 z-30">
-                  <Award className="w-5 h-5 text-amber-600" />
-                  <div className="text-right">
-                    <span className="font-bold text-xs text-stone-900 block leading-tight">
-                      15+ Years
-                    </span>
-                    <span className="text-[10px] text-stone-500">Excellence in Senior Care</span>
+                  <div className="bg-white/95 backdrop-blur-md p-3.5 sm:p-4 rounded-2xl border border-amber-100 shadow-sm flex items-center space-x-3 transition-shadow hover:shadow-md">
+                    <div className="w-10 h-10 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center shrink-0">
+                      <Award className="w-5 h-5 text-amber-700" />
+                    </div>
+                    <div className="min-w-0">
+                      <span className="font-bold text-xs text-stone-900 block leading-tight truncate">
+                        15+ Years Excellence
+                      </span>
+                      <p className="text-[11px] text-stone-500 truncate">
+                        Certified Geriatric Team
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -922,11 +928,13 @@ export default function LandingPage() {
                     fill
                     className="object-cover"
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent sm:hidden" />
                 </div>
-              </div>
-              <div className="absolute -bottom-4 -right-4 bg-[#064E3B] text-white p-4 rounded-2xl shadow-lg max-w-[200px] text-center hidden sm:block">
-                <span className="text-2xl font-serif font-bold text-amber-300 block">100+</span>
-                <span className="text-xs text-emerald-100">Happy Senior Citizens Living in Harmony</span>
+                {/* Contained Badge - 100% Contained, Zero Overlap across all devices */}
+                <div className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4 bg-[#064E3B]/95 backdrop-blur-md text-white p-3 sm:p-4 rounded-2xl shadow-xl max-w-[170px] sm:max-w-[200px] text-center border border-emerald-500/30">
+                  <span className="text-xl sm:text-2xl font-serif font-bold text-amber-300 block">100+</span>
+                  <span className="text-[11px] sm:text-xs text-emerald-100 leading-tight block">Happy Senior Citizens Living in Harmony</span>
+                </div>
               </div>
             </div>
 
@@ -990,7 +998,7 @@ export default function LandingPage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
             {/* Card 1: Private Suite */}
             <div className="bg-white rounded-3xl overflow-hidden border border-stone-200 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
               <div>
@@ -1054,7 +1062,7 @@ export default function LandingPage() {
             </div>
 
             {/* Card 3: Botanical Garden */}
-            <div className="bg-white rounded-3xl overflow-hidden border border-stone-200 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+            <div className="bg-white rounded-3xl overflow-hidden border border-stone-200 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between md:col-span-2 lg:col-span-1">
               <div>
                 <div className="relative w-full h-56 sm:h-64">
                   <Image
@@ -1193,7 +1201,7 @@ export default function LandingPage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
             <div className="p-8 rounded-3xl bg-white border border-stone-200 space-y-4 shadow-sm flex flex-col justify-between">
               <div className="space-y-3">
                 <div className="flex items-center space-x-1 text-amber-400">
@@ -1234,7 +1242,7 @@ export default function LandingPage() {
               </div>
             </div>
 
-            <div className="p-8 rounded-3xl bg-white border border-stone-200 space-y-4 shadow-sm flex flex-col justify-between">
+            <div className="p-8 rounded-3xl bg-white border border-stone-200 space-y-4 shadow-sm flex flex-col justify-between md:col-span-2 lg:col-span-1">
               <div className="space-y-3">
                 <div className="flex items-center space-x-1 text-amber-400">
                   {[...Array(5)].map((_, i) => (
@@ -1799,7 +1807,7 @@ export default function LandingPage() {
       {/* Standalone Google Account Selector Modal (Accessible from anywhere) */}
       {googlePromptOpen && (
         <div className="fixed inset-0 z-60 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
-          <div className="relative w-full max-w-sm bg-white rounded-3xl p-6 sm:p-7 shadow-2xl border border-stone-200 text-center space-y-4">
+          <div className="relative w-full max-w-sm bg-white rounded-3xl p-6 sm:p-7 shadow-2xl border border-stone-200 text-center space-y-4 max-h-[92vh] overflow-y-auto">
             {/* Close button */}
             <button
               type="button"
@@ -1924,7 +1932,7 @@ export default function LandingPage() {
         <aside
           role="region"
           aria-label="Cookie consent banner"
-          className="fixed bottom-5 inset-x-4 sm:inset-x-auto sm:right-6 sm:max-w-md z-50 bg-[#052E16]/95 backdrop-blur-md text-white p-5 rounded-3xl border border-emerald-700/80 shadow-2xl animate-in slide-in-from-bottom duration-500"
+          className="fixed bottom-5 inset-x-4 sm:inset-x-auto sm:left-6 sm:right-auto sm:max-w-md z-50 bg-[#052E16]/95 backdrop-blur-md text-white p-5 rounded-3xl border border-emerald-700/80 shadow-2xl animate-in slide-in-from-bottom duration-500"
         >
           <div className="flex items-start gap-3.5">
             <div className="w-10 h-10 rounded-2xl bg-amber-500/20 text-amber-300 flex items-center justify-center shrink-0 border border-amber-500/30">
