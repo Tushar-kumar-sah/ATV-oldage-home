@@ -61,7 +61,7 @@ export default function PendingApprovalPage() {
 
         <div className="mt-8 pt-4 border-t border-sage-100 flex items-center justify-center space-x-2 text-xs text-sage-400">
           <HeartHandshake className="w-4 h-4 text-terracotta-500" />
-          <span>Anand Dham Senior Sanctuary</span>
+          <span>OBOKASH - SENIOR LIVING</span>
         </div>
       </div>
     </div>

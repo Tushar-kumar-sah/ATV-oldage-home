@@ -45,7 +45,7 @@ function encrypt(text) {
 }
 
 async function runSeed() {
-  console.log('🌱 Starting Anand Dham Database Seeding...');
+  console.log('🌱 Starting OBOKASH - SENIOR LIVING Database Seeding...');
   console.log(`Connecting to MongoDB at: ${MONGODB_URI.replace(/:([^:@]+)@/, ':****@')}`);
 
   await mongoose.connect(MONGODB_URI);

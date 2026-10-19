@@ -3,15 +3,15 @@ import './globals.css';
 import Providers from '@/components/Providers';
 
 export const metadata: Metadata = {
-  title: 'Anand Dham Senior Living & Elder Care Home',
-  description: 'A compassionate, secure, and dignified senior sanctuary offering 24/7 assisted care, medical support, and a vibrant community for elders.',
-  keywords: ['Old Age Home', 'Senior Living', 'Elder Care', 'Assisted Living', 'Dementia Care', 'Retirement Home'],
+  title: 'OBOKASH - SENIOR LIVING | A Haven of Trust, Security, and Unparalleled Peace.',
+  description: 'OBOKASH - SENIOR LIVING: A Haven of Trust, Security, and Unparalleled Peace. A compassionate, secure, and dignified senior sanctuary offering 24/7 assisted care, medical support, and a vibrant community.',
+  keywords: ['Obokash Senior Living', 'Old Age Home', 'Senior Living', 'Elder Care', 'Assisted Living', 'Dementia Care', 'Retirement Home'],
   icons: {
     icon: [
-      { url: '/icon.svg', type: 'image/svg+xml' },
+      { url: '/images/obokash-logo.png', type: 'image/png' },
     ],
-    shortcut: '/icon.svg',
-    apple: '/icon.svg',
+    shortcut: '/images/obokash-logo.png',
+    apple: '/images/obokash-logo.png',
   },
 };
 

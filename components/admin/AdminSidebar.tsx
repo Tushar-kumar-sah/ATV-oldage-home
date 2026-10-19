@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useSession, signOut } from 'next-auth/react';
 import {
@@ -75,14 +76,20 @@ export default function AdminSidebar({ mobileOpen = false, onClose }: AdminSideb
   const sidebarContent = (
     <div className="flex flex-col h-full bg-[#052E16] text-emerald-100">
       {/* Brand Header */}
-      <div className="p-5 sm:p-6 border-b border-emerald-900/80 flex items-center justify-between">
-        <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-amber-600 flex items-center justify-center text-white shadow-md shadow-amber-950/20 shrink-0">
-            <HeartHandshake className="w-6 h-6 text-white" />
+      <div className="p-4 sm:p-5 border-b border-emerald-900/80 flex items-center justify-between">
+        <div className="flex items-center space-x-2.5">
+          <div className="h-10 px-2 bg-black rounded-xl border border-stone-800 flex items-center justify-center shadow-md shrink-0">
+            <Image
+              src="/images/obokash-logo.png"
+              alt="OBOKASH Logo"
+              width={95}
+              height={34}
+              className="h-6 w-auto object-contain"
+            />
           </div>
           <div>
-            <h1 className="font-serif font-bold text-lg text-white leading-tight">Anand Dham</h1>
-            <p className="text-xs text-amber-300 font-semibold tracking-wide">Sanctuary Portal</p>
+            <h1 className="font-serif font-bold text-base text-white leading-tight">OBOKASH</h1>
+            <p className="text-[10px] text-amber-300 font-semibold tracking-wide uppercase">Senior Living</p>
           </div>
         </div>
 

@@ -110,7 +110,7 @@ export default function LandingPage() {
 
   // Trigger Visitor Auth Modal after 7 seconds
   React.useEffect(() => {
-    const isRegistered = localStorage.getItem('anand_user_registered');
+    const isRegistered = localStorage.getItem('obokash_user_registered');
     if (!isRegistered) {
       const timer = setTimeout(() => {
         setShowAuthModal(true);
@@ -164,7 +164,7 @@ export default function LandingPage() {
               action: 'login',
             }),
           }).catch(() => {});
-          localStorage.setItem('anand_user_registered', 'true');
+          localStorage.setItem('obokash_user_registered', 'true');
           setShowAuthModal(false);
         }
       });
@@ -218,9 +218,9 @@ export default function LandingPage() {
         throw new Error(data.error || 'Failed to sign in with Google.');
       }
 
-      localStorage.setItem('anand_user_registered', 'true');
+      localStorage.setItem('obokash_user_registered', 'true');
       setGooglePromptOpen(false);
-      setAuthSuccessMsg(`Logged in successfully with Google as ${gName}! Welcome to Anand Dham.`);
+      setAuthSuccessMsg(`Logged in successfully with Google as ${gName}! Welcome to Obokash Senior Living.`);
       setTimeout(() => {
         setShowAuthModal(false);
         setAuthSuccessMsg('');
@@ -261,11 +261,11 @@ export default function LandingPage() {
         throw new Error(data.error || 'Authentication failed. Please check your credentials.');
       }
 
-      localStorage.setItem('anand_user_registered', 'true');
+      localStorage.setItem('obokash_user_registered', 'true');
       setAuthSuccessMsg(
         data.message ||
           (authAction === 'register'
-            ? `Account registered successfully via ${isEmail ? 'Email' : 'Phone'}! Welcome to Anand Dham.`
+            ? `Account registered successfully via ${isEmail ? 'Email' : 'Phone'}! Welcome to Obokash Senior Living.`
             : `Logged in successfully via ${isEmail ? 'Email' : 'Phone'}! Welcome back.`)
       );
 
@@ -402,15 +402,22 @@ export default function LandingPage() {
       <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-stone-200 shadow-xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-8 h-20 flex items-center justify-between">
           <Link href="/" className="flex items-center space-x-3 group">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-[#064E3B] to-[#047857] flex items-center justify-center text-white shadow-md shadow-emerald-900/20 group-hover:scale-105 transition-transform">
-              <HeartHandshake className="w-7 h-7 text-amber-300" />
+            <div className="h-12 px-2.5 bg-black rounded-xl border border-stone-800 flex items-center justify-center shadow-md shadow-emerald-950/20 group-hover:scale-105 transition-transform">
+              <Image
+                src="/images/obokash-logo.png"
+                alt="OBOKASH - SENIOR LIVING Logo"
+                width={120}
+                height={40}
+                className="h-8 w-auto object-contain"
+                priority
+              />
             </div>
             <div>
-              <span className="font-serif font-bold text-xl sm:text-2xl text-[#064E3B] block leading-tight">
-                Anand Dham
+              <span className="font-serif font-bold text-lg sm:text-xl text-[#064E3B] block leading-tight">
+                OBOKASH
               </span>
-              <span className="text-xs font-semibold text-amber-700 tracking-wide uppercase">
-                Elder Care Sanctuary
+              <span className="text-[10px] sm:text-xs font-semibold text-amber-700 tracking-wider uppercase">
+                Senior Living
               </span>
             </div>
           </Link>
@@ -477,7 +484,7 @@ export default function LandingPage() {
                 onClick={() => setMobileMenuOpen(false)}
                 className="py-2.5 px-3 rounded-xl hover:bg-emerald-50 hover:text-emerald-900 transition-colors"
               >
-                About Anand Dham
+                About Obokash Senior Living
               </a>
               <a
                 href="#services"
@@ -548,15 +555,15 @@ export default function LandingPage() {
             <div className="lg:col-span-6 space-y-6">
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-900 border border-emerald-200 shadow-2xs">
                 <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
-                <span>Ranked #1 Elder Sanctuary & Assisted Living in Pune</span>
+                <span>OBOKASH - SENIOR LIVING</span>
               </div>
 
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-[#064E3B] leading-[1.18] tracking-tight">
-                Where Elders Live With Dignity, Loving Care, and Pure Joy.
+                A Haven of Trust, Security, and Unparalleled Peace.
               </h1>
 
               <p className="text-base sm:text-lg text-stone-600 leading-relaxed max-w-xl">
-                Anand Dham provides round-the-clock compassionate nursing, doctor-supervised medical care, wholesome home-cooked satvik meals, and a vibrant community of friends in a lush, peaceful sanctuary.
+                Obokash Senior Living provides round-the-clock compassionate nursing, doctor-supervised medical care, wholesome home-cooked satvik meals, and a vibrant community of friends in a lush, peaceful sanctuary.
               </p>
 
               {/* Key Features Pill Matrix */}
@@ -795,7 +802,7 @@ export default function LandingPage() {
               </h2>
 
               <p className="text-stone-600 text-sm sm:text-base leading-relaxed">
-                Founded with the revered Indian cultural principle of <em>Matru Devo Bhava, Pitru Devo Bhava</em>, Anand Dham was built to bridge clinical safety with the emotional warmth and dignity every elder deserves in their sunset years.
+                Founded with the revered Indian cultural principle of <em>Matru Devo Bhava, Pitru Devo Bhava</em>, Obokash Senior Living was built to bridge clinical safety with the emotional warmth and dignity every elder deserves in their sunset years.
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
@@ -1042,7 +1049,7 @@ export default function LandingPage() {
               Loved by Seniors, Trusted by Families Across the World
             </h2>
             <p className="text-stone-600 text-sm sm:text-base leading-relaxed">
-              Read authentic feedback from sons and daughters who found peace of mind with Anand Dham.
+              Read authentic feedback from sons and daughters who found peace of mind with Obokash Senior Living.
             </p>
           </div>
 
@@ -1055,7 +1062,7 @@ export default function LandingPage() {
                   ))}
                 </div>
                 <p className="text-xs sm:text-sm text-stone-700 italic leading-relaxed">
-                  &quot;When my job relocated to California, I was terrified about leaving my 83-year-old father alone in Pune. Anand Dham gave him friends, medical safety, and loving caregivers. The admin transparency gives our family absolute peace of mind.&quot;
+                  &quot;When my job relocated to California, I was terrified about leaving my 83-year-old father alone in Pune. Obokash Senior Living gave him friends, medical safety, and loving caregivers. The admin transparency gives our family absolute peace of mind.&quot;
                 </p>
               </div>
 
@@ -1095,7 +1102,7 @@ export default function LandingPage() {
                   ))}
                 </div>
                 <p className="text-xs sm:text-sm text-stone-700 italic leading-relaxed">
-                  &quot;Spotless hygienic rooms, prompt doctor visits, and truly delicious home-style satvik meals. Anand Dham has set a benchmark for elder care sanctuary living in India.&quot;
+                  &quot;Spotless hygienic rooms, prompt doctor visits, and truly delicious home-style satvik meals. Obokash Senior Living has set a benchmark for premium senior living in India.&quot;
                 </p>
               </div>
 
@@ -1125,7 +1132,7 @@ export default function LandingPage() {
               </h2>
 
               <p className="text-sm text-stone-600 leading-relaxed">
-                We invite you and your family to visit Anand Dham. Experience the serene gardens, modern room suites, and gentle care team in person.
+                We invite you and your family to visit Obokash Senior Living. Experience the serene gardens, modern room suites, and gentle care team in person.
               </p>
 
               <div className="space-y-4 pt-2 text-sm text-stone-800">
@@ -1136,7 +1143,7 @@ export default function LandingPage() {
                   <div>
                     <span className="font-bold block">Sanctuary Address</span>
                     <span className="text-xs text-stone-600">
-                      Anand Dham Senior Sanctuary, Sector 4, Green Meadows Valley, Pune, Maharashtra – 411038
+                      Obokash - Senior Living, Sector 4, Green Meadows Valley, Pune, Maharashtra – 411038
                     </span>
                   </div>
                 </div>
@@ -1317,11 +1324,23 @@ export default function LandingPage() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="space-y-4 md:col-span-2">
               <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 rounded-xl bg-amber-500 flex items-center justify-center text-white shadow-sm">
-                  <HeartHandshake className="w-6 h-6" />
+                <div className="h-11 px-2.5 bg-black rounded-xl border border-stone-800 flex items-center justify-center shadow-sm">
+                  <Image
+                    src="/images/obokash-logo.png"
+                    alt="OBOKASH - SENIOR LIVING Logo"
+                    width={110}
+                    height={38}
+                    className="h-7 w-auto object-contain"
+                  />
                 </div>
-                <span className="font-serif font-bold text-xl text-white">Anand Dham Sanctuary</span>
+                <div>
+                  <span className="font-serif font-bold text-xl text-white block leading-tight">OBOKASH</span>
+                  <span className="text-[10px] uppercase tracking-wider text-amber-400 font-semibold">Senior Living</span>
+                </div>
               </div>
+              <p className="text-xs text-amber-300 font-serif italic max-w-md">
+                A Haven of Trust, Security, and Unparalleled Peace.
+              </p>
               <p className="text-xs text-emerald-200/80 max-w-md leading-relaxed">
                 Dedicated to honoring and nurturing our elders with clinical excellence, wholesome nutrition, serene surroundings, and deep family reverence.
               </p>
@@ -1332,7 +1351,7 @@ export default function LandingPage() {
                 Quick Navigation
               </span>
               <ul className="space-y-1.5 text-emerald-200/70">
-                <li><a href="#about" className="hover:text-amber-300">About Anand Dham</a></li>
+                <li><a href="#about" className="hover:text-amber-300">About Obokash</a></li>
                 <li><a href="#services" className="hover:text-amber-300">Care Programs</a></li>
                 <li><a href="#facilities" className="hover:text-amber-300">Living Spaces</a></li>
                 <li><a href="#testimonials" className="hover:text-amber-300">Family Reviews</a></li>
@@ -1358,8 +1377,8 @@ export default function LandingPage() {
           </div>
 
           <div className="pt-8 border-t border-emerald-900 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-emerald-400">
-            <p>© {new Date().getFullYear()} Anand Dham Elder Sanctuary. All rights reserved.</p>
-            <p className="font-medium text-amber-300/80">Reverence for Elders • Security • Compassion</p>
+            <p>© {new Date().getFullYear()} OBOKASH - SENIOR LIVING. All rights reserved.</p>
+            <p className="font-medium text-amber-300/80">A Haven of Trust, Security, and Unparalleled Peace.</p>
           </div>
         </div>
       </footer>
@@ -1379,11 +1398,17 @@ export default function LandingPage() {
 
             {/* Modal Header */}
             <div className="text-center mb-5">
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-[#064E3B] to-[#047857] flex items-center justify-center text-white mx-auto shadow-md mb-2.5">
-                <HeartHandshake className="w-7 h-7 text-amber-300" />
+              <div className="h-12 px-3 py-1 bg-black rounded-2xl border border-stone-800 flex items-center justify-center mx-auto shadow-md mb-2.5 w-fit">
+                <Image
+                  src="/images/obokash-logo.png"
+                  alt="OBOKASH - SENIOR LIVING Logo"
+                  width={110}
+                  height={38}
+                  className="h-7 w-auto object-contain"
+                />
               </div>
               <h3 className="font-serif font-bold text-xl sm:text-2xl text-[#064E3B]">
-                {authAction === 'register' ? 'Join the Anand Dham Family' : 'Welcome Back, Family'}
+                {authAction === 'register' ? 'Join the Obokash Family' : 'Welcome Back to Obokash'}
               </h3>
               <p className="text-xs text-stone-500 mt-1 max-w-xs mx-auto">
                 {authAction === 'register'
@@ -1654,7 +1679,7 @@ export default function LandingPage() {
                   </div>
                   <div>
                     <h4 className="font-serif font-bold text-lg text-stone-900">Sign in with Google</h4>
-                    <p className="text-xs text-stone-500 mt-0.5">Choose your Google account to connect with Anand Dham Sanctuary</p>
+                    <p className="text-xs text-stone-500 mt-0.5">Choose your Google account to connect with Obokash Senior Living</p>
                   </div>
                   <div className="space-y-2 text-left text-xs">
                     <div>

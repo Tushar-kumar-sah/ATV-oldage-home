@@ -171,7 +171,7 @@ export default function AdminDashboardPage() {
             Welcome, {session?.user?.name || 'Administrator'}
           </h1>
           <p className="mt-1.5 text-xs text-emerald-100 max-w-xl leading-relaxed">
-            Real-time analytics for Anand Dham Senior Sanctuary. All public visitor registrations, customer inquiry queries, and EHR data are securely tracked and managed below.
+            Real-time analytics for Obokash Senior Living. All public visitor registrations, customer inquiry queries, and EHR data are securely tracked and managed below.
           </p>
         </div>
 

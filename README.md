@@ -1,6 +1,7 @@
-# 🕊️ Anand Dham Senior Sanctuary & Elder Care Management System
+# 🕊️ OBOKASH - SENIOR LIVING
+### A Haven of Trust, Security, and Unparalleled Peace.
 
-A complete, production-ready, full-stack web application designed for an **Old Age Home / Elder Care Sanctuary**. The system combines a warm, trustworthy public portal for prospective families with an enterprise-grade, role-based administrative system to securely store and manage elderly residents' personal, medical, room, and financial records.
+A complete, production-ready, full-stack web application designed for **OBOKASH - SENIOR LIVING**. The system combines a warm, trustworthy public portal for prospective families with an enterprise-grade, role-based administrative system to securely store and manage elderly residents' personal, medical, room, and financial records.
 
 ---
 
@@ -139,16 +140,16 @@ CLOUDINARY_URL=
 ## 🔑 Setting Up Google OAuth 2.0 Credentials
 
 1. Go to the [Google Cloud Console](https://console.cloud.google.com/).
-2. Create a new project named **Anand Dham Elder Care**.
+2. Create a new project named **Obokash Senior Living**.
 3. Go to **APIs & Services** > **OAuth consent screen**:
    - Choose **External**.
-   - Fill in App Name: `Anand Dham Senior Sanctuary`.
+   - Fill in App Name: `OBOKASH - SENIOR LIVING`.
    - Provide User Support Email and Developer Contact Email.
    - Click **Save and Continue** through the Scopes step (default `email`, `profile`, `openid` are sufficient).
 4. Go to **APIs & Services** > **Credentials**:
    - Click **+ CREATE CREDENTIALS** > **OAuth client ID**.
    - Application type: **Web application**.
-   - Name: `Anand Dham Web Client`.
+   - Name: `Obokash Web Client`.
    - **Authorized JavaScript origins**:
      - Local: `http://localhost:3000`
      - Production: `https://your-production-app.vercel.app`

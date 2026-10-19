@@ -128,7 +128,7 @@ export async function POST(req: Request) {
         message:
           action === 'login'
             ? `Welcome back, ${resolvedName}!`
-            : `Welcome to Anand Dham Sanctuary, ${resolvedName}!`,
+            : `Welcome to Obokash Senior Living, ${resolvedName}!`,
       },
       { status: action === 'register' ? 201 : 200 }
     );

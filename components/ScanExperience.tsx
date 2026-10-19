@@ -329,21 +329,22 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
       {/* Top micro-navigation */}
       <header className="relative z-20 w-full max-w-6xl mx-auto px-4 py-4 flex items-center justify-between border-b border-emerald-900/30">
         <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-xl overflow-hidden border border-emerald-500/40 relative shadow-md">
+          <div className="h-10 px-2 rounded-xl overflow-hidden border border-emerald-500/40 relative shadow-md bg-black flex items-center justify-center">
             <Image
-              src="/images/anand-dham-logo.jpg"
-              alt="Anand Dham Logo"
-              fill
-              className="object-cover"
+              src="/images/obokash-logo.png"
+              alt="OBOKASH - SENIOR LIVING Logo"
+              width={100}
+              height={36}
+              className="h-7 w-auto object-contain"
               priority
             />
           </div>
           <div>
             <span className="font-serif font-bold text-base tracking-wide text-white block leading-none">
-              Anand Dham
+              OBOKASH
             </span>
             <span className="text-[10px] uppercase tracking-widest text-amber-400 font-semibold">
-              Elder Care Sanctuary
+              Senior Living
             </span>
           </div>
         </div>
@@ -404,14 +405,14 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
                 ) : (
                   <>
                     <Loader2 className="w-3.5 h-3.5 animate-spin text-amber-400" />
-                    <span>Reading Anand Dham Smart QR...</span>
+                    <span>Reading Obokash Smart QR...</span>
                   </>
                 )}
               </div>
 
               <h2 className="text-xl sm:text-2xl font-serif font-bold text-white">
                 {scanComplete
-                  ? 'Welcome to Anand Dham'
+                  ? 'Welcome to OBOKASH - SENIOR LIVING'
                   : 'Scanning Sanctuary Beacon...'}
               </h2>
               <p className="text-xs sm:text-sm text-stone-400 max-w-sm mx-auto">
@@ -513,21 +514,21 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
         {phase === 'step1_loading' && (
           <div className="w-full max-w-md text-center py-16 px-6 bg-emerald-950/30 border border-emerald-500/20 rounded-3xl backdrop-blur-xl shadow-2xl relative">
             {/* The Logo zooms in */}
-            <div className="relative w-36 h-36 mx-auto mb-6 rounded-3xl overflow-hidden border-2 border-amber-400/50 shadow-2xl shadow-amber-500/20 animate-in zoom-in-75 duration-700">
+            <div className="relative w-64 sm:w-72 h-32 mx-auto mb-6 rounded-2xl overflow-hidden border-2 border-amber-400/50 shadow-2xl shadow-amber-500/20 bg-black animate-in zoom-in-75 duration-700 flex items-center justify-center p-2">
               <Image
-                src="/images/anand-dham-logo.jpg"
-                alt="Anand Dham Logo"
+                src="/images/obokash-logo.png"
+                alt="OBOKASH - SENIOR LIVING Logo"
                 fill
-                className="object-cover"
+                className="object-contain p-2"
                 priority
               />
             </div>
 
-            <h1 className="font-serif text-3xl font-bold text-white tracking-wide mb-1">
-              Anand Dham
+            <h1 className="font-serif text-2xl sm:text-3xl font-bold text-white tracking-wide mb-1">
+              OBOKASH - SENIOR LIVING
             </h1>
-            <p className="text-xs uppercase tracking-widest text-amber-400 font-semibold mb-8">
-              Elder Care Sanctuary
+            <p className="text-xs sm:text-sm text-amber-300 font-medium italic max-w-sm mx-auto mb-8 leading-relaxed">
+              A Haven of Trust, Security, and Unparalleled Peace.
             </p>
 
             {/* Loading progress bar */}
@@ -743,7 +744,7 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
               </h3>
 
               <p className="text-xs text-stone-300 mt-1.5 font-normal leading-relaxed">
-                A simple, minimal welcome gift for scanning our beacon today. Experience Anand Dham&apos;s peace and satvik living with <strong className="text-amber-300">zero payment</strong>.
+                A simple, minimal welcome gift for scanning our beacon today. Experience Obokash Senior Living&apos;s peace and satvik living with <strong className="text-amber-300">zero payment</strong>.
               </p>
 
               {/* Countdown Timer */}
@@ -1055,7 +1056,7 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
               </div>
 
               <p className="text-[11px] text-stone-400 text-center">
-                🔒 Your information is saved directly to the Anand Dham Admin
+                🔒 Your information is saved directly to the Obokash Admin
                 Registry. No spam, ever.
               </p>
             </form>
@@ -1079,7 +1080,7 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
               VIP Pass Confirmed!
             </h2>
             <p className="text-xs text-stone-300 mt-1 mb-6">
-              Welcome to the Anand Dham family, <strong>{issuedPass?.name}</strong>.
+              Welcome to the Obokash Senior Living family, <strong>{issuedPass?.name}</strong>.
             </p>
 
             {/* Digital Pass Card */}
@@ -1087,18 +1088,18 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
               <div className="flex justify-between items-start mb-3">
                 <div>
                   <span className="text-[10px] text-amber-400 font-bold uppercase tracking-widest block">
-                    Anand Dham VIP Pass
+                    OBOKASH VIP Pass
                   </span>
                   <span className="font-mono text-base font-bold text-white">
                     {issuedPass?.passId}
                   </span>
                 </div>
-                <div className="w-8 h-8 rounded-lg overflow-hidden border border-emerald-500/40 relative">
+                <div className="w-12 h-7 rounded-lg overflow-hidden border border-emerald-500/40 relative bg-black flex items-center justify-center p-1">
                   <Image
-                    src="/images/anand-dham-logo.jpg"
-                    alt="Logo"
+                    src="/images/obokash-logo.png"
+                    alt="OBOKASH Logo"
                     fill
-                    className="object-cover"
+                    className="object-contain p-0.5"
                   />
                 </div>
               </div>
@@ -1141,7 +1142,7 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
 
       {/* Footer copyright */}
       <footer className="relative z-10 w-full max-w-6xl mx-auto px-4 py-4 text-center text-xs text-stone-500 border-t border-emerald-950/60">
-        © {new Date().getFullYear()} Anand Dham Elder Care Sanctuary. All rights reserved.
+        © {new Date().getFullYear()} OBOKASH - SENIOR LIVING. All rights reserved.
       </footer>
     </div>
   );

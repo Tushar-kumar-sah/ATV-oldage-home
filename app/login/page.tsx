@@ -4,6 +4,7 @@ import React, { useState, Suspense } from 'react';
 import { signIn, useSession } from 'next-auth/react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import {
   HeartHandshake,
   Lock,
@@ -136,15 +137,22 @@ function LoginForm() {
 
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div className="flex justify-center">
-          <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-[#064E3B] to-[#047857] flex items-center justify-center text-white shadow-lg shadow-emerald-950/20">
-            <HeartHandshake className="w-8 h-8 text-amber-300" />
+          <div className="h-16 px-4 bg-black rounded-2xl border border-stone-800 flex items-center justify-center shadow-lg shadow-emerald-950/20">
+            <Image
+              src="/images/obokash-logo.png"
+              alt="OBOKASH - SENIOR LIVING Logo"
+              width={160}
+              height={55}
+              className="h-12 w-auto object-contain"
+              priority
+            />
           </div>
         </div>
-        <h2 className="mt-4 text-center text-3xl font-serif font-bold text-[#064E3B] tracking-tight">
-          Staff & Admin Portal
+        <h2 className="mt-4 text-center text-2xl sm:text-3xl font-serif font-bold text-[#064E3B] tracking-tight">
+          OBOKASH - SENIOR LIVING
         </h2>
-        <p className="mt-2 text-center text-xs text-stone-600">
-          Anand Dham Senior Sanctuary Management & EHR System
+        <p className="mt-1 text-center text-xs text-stone-600 font-medium italic">
+          A Haven of Trust, Security, and Unparalleled Peace.
         </p>
       </div>
 

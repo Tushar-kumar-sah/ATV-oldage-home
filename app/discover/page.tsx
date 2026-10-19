@@ -2,8 +2,8 @@ import { Metadata } from 'next';
 import ScanExperience from '@/components/ScanExperience';
 
 export const metadata: Metadata = {
-  title: 'Anand Dham | Discover & Early Checkers List',
-  description: 'Experience Anand Dham and join the Early Checkers List.',
+  title: 'OBOKASH - SENIOR LIVING | Discover & Early Checkers List',
+  description: 'A Haven of Trust, Security, and Unparalleled Peace. Experience Obokash Senior Living and join the Early Checkers List.',
 };
 
 export default function DiscoverPage() {

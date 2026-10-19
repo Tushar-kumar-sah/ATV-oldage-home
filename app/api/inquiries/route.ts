@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
 
       return NextResponse.json(
         {
-          message: 'Thank you for reaching out to Anand Dham. Our care coordinator will contact you shortly.',
+          message: 'Thank you for reaching out to Obokash Senior Living. Our care coordinator will contact you shortly.',
           inquiryId: inquiry._id,
         },
         { status: 201 }
@@ -73,7 +73,7 @@ export async function POST(req: NextRequest) {
       const savedInq = addInquiry(validation.data as any);
       return NextResponse.json(
         {
-          message: 'Thank you for reaching out to Anand Dham. Our care coordinator will contact you shortly.',
+          message: 'Thank you for reaching out to Obokash Senior Living. Our care coordinator will contact you shortly.',
           inquiryId: savedInq._id,
         },
         { status: 201 }
