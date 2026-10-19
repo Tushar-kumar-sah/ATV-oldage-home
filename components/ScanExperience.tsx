@@ -103,13 +103,12 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
   };
 
   // Navigation state:
-  // 'scan' -> 'step1_questions' -> 'step1_loading' -> 'step2_slides' -> 'step3_ad' -> 'step4_list' -> 'step5_form' -> 'step5_success'
+  // 'scan' -> 'step1_questions' -> 'step1_loading' -> 'step2_slides' -> 'step4_list' -> 'step5_form' -> 'step5_success'
   const [phase, setPhase] = useState<
     | 'scan'
     | 'step1_questions'
     | 'step1_loading'
     | 'step2_slides'
-    | 'step3_ad'
     | 'step4_list'
     | 'step5_form'
     | 'step5_success'
@@ -131,10 +130,6 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
   const [currentSlide, setCurrentSlide] = useState(0);
   const [slideFade, setSlideFade] = useState(true);
   const [autoPlay, setAutoPlay] = useState(true);
-
-  // Step 3: Irritating Ad state
-  const [adVisible, setAdVisible] = useState(false);
-  const [timerSeconds, setTimerSeconds] = useState(179); // 2m 59s
 
   // Step 4: Early Checkers List state
   const [spotsLeft] = useState(47);
@@ -236,9 +231,8 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
           setSlideFade(true);
         }, 400);
       } else {
-        // After final slide, proceed to step 3 irritating ad!
-        setPhase('step3_ad');
-        setTimeout(() => setAdVisible(true), 200);
+        // After final slide, proceed directly to Early Checkers List
+        setPhase('step4_list');
       }
     }, 4500);
 
@@ -246,18 +240,7 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
   }, [phase, currentSlide, autoPlay]);
 
   // -------------------------------------------------------------
-  // STEP 3: Irritating Ad Timer
-  // -------------------------------------------------------------
-  useEffect(() => {
-    if (phase !== 'step3_ad') return;
-    const interval = setInterval(() => {
-      setTimerSeconds((prev) => (prev > 0 ? prev - 1 : 0));
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [phase]);
-
-  // -------------------------------------------------------------
-  // FORM SUBMISSION HANDLER (Step 5)
+  // FORM SUBMISSION HANDLER (Step 4)
   // -------------------------------------------------------------
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -312,12 +295,6 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
     }
   };
 
-  const formatTimer = (totalSeconds: number) => {
-    const mins = Math.floor(totalSeconds / 60);
-    const secs = totalSeconds % 60;
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-  };
-
   return (
     <div className="min-h-screen bg-[#0A1811] text-white flex flex-col justify-between selection:bg-amber-500 selection:text-black font-sans relative overflow-x-hidden">
       {/* Ambient background glow elements */}
@@ -363,10 +340,9 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
             {phase === 'step1_questions' && 'Step 1: Perspectives'}
             {phase === 'step1_loading' && 'Step 1: Loading Sanctuary'}
             {phase === 'step2_slides' && 'Step 2: Sanctuary Experience'}
-            {phase === 'step3_ad' && 'Step 3: Exclusive Pass'}
-            {phase === 'step4_list' && 'Step 4: Early Checkers List'}
-            {phase === 'step5_form' && 'Step 5: Reserve Pass'}
-            {phase === 'step5_success' && 'VIP Pass Confirmed ✓'}
+            {phase === 'step4_list' && 'Step 3: Early Checkers List'}
+            {phase === 'step5_form' && 'Step 4: Register Details'}
+            {phase === 'step5_success' && 'Registration Confirmed ✓'}
           </span>
         </div>
       </header>
@@ -678,123 +654,17 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
                       ) : (
                         <button
                           onClick={() => {
-                            setPhase('step3_ad');
-                            setTimeout(() => setAdVisible(true), 150);
+                            setPhase('step4_list');
                           }}
                           className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 text-xs font-bold flex items-center gap-1.5 transition shadow-md shadow-amber-500/20"
                         >
-                          Continue <ChevronRight className="w-4 h-4" />
+                          Continue to Early Checkers <ChevronRight className="w-4 h-4" />
                         </button>
                       )}
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-        )}
-
-        {/* ========================================================================= */}
-        {/* STEP 3: FREE SUBSCRIPTION POP UP COMES, LIKE AN IRRITATING AD             */}
-        {/* ========================================================================= */}
-        {phase === 'step3_ad' && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-300">
-            {/* The "Irritating Ad" container with flashing borders & urgency styling */}
-            <div
-              className={`relative w-full max-w-md bg-gradient-to-b from-[#1c1306] via-[#241708] to-[#120a02] border-4 border-amber-400 rounded-3xl p-6 sm:p-7 shadow-[0_0_50px_rgba(245,158,11,0.5)] text-center transition-all duration-500 transform ${
-                adVisible ? 'scale-100 opacity-100' : 'scale-75 opacity-0'
-              }`}
-            >
-              {/* Minimal Offer Badge in corner */}
-              <div className="absolute -top-3.5 -left-2 rotate-[-6deg] bg-amber-500 text-stone-950 font-black text-[11px] uppercase px-3 py-1 rounded-full shadow-lg border border-amber-300 animate-pulse">
-                🎁 MINIMAL OFFER
-              </div>
-
-              <div className="absolute -top-3.5 -right-2 rotate-[6deg] bg-emerald-600 text-white font-bold text-[11px] uppercase px-3 py-1 rounded-full shadow-lg border border-emerald-400">
-                ✓ 100% FREE
-              </div>
-
-              {/* Fake close button ("Irritating" tiny button) */}
-              <button
-                onClick={() => setPhase('step4_list')}
-                className="absolute top-3 right-3 text-stone-400 hover:text-white p-1 rounded-full bg-black/40 hover:bg-black/80 text-[10px] flex items-center gap-1 border border-stone-700 cursor-pointer"
-                title="Skip to list"
-              >
-                <X className="w-3.5 h-3.5" />
-              </button>
-
-              {/* Top Announcement */}
-              <div className="mt-2 mb-3">
-                <span className="inline-block px-3 py-1 rounded-full bg-amber-500/15 border border-amber-500/40 text-amber-300 text-[11px] font-bold tracking-wider uppercase">
-                  ⚡ TODAY&apos;S VISITOR PRIVILEGE ⚡
-                </span>
-              </div>
-
-              {/* Attention Grabbing Icon */}
-              <div className="relative w-16 h-16 mx-auto my-2 flex items-center justify-center">
-                <div className="absolute inset-0 bg-amber-500/15 rounded-full animate-ping" />
-                <div className="relative w-14 h-14 rounded-2xl bg-gradient-to-tr from-amber-500 to-yellow-300 text-stone-950 flex items-center justify-center shadow-lg shadow-amber-500/30">
-                  <Ticket className="w-7 h-7" />
-                </div>
-              </div>
-
-              {/* Minimal Offer Headline */}
-              <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight leading-snug">
-                Free 1-Day Sanctuary Pass
-              </h3>
-
-              <p className="text-xs text-stone-300 mt-1.5 font-normal leading-relaxed">
-                A simple, minimal welcome gift for scanning our beacon today. Experience Obokash Senior Living&apos;s peace and satvik living with <strong className="text-amber-300">zero payment</strong>.
-              </p>
-
-              {/* Countdown Timer */}
-              <div className="my-3.5 py-2 px-3 rounded-xl bg-black/50 border border-amber-500/30 flex items-center justify-center gap-2.5">
-                <Clock className="w-3.5 h-3.5 text-amber-400" />
-                <span className="text-[11px] uppercase tracking-wider text-stone-400 font-semibold">
-                  Complimentary Claim Window:
-                </span>
-                <span className="font-mono text-base font-bold text-amber-300 bg-amber-950/60 px-2 py-0.5 rounded border border-amber-500/30">
-                  {formatTimer(timerSeconds)}
-                </span>
-              </div>
-
-              {/* Minimal Features bullets */}
-              <div className="text-left bg-black/30 rounded-xl p-3 space-y-1.5 border border-emerald-500/20 text-xs mb-4">
-                <div className="flex items-center gap-2 text-stone-200">
-                  <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                  <span>Free 1-Day Guided Sanctuary Tour for 2</span>
-                </div>
-                <div className="flex items-center gap-2 text-stone-200">
-                  <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                  <span>Complimentary Satvik Lunch & Herbal Tea</span>
-                </div>
-                <div className="flex items-center gap-2 text-stone-200">
-                  <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                  <span>Free Senior Physician Health Consultation</span>
-                </div>
-                <div className="flex items-center gap-2 text-stone-200">
-                  <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                  <span>₹0 Registration Fee Waiver (Save ₹1,500)</span>
-                </div>
-              </div>
-
-              {/* CLICKING THE AD GETS YOU TO THE EARLY CHECKERS LIST */}
-              <button
-                id="claim-free-subscription-ad-btn"
-                onClick={() => setPhase('step4_list')}
-                className="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-500 text-stone-950 font-bold text-sm tracking-wide uppercase shadow-lg shadow-amber-500/30 hover:scale-[1.02] active:scale-98 transition flex items-center justify-center gap-2 cursor-pointer border border-yellow-200"
-              >
-                <Sparkles className="w-4 h-4 fill-stone-950" />
-                <span>Claim Minimal Offer & View List</span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
-
-              <button
-                onClick={() => setPhase('step4_list')}
-                className="mt-2.5 text-[11px] text-stone-400 hover:text-stone-300 underline underline-offset-2 cursor-pointer block mx-auto"
-              >
-                or proceed to Early Checkers List directly →
-              </button>
             </div>
           </div>
         )}
@@ -907,7 +777,7 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-2xl bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-500 text-stone-950 font-black text-base tracking-wide uppercase shadow-xl shadow-amber-500/30 hover:scale-105 active:scale-95 transition cursor-pointer"
               >
                 <Sparkles className="w-5 h-5 fill-stone-950" />
-                <span>Claim Minimal Offer — Go to Sign Up</span>
+                <span>Join Early Checkers — Enter Details</span>
                 <ChevronRight className="w-5 h-5" />
               </button>
               <p className="text-xs text-stone-400 mt-2">
@@ -925,13 +795,13 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
             <div className="text-center mb-6">
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-bold uppercase tracking-wider mb-2">
                 <Ticket className="w-3.5 h-3.5 text-amber-400" />
-                <span>Step 5: Official Registration</span>
+                <span>Step 4: Visitor Registration</span>
               </div>
               <h2 className="text-2xl sm:text-3xl font-serif font-bold text-white tracking-tight">
-                Claim Your Free 1-Day Pass
+                Enter Your Details
               </h2>
               <p className="text-xs sm:text-sm text-stone-300 mt-1">
-                Minimal details to claim spot #{101 - spotsLeft} and confirm your complimentary sanctuary visit.
+                Provide your details to secure spot #{101 - spotsLeft} on the Early Checkers roster. Your information is securely saved to our database.
               </p>
             </div>
 
@@ -1044,12 +914,12 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
                   {submitting ? (
                     <>
                       <Loader2 className="w-5 h-5 animate-spin text-amber-400" />
-                      <span>Recording Your Registration...</span>
+                      <span>Saving Your Details in Database...</span>
                     </>
                   ) : (
                     <>
                       <CheckCircle2 className="w-5 h-5 text-amber-300" />
-                      <span>Submit & Confirm Free 1-Day Pass</span>
+                      <span>Submit Details & Confirm Registration</span>
                     </>
                   )}
                 </button>
@@ -1057,7 +927,7 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
 
               <p className="text-[11px] text-stone-400 text-center">
                 🔒 Your information is saved directly to the Obokash Admin
-                Registry. No spam, ever.
+                Database.
               </p>
             </form>
           </div>
