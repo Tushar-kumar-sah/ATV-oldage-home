@@ -5,7 +5,7 @@ export interface IRegisteredUser extends Document {
   email: string;
   phone: string;
   password?: string;
-  authProvider: 'credentials' | 'google' | 'email' | 'phone' | 'early-checker' | 'early-access';
+  authProvider: 'credentials' | 'google' | 'email' | 'phone' | 'early-checker' | 'early-access' | 'scan-lead' | 'visitor-lead';
   userAgent?: string;
   lastSeenAt?: Date;
   createdAt: Date;
@@ -36,7 +36,7 @@ const RegisteredUserSchema = new Schema<IRegisteredUser>(
     },
     authProvider: {
       type: String,
-      enum: ['credentials', 'google', 'email', 'phone', 'early-checker', 'early-access'],
+      enum: ['credentials', 'google', 'email', 'phone', 'early-checker', 'early-access', 'scan-lead', 'visitor-lead'],
       default: 'email',
     },
     userAgent: {

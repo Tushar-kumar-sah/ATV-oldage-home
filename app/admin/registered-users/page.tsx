@@ -124,14 +124,14 @@ export default function RegisteredUsersPage() {
           <div className="text-2xl font-bold text-stone-900 mt-1">{users.length}</div>
         </div>
         <div className="bg-white p-5 rounded-2xl border border-stone-200 shadow-2xs">
-          <span className="text-xs font-semibold text-stone-500">Early Checkers List</span>
-          <div className="text-2xl font-bold text-amber-600 mt-1">
-            {users.filter((u) => u.authProvider === 'early-checker' || u.authProvider === 'early-access').length}
+          <span className="text-xs font-semibold text-stone-500">Scan & Direct Leads</span>
+          <div className="text-2xl font-bold text-emerald-700 mt-1">
+            {users.filter((u) => u.authProvider === 'scan-lead' || u.authProvider === 'visitor-lead' || u.authProvider === 'early-checker' || u.authProvider === 'early-access').length}
           </div>
         </div>
         <div className="bg-white p-5 rounded-2xl border border-stone-200 shadow-2xs">
           <span className="text-xs font-semibold text-stone-500">Email & Password Users</span>
-          <div className="text-2xl font-bold text-emerald-800 mt-1">
+          <div className="text-2xl font-bold text-stone-800 mt-1">
             {users.filter((u) => u.authProvider === 'credentials' || u.authProvider === 'email').length}
           </div>
         </div>
@@ -161,8 +161,8 @@ export default function RegisteredUsersPage() {
           onChange={(e) => setProviderFilter(e.target.value)}
           className="text-xs border border-stone-300 rounded-xl px-3 py-2 bg-[#FAF8F5] text-stone-700 focus:outline-hidden focus:ring-2 focus:ring-emerald-500"
         >
-          <option value="all">All Login Methods</option>
-          <option value="early-checker">Early Checkers List</option>
+          <option value="all">All Login & Lead Types</option>
+          <option value="scan-lead">Scan & Direct Leads</option>
           <option value="email">Email Login & Register</option>
           <option value="phone">Phone & Password</option>
           <option value="google">Google Login</option>
@@ -237,10 +237,10 @@ export default function RegisteredUsersPage() {
                           </svg>
                           Google Login
                         </span>
-                      ) : user.authProvider === 'early-checker' || user.authProvider === 'early-access' ? (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-100 text-amber-900 border border-amber-300">
-                          <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
-                          Early Checker Pass
+                      ) : user.authProvider === 'scan-lead' || user.authProvider === 'visitor-lead' || user.authProvider === 'early-checker' || user.authProvider === 'early-access' ? (
+                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-900 border border-emerald-300">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                          Direct Lead
                         </span>
                       ) : user.authProvider === 'phone' ? (
                         <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-50 text-amber-900 border border-amber-200">

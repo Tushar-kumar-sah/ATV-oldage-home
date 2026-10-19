@@ -33,6 +33,8 @@ export async function POST(req: Request) {
       authProvider !== 'google' &&
       authProvider !== 'early-checker' &&
       authProvider !== 'early-access' &&
+      authProvider !== 'scan-lead' &&
+      authProvider !== 'visitor-lead' &&
       !trimmedPass
     ) {
       return NextResponse.json(
