@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { getServerAuthSession } from '@/lib/auth-helpers';
 import { connectDB } from '@/lib/db';
 import RegisteredUser from '@/models/RegisteredUser';
 import { addRegisteredUser, addLoginRecord, getFallbackData } from '@/lib/localFallback';
@@ -144,7 +143,7 @@ export async function POST(req: Request) {
 
 export async function GET(req: Request) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await getServerAuthSession();
     if (!session || !['super_admin', 'staff'].includes(session.user?.role as string)) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }

@@ -147,12 +147,12 @@ export default function AdminDashboardPage() {
 
   const stats = data?.stats;
   const trends = data?.monthlyTrends || [
-    { month: 'May', inquiries: 8, users: 12, logins: 34 },
-    { month: 'Jun', inquiries: 14, users: 19, logins: 52 },
-    { month: 'Jul', inquiries: 18, users: 24, logins: 68 },
-    { month: 'Aug', inquiries: 22, users: 31, logins: 85 },
-    { month: 'Sep', inquiries: 28, users: 39, logins: 104 },
-    { month: 'Oct', inquiries: 32, users: 44, logins: 128 },
+    { month: 'May', inquiries: 0, users: 0, logins: 0 },
+    { month: 'Jun', inquiries: 0, users: 0, logins: 0 },
+    { month: 'Jul', inquiries: 0, users: 0, logins: 0 },
+    { month: 'Aug', inquiries: 0, users: 0, logins: 0 },
+    { month: 'Sep', inquiries: 0, users: 0, logins: 0 },
+    { month: 'Oct', inquiries: stats?.totalInquiries ?? 0, users: stats?.totalRegisteredUsers ?? 0, logins: 0 },
   ];
 
   // Maximum value for scaling SVG chart bars
