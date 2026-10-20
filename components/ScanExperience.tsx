@@ -41,6 +41,13 @@ const QUESTIONS = [
 
 const SLIDES = [
   {
+    src: '/images/obokash-hero-poster.jpg',
+    tag: 'Official Sanctuary Vision',
+    headline: 'A New Chapter of Life, Filled with Peace.',
+    body: 'OBOKASH is being envisioned as a warm and welcoming space for seniors — where they can live with dignity, companionship and comfort, while families find peace of mind.',
+    badge: 'Kulpi, West Bengal',
+  },
+  {
     src: '/images/about-garden-walk.jpg',
     tag: 'Botanical Sanctuary',
     headline: 'Where every sunrise brings serenity, fresh air, and companionship.',
@@ -308,11 +315,11 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
         <div className="flex items-center gap-2.5">
           <div className="h-10 px-2 rounded-xl overflow-hidden border border-[#352A25]/15 relative shadow-xs bg-white flex items-center justify-center">
             <Image
-              src="/images/obokash-logo.png"
+              src="/images/obokash-bengali-logo.png"
               alt="OBOKASH - SENIOR LIVING Logo"
-              width={100}
+              width={110}
               height={36}
-              className="h-7 w-auto object-contain"
+              className="h-8 w-auto object-contain"
               priority
             />
           </div>
@@ -492,7 +499,7 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
             {/* The Logo zooms in */}
             <div className="relative w-64 sm:w-72 h-32 mx-auto mb-6 rounded-2xl overflow-hidden border-2 border-[#A47750]/50 shadow-md bg-white animate-in zoom-in-75 duration-700 flex items-center justify-center p-2">
               <Image
-                src="/images/obokash-logo.png"
+                src="/images/obokash-bengali-logo.png"
                 alt="OBOKASH - SENIOR LIVING Logo"
                 fill
                 className="object-contain p-2"
@@ -556,7 +563,11 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
                       src={s.src}
                       alt={s.headline}
                       fill
-                      className="object-cover"
+                      className={
+                        s.src === '/images/obokash-hero-poster.jpg'
+                          ? 'object-contain bg-[#2A211D]'
+                          : 'object-cover'
+                      }
                       priority={idx === 0}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#352A25]/80 via-transparent to-transparent" />

@@ -40,9 +40,21 @@ import {
   Mail,
   User,
   LogOut,
+  Sprout,
+  Flower2,
+  Home,
+  Maximize2,
+  Eye,
 } from 'lucide-react';
 
 const heroSlides = [
+  {
+    src: '/images/obokash-hero-poster.jpg',
+    tag: 'Official Sanctuary Vision',
+    title: '"A haven of trust, security and unparalleled peace."',
+    subtitle: '8769, SH 1, Kulpi, Chak Ramnath, West Bengal – 743351',
+    alt: 'OBOKASH Senior Living official intro poster showing elderly couple sitting on a wooden bench overlooking a peaceful lake at sunset',
+  },
   {
     src: '/images/hero-senior-living.jpg',
     tag: 'Warmth & Reverence',
@@ -86,6 +98,7 @@ export default function LandingPage() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [showPosterModal, setShowPosterModal] = useState(false);
 
   // Timed Visitor Login / Register modal (after 6-8 seconds)
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -460,11 +473,11 @@ export default function LandingPage() {
           <Link href="/" className="flex items-center space-x-3 group">
             <div className="h-12 px-2.5 bg-white rounded-xl border border-[#352A25]/15 flex items-center justify-center shadow-xs group-hover:scale-105 transition-transform">
               <Image
-                src="/images/obokash-logo.png"
+                src="/images/obokash-bengali-logo.png"
                 alt="OBOKASH - SENIOR LIVING Logo"
-                width={120}
-                height={40}
-                className="h-8 w-auto object-contain"
+                width={130}
+                height={42}
+                className="h-9 w-auto object-contain"
                 priority
               />
             </div>
@@ -721,7 +734,7 @@ export default function LandingPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 text-xs">
                 <div className="flex items-start space-x-2.5 text-[#352A25] p-3 rounded-2xl bg-white border border-[#352A25]/10 shadow-2xs">
                   <div className="w-7 h-7 rounded-lg bg-[#78836A]/10 text-[#78836A] flex items-center justify-center shrink-0 mt-0.5">
-                    <Shield className="w-4 h-4" />
+                    <Home className="w-4 h-4" />
                   </div>
                   <div>
                     <span className="font-bold block text-xs">A Safe Environment</span>
@@ -731,7 +744,7 @@ export default function LandingPage() {
 
                 <div className="flex items-start space-x-2.5 text-[#352A25] p-3 rounded-2xl bg-white border border-[#352A25]/10 shadow-2xs">
                   <div className="w-7 h-7 rounded-lg bg-[#78836A]/10 text-[#78836A] flex items-center justify-center shrink-0 mt-0.5">
-                    <Heart className="w-4 h-4" />
+                    <Sprout className="w-4 h-4" />
                   </div>
                   <div>
                     <span className="font-bold block text-xs">A Healthier Tomorrow</span>
@@ -751,7 +764,7 @@ export default function LandingPage() {
 
                 <div className="flex items-start space-x-2.5 text-[#352A25] p-3 rounded-2xl bg-white border border-[#352A25]/10 shadow-2xs">
                   <div className="w-7 h-7 rounded-lg bg-[#A47750]/10 text-[#A47750] flex items-center justify-center shrink-0 mt-0.5">
-                    <Sparkles className="w-4 h-4" />
+                    <Flower2 className="w-4 h-4" />
                   </div>
                   <div>
                     <span className="font-bold block text-xs">A More Fulfilling Life</span>
@@ -825,7 +838,7 @@ export default function LandingPage() {
                 <div className="absolute -inset-2 bg-gradient-to-tr from-[#A47750]/20 via-[#78836A]/15 to-[#F7F2EA] rounded-3xl blur-xl"></div>
 
                 {/* Primary Hero Slideshow Container */}
-                <div className="relative rounded-3xl overflow-hidden border-4 border-white shadow-warm-lg bg-stone-900 w-full h-[380px] sm:h-[440px] lg:h-[480px]">
+                <div className="relative rounded-3xl overflow-hidden border-4 border-white shadow-warm-lg bg-stone-900 w-full h-[400px] sm:h-[460px] lg:h-[500px]">
                   {heroSlides.map((slide, index) => (
                     <div
                       key={slide.src}
@@ -840,17 +853,36 @@ export default function LandingPage() {
                         alt={slide.alt}
                         fill
                         priority={index === 0}
-                        className="object-cover"
+                        className={
+                          slide.src === '/images/obokash-hero-poster.jpg'
+                            ? 'object-contain bg-[#231A16]'
+                            : 'object-cover'
+                        }
                       />
                       {/* Gradient overlay for text contrast */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#352A25]/85 via-black/20 to-transparent"></div>
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#352A25]/90 via-black/25 to-transparent"></div>
 
                       {/* Slide Caption Box */}
                       <div className="absolute bottom-6 left-5 right-5 text-white transition-opacity duration-300">
                         <div className="flex items-center justify-between mb-1.5">
-                          <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-[#A47750] text-white shadow-xs">
-                            {slide.tag}
-                          </span>
+                          <div className="flex items-center gap-2">
+                            <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-[#A47750] text-white shadow-xs">
+                              {slide.tag}
+                            </span>
+                            {slide.src === '/images/obokash-hero-poster.jpg' && (
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setShowPosterModal(true);
+                                }}
+                                className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-white text-[#352A25] hover:bg-[#FAF6F0] shadow-xs cursor-pointer border border-[#352A25]/20"
+                              >
+                                <Maximize2 className="w-3 h-3 text-[#A47750]" />
+                                <span>Full View</span>
+                              </button>
+                            )}
+                          </div>
                           <span className="text-[11px] font-mono font-medium text-[#F7F2EA] bg-[#352A25]/80 backdrop-blur-xs px-2 py-0.5 rounded-full">
                             {index + 1} / {heroSlides.length}
                           </span>
@@ -1507,11 +1539,11 @@ export default function LandingPage() {
               <div className="flex items-center space-x-3">
                 <div className="h-11 px-2.5 bg-white rounded-xl border border-[#352A25]/15 flex items-center justify-center shadow-sm">
                   <Image
-                    src="/images/obokash-logo.png"
+                    src="/images/obokash-bengali-logo.png"
                     alt="OBOKASH - SENIOR LIVING Logo"
-                    width={110}
-                    height={38}
-                    className="h-7 w-auto object-contain"
+                    width={120}
+                    height={40}
+                    className="h-8 w-auto object-contain"
                   />
                 </div>
                 <div>
@@ -1587,11 +1619,11 @@ export default function LandingPage() {
             <div className="text-center mb-5">
               <div className="h-12 px-3 py-1 bg-white rounded-2xl border border-[#352A25]/15 flex items-center justify-center mx-auto shadow-xs mb-2.5 w-fit">
                 <Image
-                  src="/images/obokash-logo.png"
+                  src="/images/obokash-bengali-logo.png"
                   alt="OBOKASH - SENIOR LIVING Logo"
-                  width={110}
-                  height={38}
-                  className="h-7 w-auto object-contain"
+                  width={120}
+                  height={40}
+                  className="h-8 w-auto object-contain"
                 />
               </div>
               <h3 className="font-serif font-bold text-xl sm:text-2xl text-[#352A25]">
@@ -2016,6 +2048,64 @@ export default function LandingPage() {
         <span>• Register Your Interest</span>
         <ArrowRight className="w-3.5 h-3.5 text-[#A47750] group-hover:translate-x-1 transition" />
       </button>
+
+      {/* Official Intro Poster Lightbox Modal */}
+      {showPosterModal && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200"
+          onClick={() => setShowPosterModal(false)}
+        >
+          <div
+            className="relative max-w-xl w-full bg-[#F7F2EA] rounded-3xl overflow-hidden shadow-2xl border border-[#352A25]/20 p-4 sm:p-6 animate-in zoom-in-95 duration-200"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between pb-3 border-b border-[#352A25]/15 mb-3">
+              <div>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-[#A47750] block">
+                  Official Vision & Campus Poster
+                </span>
+                <h3 className="font-serif font-bold text-base sm:text-lg text-[#352A25]">
+                  OBOKASH Senior Living
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowPosterModal(false)}
+                className="p-2 rounded-xl text-[#352A25] hover:bg-[#352A25]/10 transition-colors cursor-pointer"
+                aria-label="Close poster view"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="relative aspect-square w-full rounded-2xl overflow-hidden border border-[#352A25]/15 bg-white shadow-inner">
+              <Image
+                src="/images/obokash-hero-poster.jpg"
+                alt="OBOKASH Senior Living Official Vision Poster - A New Chapter of Life, Filled with Peace."
+                fill
+                className="object-contain"
+                priority
+              />
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mt-4 pt-3 border-t border-[#352A25]/15 text-xs">
+              <div className="text-center sm:text-left">
+                <span className="font-bold text-[#352A25] block">📍 8769, SH 1, Kulpi, Chak Ramnath, West Bengal – 743351</span>
+                <span className="text-[11px] text-[#352A25]/70">A Haven of Trust, Security, and Unparalleled Peace.</span>
+              </div>
+              <a
+                href="#contact"
+                onClick={() => setShowPosterModal(false)}
+                className="px-4 py-2 rounded-xl font-bold bg-[#352A25] text-[#F7F2EA] hover:bg-[#A47750] transition-colors shrink-0"
+              >
+                Register Your Interest
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
