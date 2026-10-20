@@ -92,6 +92,87 @@ const heroSlides = [
   },
 ];
 
+const serviceSections = [
+  {
+    id: 'residential-living',
+    category: '01 / RESIDENTIAL LIVING',
+    heading: 'A Place to Call Home',
+    description:
+      'A thoughtfully designed living environment where comfort, privacy and belonging come together. OBOKASH aspires to offer seniors a peaceful space to embrace everyday life with independence, dignity and the warmth of a welcoming community.',
+    keywords: ['Comfort', 'Independence', 'Belonging'],
+    buttonText: 'Explore Living Options',
+    careCategory: 'Independent Residential Living',
+    subject: 'Inquiry: Residential Living Options',
+    image: '/images/services/service-01-residential-living.jpg',
+    alt: 'A thoughtfully designed senior living environment with warm comfort, privacy, and sunlight',
+  },
+  {
+    id: 'assisted-living',
+    category: '02 / ASSISTED LIVING',
+    heading: 'Care with Dignity',
+    description:
+      "Every individual deserves care that respects their choices, routines and independence. Our vision for assisted living centres on compassionate personal support, thoughtful daily assistance and an approach that puts each resident's dignity first.",
+    keywords: ['Respect', 'Support', 'Dignity'],
+    buttonText: 'Discover Assisted Living',
+    careCategory: 'Assisted Living',
+    subject: 'Inquiry: Assisted Living Care',
+    image: '/images/services/service-02-assisted-living.jpg',
+    alt: 'Compassionate personal support and assistance putting senior resident dignity first',
+  },
+  {
+    id: 'nutrition-dining',
+    category: '03 / NUTRITION & DINING',
+    heading: 'Nourishment for Life',
+    description:
+      'Good food brings nourishment, comfort and people together. OBOKASH aims to make dining a pleasant part of everyday life, with thoughtfully planned meals, attention to individual dietary needs and opportunities to enjoy food in good company.',
+    keywords: ['Nutrition', 'Enjoyment', 'Togetherness'],
+    buttonText: 'Discover Our Dining Experience',
+    careCategory: 'Satvik Dining & Nutrition',
+    subject: 'Inquiry: Nutrition & Dining Experience',
+    image: '/images/services/service-03-nutrition-dining.jpg',
+    alt: 'Nourishing, thoughtfully planned meals shared in good company with friends',
+  },
+  {
+    id: 'healthcare-wellness',
+    category: '04 / HEALTHCARE & WELLNESS',
+    heading: 'Wellness, Every Day',
+    description:
+      'Ageing well means caring for both body and mind. OBOKASH envisions a supportive environment that encourages healthy routines and helps residents and families coordinate access to appropriate healthcare and wellness services.',
+    keywords: ['Wellness', 'Reassurance', 'Support'],
+    buttonText: 'Explore Wellness',
+    careCategory: 'Medical & Healthcare Support',
+    subject: 'Inquiry: Healthcare & Wellness Coordination',
+    image: '/images/services/service-04-healthcare-wellness.jpg',
+    alt: 'Supportive healthcare and wellness environment encouraging healthy routines for body and mind',
+  },
+  {
+    id: 'community-lifestyle',
+    category: '05 / COMMUNITY & LIFESTYLE',
+    heading: 'Life Is Better Together',
+    description:
+      'A fulfilling life is shaped by connection, discovery and the freedom to enjoy what matters. From gardening and creative pursuits to cultural celebrations and shared activities, OBOKASH aims to nurture a community where friendships can flourish and every day can hold something meaningful.',
+    keywords: ['Friendship', 'Joy', 'Purpose'],
+    buttonText: 'Discover Community Life',
+    careCategory: 'Community & Cultural Life',
+    subject: 'Inquiry: Community & Lifestyle Programs',
+    image: '/images/services/service-05-community-lifestyle.jpg',
+    alt: 'Seniors engaging in gardening and cultural pursuits where friendships flourish and life is shared',
+  },
+  {
+    id: 'family-connect',
+    category: '06 / FAMILY CONNECT',
+    heading: 'Peace of Mind for Families',
+    description:
+      'Choosing a senior living environment is a family decision built on trust. OBOKASH aims to encourage open communication, meaningful family involvement and thoughtful updates, helping loved ones remain connected and involved in the journey.',
+    keywords: ['Trust', 'Connection', 'Reassurance'],
+    buttonText: 'Connect with OBOKASH',
+    careCategory: 'Family Advisory & Consult',
+    subject: 'Inquiry: Family Connect & Partnership',
+    image: '/images/services/service-06-family-connect.jpg',
+    alt: 'Family connection built on trust, open communication, and reassurance for loved ones',
+  },
+];
+
 export default function LandingPage() {
   // Scan intro is presented in the starting before entering the main website
   const [showScanIntro, setShowScanIntro] = useState<boolean>(true);
@@ -388,6 +469,14 @@ export default function LandingPage() {
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSelectServiceInquiry = (careCategory: string, serviceSubject: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      careNeeded: careCategory,
+      subject: serviceSubject,
+    }));
   };
 
   const handleInquirySubmit = async (e: React.FormEvent) => {
@@ -1048,205 +1137,95 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* 5. Living Spaces & Accommodations (Featuring Room & Dining Photos) */}
-      <section id="facilities" className="py-20 bg-[#F7F2EA] border-b border-[#352A25]/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-8">
-          <div className="max-w-3xl mx-auto text-center space-y-4 mb-16">
-            <span className="text-xs font-bold uppercase tracking-wider text-[#A47750]">
-              Senior-Centric Architecture
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#352A25]">
-              Living Spaces Crafted for Comfort, Safety & Companionship
+      {/* 5. Comprehensive Service Guide (The 6 Official Service Sections) */}
+      <section id="services" className="py-20 lg:py-28 bg-[#F7F2EA] border-b border-[#352A25]/10 scroll-mt-20">
+        <div id="facilities" className="scroll-mt-24" />
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 space-y-16">
+          {/* Section Header */}
+          <div className="max-w-3xl mx-auto text-center space-y-4">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-[#A47750]/10 text-[#A47750] border border-[#A47750]/30 shadow-2xs">
+              <Sparkles className="w-3.5 h-3.5 text-[#A47750]" />
+              <span>OBOKASH Senior Living • Service Visual Guide</span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-[#352A25] leading-tight">
+              A Thoughtful Approach to Every Stage of Senior Life
             </h2>
-            <p className="text-[#352A25]/80 text-sm sm:text-base leading-relaxed">
-              Every detail is designed for senior independence: wide doorways, grab bars, emergency pull cords, and abundant natural light.
+            <p className="text-[#352A25]/85 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto">
+              Our six core service sections pair dedicated, compassionate support and wholesome living with uncompromised dignity, independence, and peace of mind.
+            </p>
+            <p className="text-[11px] text-[#352A25]/60 italic font-medium">
+              Note: OBOKASH is in development. The copy is intentionally aspirational to reflect our planned living standards and care philosophy.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-            {/* Card 1: Private Suite */}
-            <div className="bg-white rounded-3xl overflow-hidden border border-[#352A25]/10 shadow-warm-sm hover:shadow-warm-md hover:border-[#A47750]/40 transition-all flex flex-col justify-between">
-              <div>
-                <div className="relative w-full h-56 sm:h-64">
-                  <Image
-                    src="/images/senior-room-suite.jpg"
-                    alt="Cozy, luxury private elder bedroom suite with orthopedic bed, armchair, and emergency button"
-                    fill
-                    className="object-cover"
-                  />
-                  <div className="absolute top-3 left-3 bg-[#352A25]/90 backdrop-blur-xs text-[#F7F2EA] px-3 py-1 rounded-full text-[11px] font-bold">
-                    Private & Sharing Suites
+          {/* The 6 Alternating Service Sections */}
+          <div className="space-y-12 lg:space-y-16">
+            {serviceSections.map((service, index) => {
+              const isEven = index % 2 === 1; // 0-based: index 0 (01) is odd, index 1 (02) is even
+              return (
+                <div
+                  key={service.id}
+                  id={service.id}
+                  className="bg-white rounded-3xl p-6 sm:p-10 lg:p-14 border border-[#352A25]/12 shadow-warm-md hover:shadow-warm-lg transition-all scroll-mt-24"
+                >
+                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
+                    {/* Text Column */}
+                    <div className={`lg:col-span-6 space-y-5 ${isEven ? 'order-1 lg:order-2' : 'order-1'}`}>
+                      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-bold tracking-widest uppercase bg-[#F7F2EA] border border-[#352A25]/15 text-[#A47750]">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#A47750]" />
+                        <span>{service.category}</span>
+                      </div>
+
+                      <h3 className="font-serif font-bold text-2xl sm:text-3xl lg:text-4xl text-[#352A25] leading-snug">
+                        {service.heading}
+                      </h3>
+
+                      <p className="text-sm sm:text-base text-[#352A25]/85 leading-relaxed">
+                        {service.description}
+                      </p>
+
+                      {/* Supporting keywords with dot separator */}
+                      <div className="flex flex-wrap items-center gap-2.5 text-xs sm:text-sm font-semibold text-[#78836A] pt-1">
+                        {service.keywords.map((kw, kwIdx) => (
+                          <React.Fragment key={kw}>
+                            <span>{kw}</span>
+                            {kwIdx < service.keywords.length - 1 && (
+                              <span className="text-[#A47750] font-bold">•</span>
+                            )}
+                          </React.Fragment>
+                        ))}
+                      </div>
+
+                      {/* Action Button linking to Contact with prefill */}
+                      <div className="pt-3">
+                        <a
+                          href="#contact"
+                          onClick={() => handleSelectServiceInquiry(service.careCategory, service.subject)}
+                          className="inline-flex items-center gap-2 px-6 sm:px-7 py-3 sm:py-3.5 rounded-xl font-bold text-xs sm:text-sm bg-[#352A25] hover:bg-[#A47750] text-[#F7F2EA] shadow-warm-sm hover:shadow-warm-md transition-all hover:scale-[1.02] active:scale-98 cursor-pointer"
+                        >
+                          <span>{service.buttonText}</span>
+                          <ArrowRight className="w-4 h-4 text-[#A47750]" />
+                        </a>
+                      </div>
+                    </div>
+
+                    {/* Square Illustration Column */}
+                    <div className={`lg:col-span-6 ${isEven ? 'order-2 lg:order-1' : 'order-2'}`}>
+                      <div className="relative aspect-square w-full max-w-md mx-auto rounded-3xl overflow-hidden border-4 border-[#F7F2EA] shadow-warm-md group bg-[#F7F2EA]">
+                        <Image
+                          src={service.image}
+                          alt={service.alt}
+                          fill
+                          className="object-cover group-hover:scale-105 transition-transform duration-500"
+                          sizes="(max-width: 768px) 100vw, 500px"
+                        />
+                        <div className="absolute inset-0 ring-1 ring-inset ring-black/5 rounded-3xl pointer-events-none" />
+                      </div>
+                    </div>
                   </div>
                 </div>
-
-                <div className="p-6 space-y-2">
-                  <h3 className="font-serif font-bold text-lg text-[#352A25]">
-                    Spacious Living Suites
-                  </h3>
-                  <p className="text-xs text-[#352A25]/80 leading-relaxed">
-                    Orthopedic beds, air conditioning, reading chairs, attached anti-skid bathrooms with grab rails and instant emergency nurse call cords.
-                  </p>
-                </div>
-              </div>
-
-              <div className="p-6 pt-0 border-t border-[#352A25]/10 flex items-center justify-between text-xs text-[#352A25] font-semibold">
-                <span>Daily housekeeping & linen care</span>
-                <BedDouble className="w-4 h-4 text-[#78836A]" />
-              </div>
-            </div>
-
-            {/* Card 2: Dining Hall */}
-            <div className="bg-white rounded-3xl overflow-hidden border border-[#352A25]/10 shadow-warm-sm hover:shadow-warm-md hover:border-[#A47750]/40 transition-all flex flex-col justify-between">
-              <div>
-                <div className="relative w-full h-56 sm:h-64">
-                  <Image
-                    src="/images/senior-dining-hall.jpg"
-                    alt="Senior citizens enjoying fresh satvik vegetarian food together in a sunny community dining room"
-                    fill
-                    className="object-cover"
-                  />
-                  <div className="absolute top-3 left-3 bg-[#352A25]/90 backdrop-blur-xs text-[#F7F2EA] px-3 py-1 rounded-full text-[11px] font-bold">
-                    Nutritious Dining
-                  </div>
-                </div>
-
-                <div className="p-6 space-y-2">
-                  <h3 className="font-serif font-bold text-lg text-[#352A25]">
-                    Wholesome Satvik Food
-                  </h3>
-                  <p className="text-xs text-[#352A25]/80 leading-relaxed">
-                    Dietitian-supervised vegetarian meals cooked fresh 4 times a day with low-sodium, diabetic-friendly, and pureed meal options.
-                  </p>
-                </div>
-              </div>
-
-              <div className="p-6 pt-0 border-t border-[#352A25]/10 flex items-center justify-between text-xs text-[#352A25] font-semibold">
-                <span>Tailored dietary plans</span>
-                <Utensils className="w-4 h-4 text-[#78836A]" />
-              </div>
-            </div>
-
-            {/* Card 3: Botanical Garden */}
-            <div className="bg-white rounded-3xl overflow-hidden border border-[#352A25]/10 shadow-warm-sm hover:shadow-warm-md hover:border-[#A47750]/40 transition-all flex flex-col justify-between md:col-span-2 lg:col-span-1">
-              <div>
-                <div className="relative w-full h-56 sm:h-64">
-                  <Image
-                    src="/images/about-garden-walk.jpg"
-                    alt="Serene herbal flower garden walking trails"
-                    fill
-                    className="object-cover"
-                  />
-                  <div className="absolute top-3 left-3 bg-[#352A25]/90 backdrop-blur-xs text-[#F7F2EA] px-3 py-1 rounded-full text-[11px] font-bold">
-                    Herbal & Flower Garden
-                  </div>
-                </div>
-
-                <div className="p-6 space-y-2">
-                  <h3 className="font-serif font-bold text-lg text-[#352A25]">
-                    Serene Nature Trails
-                  </h3>
-                  <p className="text-xs text-[#352A25]/80 leading-relaxed">
-                    Lush botanical gardens with paved, anti-skid walking pathways, gazebos, and flowering shrubs for fresh morning walks and gentle yoga.
-                  </p>
-                </div>
-              </div>
-
-              <div className="p-6 pt-0 border-t border-[#352A25]/10 flex items-center justify-between text-xs text-[#352A25] font-semibold">
-                <span>Wheelchair accessible paths</span>
-                <Sun className="w-4 h-4 text-[#78836A]" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 6. Comprehensive Care Services */}
-      <section id="services" className="py-20 bg-white border-b border-[#352A25]/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-8">
-          <div className="max-w-3xl mx-auto text-center space-y-4 mb-16">
-            <span className="text-xs font-bold uppercase tracking-wider text-[#A47750]">
-              Specialized Care Programs
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#352A25]">
-              Care Programs Tailored to Individual Needs
-            </h2>
-            <p className="text-[#352A25]/80 text-sm sm:text-base leading-relaxed">
-              Certified geriatric specialists providing customized support at every life stage.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div className="p-6 rounded-2xl bg-[#F7F2EA] border border-[#352A25]/10 space-y-3 hover:border-[#A47750]/40 hover:shadow-warm-sm transition-all">
-              <div className="w-10 h-10 rounded-xl bg-white text-[#78836A] border border-[#352A25]/10 flex items-center justify-center">
-                <Heart className="w-5 h-5 text-[#78836A]" />
-              </div>
-              <h3 className="font-serif font-bold text-base text-[#352A25]">
-                Assisted Daily Living (ADL)
-              </h3>
-              <p className="text-xs text-[#352A25]/80 leading-relaxed">
-                Respectful assistance with bathing, dressing, medication management, and mobility support while fostering self-confidence.
-              </p>
-            </div>
-
-            <div className="p-6 rounded-2xl bg-[#F7F2EA] border border-[#352A25]/10 space-y-3 hover:border-[#A47750]/40 hover:shadow-warm-sm transition-all">
-              <div className="w-10 h-10 rounded-xl bg-white text-[#A47750] border border-[#352A25]/10 flex items-center justify-center">
-                <Activity className="w-5 h-5 text-[#A47750]" />
-              </div>
-              <h3 className="font-serif font-bold text-base text-[#352A25]">
-                Dementia & Memory Care
-              </h3>
-              <p className="text-xs text-[#352A25]/80 leading-relaxed">
-                Calming sensory environments and cognitive activities designed specifically for elders coping with Alzheimer&apos;s and memory decline.
-              </p>
-            </div>
-
-            <div className="p-6 rounded-2xl bg-[#F7F2EA] border border-[#352A25]/10 space-y-3 hover:border-[#A47750]/40 hover:shadow-warm-sm transition-all">
-              <div className="w-10 h-10 rounded-xl bg-white text-[#78836A] border border-[#352A25]/10 flex items-center justify-center">
-                <Clock className="w-5 h-5 text-[#78836A]" />
-              </div>
-              <h3 className="font-serif font-bold text-base text-[#352A25]">
-                24/7 Nursing & Doctor Checks
-              </h3>
-              <p className="text-xs text-[#352A25]/80 leading-relaxed">
-                Continuous vitals logging, blood sugar checks, medication charting, and weekly visiting geriatric doctors.
-              </p>
-            </div>
-
-            <div className="p-6 rounded-2xl bg-[#F7F2EA] border border-[#352A25]/10 space-y-3 hover:border-[#A47750]/40 hover:shadow-warm-sm transition-all">
-              <div className="w-10 h-10 rounded-xl bg-white text-[#A47750] border border-[#352A25]/10 flex items-center justify-center">
-                <Sun className="w-5 h-5 text-[#A47750]" />
-              </div>
-              <h3 className="font-serif font-bold text-base text-[#352A25]">
-                Physiotherapy & Mobility Care
-              </h3>
-              <p className="text-xs text-[#352A25]/80 leading-relaxed">
-                In-house therapists provide daily exercises for joint pain relief, stroke rehabilitation, and fall prevention.
-              </p>
-            </div>
-
-            <div className="p-6 rounded-2xl bg-[#F7F2EA] border border-[#352A25]/10 space-y-3 hover:border-[#A47750]/40 hover:shadow-warm-sm transition-all">
-              <div className="w-10 h-10 rounded-xl bg-white text-[#78836A] border border-[#352A25]/10 flex items-center justify-center">
-                <Smile className="w-5 h-5 text-[#78836A]" />
-              </div>
-              <h3 className="font-serif font-bold text-base text-[#352A25]">
-                Short Stay & Respite Care
-              </h3>
-              <p className="text-xs text-[#352A25]/80 leading-relaxed">
-                Temporary accommodations for seniors whose primary family caregivers are traveling abroad or needing short-term support.
-              </p>
-            </div>
-
-            <div className="p-6 rounded-2xl bg-[#F7F2EA] border border-[#352A25]/10 space-y-3 hover:border-[#A47750]/40 hover:shadow-warm-sm transition-all">
-              <div className="w-10 h-10 rounded-xl bg-white text-[#A47750] border border-[#352A25]/10 flex items-center justify-center">
-                <Sparkles className="w-5 h-5 text-[#A47750]" />
-              </div>
-              <h3 className="font-serif font-bold text-base text-[#352A25]">
-                Spiritual & Social Community
-              </h3>
-              <p className="text-xs text-[#352A25]/80 leading-relaxed">
-                Celebrations of Diwali, Holi, birthdays, movie afternoons, indoor games, and daily devotional singing sessions.
-              </p>
-            </div>
+              );
+            })}
           </div>
         </div>
       </section>
