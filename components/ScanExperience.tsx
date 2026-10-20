@@ -41,46 +41,82 @@ const QUESTIONS = [
 
 const SLIDES = [
   {
-    src: '/images/obokash-hero-poster.jpg',
-    tag: 'Official Sanctuary Vision',
-    headline: 'A New Chapter of Life, Filled with Peace.',
-    body: 'OBOKASH is being envisioned as a warm and welcoming space for seniors — where they can live with dignity, companionship and comfort, while families find peace of mind.',
-    badge: 'Kulpi, West Bengal',
+    src: '/images/services/service-01-residential-living.jpg',
+    tag: '01 / Residential Living',
+    category: '01 / Residential Living',
+    headline: 'A Place to Call Home',
+    body: 'A thoughtfully designed living environment where comfort, privacy and belonging come together. OBOKASH aspires to offer seniors a peaceful space to embrace everyday life with independence, dignity and the warmth of a welcoming community.',
+    badge: 'Comfort • Independence • Belonging',
+    highlights: [
+      'Comfort, privacy and independent living',
+      'Warm and welcoming senior community',
+      'Peaceful, dignity-centered atmosphere',
+    ],
   },
   {
-    src: '/images/about-garden-walk.jpg',
-    tag: 'Botanical Sanctuary',
-    headline: 'Where every sunrise brings serenity, fresh air, and companionship.',
-    body: 'Safe anti-skid botanical walking paths, morning yoga, and gentle walks supported by compassionate caregivers. No elder walks alone.',
-    badge: '100% Anti-Skid Pathways',
+    src: '/images/services/service-02-assisted-living.jpg',
+    tag: '02 / Assisted Living',
+    category: '02 / Assisted Living',
+    headline: 'Care with Dignity',
+    body: "Every individual deserves care that respects their choices, routines and independence. Our vision for assisted living centres on compassionate personal support, thoughtful daily assistance and an approach that puts each resident's dignity first.",
+    badge: 'Respect • Support • Dignity',
+    highlights: [
+      'Compassionate personal support & daily care',
+      'Respects individual choices and routines',
+      "Puts each resident's dignity and autonomy first",
+    ],
   },
   {
-    src: '/images/hero-senior-living.jpg',
-    tag: 'Warmth & Reverence',
-    headline: 'A dignified sanctuary where your parents feel celebrated, not secluded.',
-    body: 'Round-the-clock trained geriatric nurses, personalized medical attention, and deeply human reverence in every interaction.',
-    badge: '24/7 ICU & Doctor Backup',
+    src: '/images/services/service-03-nutrition-dining.jpg',
+    tag: '03 / Nutrition & Dining',
+    category: '03 / Nutrition & Dining',
+    headline: 'Nourishment for Life',
+    body: 'Good food brings nourishment, comfort and people together. OBOKASH aims to make dining a pleasant part of everyday life, with thoughtfully planned meals, attention to individual dietary needs and opportunities to enjoy food in good company.',
+    badge: 'Nutrition • Enjoyment • Togetherness',
+    highlights: [
+      'Thoughtfully planned nutritious meals',
+      'Attentive to individual dietary needs',
+      'Joyful dining shared in warm company',
+    ],
   },
   {
-    src: '/images/senior-physio-wellness.jpg',
-    tag: 'Daily Health & Movement',
-    headline: 'Restoring mobility, strength, and the simple joy of daily movement.',
-    body: 'Dedicated geriatric physiotherapists, daily chair yoga, and cognitive wellness games ensure every resident stays agile and active.',
-    badge: 'Daily Geriatric Therapy',
+    src: '/images/services/service-04-healthcare-wellness.jpg',
+    tag: '04 / Healthcare & Wellness',
+    category: '04 / Healthcare & Wellness',
+    headline: 'Wellness, Every Day',
+    body: 'Ageing well means caring for both body and mind. OBOKASH envisions a supportive environment that encourages healthy routines and helps residents and families coordinate access to appropriate healthcare and wellness services.',
+    badge: 'Wellness • Reassurance • Support',
+    highlights: [
+      'Holistic care for both body and mind',
+      'Encourages healthy daily routines & movement',
+      'Assists families in healthcare coordination',
+    ],
   },
   {
-    src: '/images/senior-room-suite.jpg',
-    tag: 'Deluxe Private Suites',
-    headline: 'Private sanctuaries thoughtfully designed for comfort and safety.',
-    body: 'Motorized orthopedic beds, in-room emergency response systems, central climate control, and serene courtyard views.',
-    badge: 'Emergency Response In Every Room',
+    src: '/images/services/service-05-community-lifestyle.jpg',
+    tag: '05 / Community & Lifestyle',
+    category: '05 / Community & Lifestyle',
+    headline: 'Life Is Better Together',
+    body: 'A fulfilling life is shaped by connection, discovery and the freedom to enjoy what matters. From gardening and creative pursuits to cultural celebrations and shared activities, OBOKASH aims to nurture a community where friendships can flourish and every day can hold something meaningful.',
+    badge: 'Friendship • Joy • Purpose',
+    highlights: [
+      'Gardening, creative & cultural pursuits',
+      'Community where friendships flourish naturally',
+      'Every day holds meaningful shared connection',
+    ],
   },
   {
-    src: '/images/senior-dining-hall.jpg',
-    tag: 'Pure Satvik Dining',
-    headline: 'Doctor-curated nutritious vegetarian meals, shared with friends.',
-    body: 'Hygiene-certified pure satvik kitchen crafting wholesome, flavourful meals tailored to diabetic, renal, and dietary preferences.',
-    badge: 'Doctor-Curated Satvik Kitchen',
+    src: '/images/services/service-06-family-connect.jpg',
+    tag: '06 / Family Connect',
+    category: '06 / Family Connect',
+    headline: 'Peace of Mind for Families',
+    body: 'Choosing a senior living environment is a family decision built on trust. OBOKASH aims to encourage open communication, meaningful family involvement and thoughtful updates, helping loved ones remain connected and involved in the journey.',
+    badge: 'Trust • Connection • Reassurance',
+    highlights: [
+      'Open communication & regular family updates',
+      'Meaningful family involvement throughout',
+      'Reassurance and trusted partnership for loved ones',
+    ],
   },
 ];
 
@@ -563,11 +599,7 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
                       src={s.src}
                       alt={s.headline}
                       fill
-                      className={
-                        s.src === '/images/obokash-hero-poster.jpg'
-                          ? 'object-contain bg-[#2A211D]'
-                          : 'object-cover'
-                      }
+                      className="object-cover"
                       priority={idx === 0}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#352A25]/80 via-transparent to-transparent" />
@@ -582,13 +614,13 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
                 </div>
 
                 {/* Badge at bottom of image */}
-                <div className="absolute bottom-4 left-4 right-4 z-20 flex items-center justify-between">
-                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[#352A25]/90 backdrop-blur-md text-[11px] font-semibold text-[#F7F2EA] border border-[#352A25]/30">
-                    <Shield className="w-3.5 h-3.5 text-[#78836A]" />
-                    <span>{SLIDES[currentSlide].badge}</span>
+                <div className="absolute bottom-4 left-4 right-4 z-20 flex items-center justify-between gap-2">
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[#352A25]/90 backdrop-blur-md text-[11px] font-semibold text-[#F7F2EA] border border-[#352A25]/30 truncate">
+                    <Shield className="w-3.5 h-3.5 text-[#78836A] shrink-0" />
+                    <span className="truncate">{SLIDES[currentSlide].badge}</span>
                   </div>
 
-                  <span className="text-xs font-mono font-bold bg-[#352A25]/90 px-2.5 py-1 rounded-md text-[#F7F2EA]">
+                  <span className="text-xs font-mono font-bold bg-[#352A25]/90 px-2.5 py-1 rounded-md text-[#F7F2EA] shrink-0">
                     0{currentSlide + 1} / 0{SLIDES.length}
                   </span>
                 </div>
@@ -599,7 +631,7 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
                 <div>
                   <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#A47750] mb-2">
                     <Sparkles className="w-3.5 h-3.5" />
-                    <span>Sanctuary Tour</span>
+                    <span>{SLIDES[currentSlide].category}</span>
                   </div>
 
                   <h3 className="font-serif text-xl sm:text-2xl font-bold text-[#352A25] leading-snug mb-3">
@@ -610,16 +642,14 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
                     {SLIDES[currentSlide].body}
                   </p>
 
-                  {/* Highlights list */}
+                  {/* Dynamic Highlights list */}
                   <div className="mt-5 space-y-2 pt-4 border-t border-[#352A25]/10">
-                    <div className="flex items-center gap-2 text-xs text-[#352A25]/85">
-                      <Check className="w-3.5 h-3.5 text-[#78836A] shrink-0" />
-                      <span>Dedicated geriatric personal companion</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-xs text-[#352A25]/85">
-                      <Check className="w-3.5 h-3.5 text-[#78836A] shrink-0" />
-                      <span>Regular family video calls & medical logs</span>
-                    </div>
+                    {SLIDES[currentSlide].highlights.map((item, hIdx) => (
+                      <div key={hIdx} className="flex items-center gap-2 text-xs text-[#352A25]/85">
+                        <Check className="w-3.5 h-3.5 text-[#78836A] shrink-0" />
+                        <span>{item}</span>
+                      </div>
+                    ))}
                   </div>
                 </div>
 
