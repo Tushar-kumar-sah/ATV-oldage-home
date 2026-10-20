@@ -3,9 +3,18 @@ import './globals.css';
 import Providers from '@/components/Providers';
 
 export const metadata: Metadata = {
-  title: 'OBOKASH - SENIOR LIVING | A Haven of Trust, Security, and Unparalleled Peace.',
-  description: 'OBOKASH - SENIOR LIVING: A Haven of Trust, Security, and Unparalleled Peace. A compassionate, secure, and dignified senior sanctuary offering 24/7 assisted care, medical support, and a vibrant community.',
-  keywords: ['Obokash Senior Living', 'Old Age Home', 'Senior Living', 'Elder Care', 'Assisted Living', 'Dementia Care', 'Retirement Home'],
+  title: 'OBOKASH Senior Living | A New Chapter of Life, Filled with Peace.',
+  description: 'OBOKASH is an evolving vision for senior living, built around dignity, comfort, companionship, and peace of mind. A Haven of Trust, Security, and Unparalleled Peace. 8769, SH 1, Kulpi, Chak Ramnath, West Bengal – 743351.',
+  keywords: [
+    'OBOKASH Senior Living',
+    'A New Chapter of Life Filled with Peace',
+    'A Haven of Trust Security and Unparalleled Peace',
+    'Kulpi West Bengal Senior Living',
+    'Old Age Home West Bengal',
+    'Senior Care Kolkata',
+    'Assisted Living Bengal',
+    'Dignified Elder Care',
+  ],
   icons: {
     icon: [
       { url: '/images/obokash-logo.png', type: 'image/png' },
@@ -22,7 +31,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="min-h-screen bg-cream-50 font-sans text-sage-900 antialiased selection:bg-sage-200 selection:text-sage-900">
+      <body className="min-h-screen bg-[#F7F2EA] font-sans text-[#352A25] antialiased selection:bg-[#78836A]/20 selection:text-[#352A25]">
         <Providers>{children}</Providers>
       </body>
     </html>

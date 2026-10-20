@@ -12,7 +12,7 @@ export default function AdminLayout({
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
   return (
-    <div className="flex min-h-screen bg-[#FAF8F5] font-sans antialiased">
+    <div className="flex min-h-screen bg-[#F7F2EA] font-sans antialiased">
       {/* Sidebar - responsive desktop and off-canvas mobile drawer */}
       <AdminSidebar
         mobileOpen={mobileSidebarOpen}

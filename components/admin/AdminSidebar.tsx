@@ -74,11 +74,11 @@ export default function AdminSidebar({ mobileOpen = false, onClose }: AdminSideb
   };
 
   const sidebarContent = (
-    <div className="flex flex-col h-full bg-[#052E16] text-emerald-100">
+    <div className="flex flex-col h-full bg-[#352A25] text-[#F7F2EA]">
       {/* Brand Header */}
-      <div className="p-4 sm:p-5 border-b border-emerald-900/80 flex items-center justify-between">
+      <div className="p-4 sm:p-5 border-b border-[#F7F2EA]/10 flex items-center justify-between">
         <div className="flex items-center space-x-2.5">
-          <div className="h-10 px-2 bg-black rounded-xl border border-stone-800 flex items-center justify-center shadow-md shrink-0">
+          <div className="h-10 px-2 bg-white rounded-xl border border-[#352A25]/15 flex items-center justify-center shadow-md shrink-0">
             <Image
               src="/images/obokash-logo.png"
               alt="OBOKASH Logo"
@@ -88,8 +88,8 @@ export default function AdminSidebar({ mobileOpen = false, onClose }: AdminSideb
             />
           </div>
           <div>
-            <h1 className="font-serif font-bold text-base text-white leading-tight">OBOKASH</h1>
-            <p className="text-[10px] text-amber-300 font-semibold tracking-wide uppercase">Senior Living</p>
+            <h1 className="font-serif font-bold text-base text-[#F7F2EA] leading-tight">OBOKASH</h1>
+            <p className="text-[10px] text-[#A47750] font-semibold tracking-wide uppercase">Senior Living</p>
           </div>
         </div>
 
@@ -98,7 +98,7 @@ export default function AdminSidebar({ mobileOpen = false, onClose }: AdminSideb
           <button
             type="button"
             onClick={onClose}
-            className="md:hidden p-1.5 rounded-lg text-emerald-300 hover:text-white hover:bg-emerald-900 transition-colors"
+            className="md:hidden p-1.5 rounded-lg text-[#F7F2EA]/80 hover:text-white hover:bg-white/10 transition-colors"
             aria-label="Close sidebar"
           >
             <X className="w-5 h-5" />
@@ -108,7 +108,7 @@ export default function AdminSidebar({ mobileOpen = false, onClose }: AdminSideb
 
       {/* Navigation Links */}
       <nav className="flex-1 px-3 py-5 space-y-1.5 overflow-y-auto">
-        <div className="px-3 pb-2 text-[10px] font-bold uppercase tracking-wider text-emerald-400">
+        <div className="px-3 pb-2 text-[10px] font-bold uppercase tracking-wider text-[#A47750]">
           Core Operations
         </div>
         {navItems.map((item) => {
@@ -127,20 +127,20 @@ export default function AdminSidebar({ mobileOpen = false, onClose }: AdminSideb
               onClick={handleNavClick}
               className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
                 isActive
-                  ? 'bg-emerald-900 text-white shadow-xs font-bold border border-emerald-700/50'
-                  : 'text-emerald-200/80 hover:bg-emerald-900/50 hover:text-white'
+                  ? 'bg-[#78836A] text-white shadow-xs font-bold'
+                  : 'text-[#F7F2EA]/80 hover:bg-white/10 hover:text-white'
               }`}
             >
               <div className="flex items-center space-x-3">
                 <Icon
                   className={`w-4 h-4 ${
-                    isActive ? 'text-amber-400' : 'text-emerald-400/80'
+                    isActive ? 'text-[#F7F2EA]' : 'text-[#A47750]'
                   }`}
                 />
                 <span>{item.name}</span>
               </div>
               {item.badge && (
-                <span className="text-[9px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                <span className="text-[9px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-[#A47750]/20 text-[#A47750] border border-[#A47750]/40">
                   {item.badge}
                 </span>
               )}
@@ -148,34 +148,34 @@ export default function AdminSidebar({ mobileOpen = false, onClose }: AdminSideb
           );
         })}
 
-        <div className="pt-5 px-3 pb-2 text-[10px] font-bold uppercase tracking-wider text-emerald-400">
+        <div className="pt-5 px-3 pb-2 text-[10px] font-bold uppercase tracking-wider text-[#A47750]">
           Public Website
         </div>
         <Link
           href="/"
           target="_blank"
           onClick={handleNavClick}
-          className="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs text-emerald-300 hover:bg-emerald-900/50 hover:text-white transition-colors"
+          className="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs text-[#F7F2EA]/80 hover:bg-white/10 hover:text-white transition-colors"
         >
           <div className="flex items-center space-x-3">
-            <ExternalLink className="w-4 h-4 text-emerald-400" />
+            <ExternalLink className="w-4 h-4 text-[#A47750]" />
             <span>Visit Home Page</span>
           </div>
-          <ChevronRight className="w-3.5 h-3.5 text-emerald-600" />
+          <ChevronRight className="w-3.5 h-3.5 text-[#F7F2EA]/40" />
         </Link>
       </nav>
 
       {/* User Status & Sign Out */}
-      <div className="p-4 border-t border-emerald-900/80 bg-[#042411]">
+      <div className="p-4 border-t border-[#F7F2EA]/10 bg-[#271E1A]">
         <div className="flex items-center space-x-3 mb-3">
-          <div className="w-9 h-9 rounded-full bg-emerald-800 border border-emerald-700 flex items-center justify-center font-bold text-white text-sm shrink-0">
+          <div className="w-9 h-9 rounded-full bg-[#78836A] text-white flex items-center justify-center font-bold text-sm shrink-0">
             {session?.user?.name ? session.user.name.charAt(0).toUpperCase() : 'U'}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold text-white truncate">{session?.user?.name || 'Staff User'}</p>
-            <p className="text-xs text-emerald-300 truncate capitalize">
+            <p className="text-sm font-semibold text-[#F7F2EA] truncate">{session?.user?.name || 'Staff User'}</p>
+            <p className="text-xs text-[#F7F2EA]/70 truncate capitalize">
               {session?.user?.role === 'super_admin' ? (
-                <span className="text-amber-300 font-medium">Super Administrator</span>
+                <span className="text-[#A47750] font-medium">Super Administrator</span>
               ) : (
                 'Staff Member'
               )}
@@ -185,7 +185,7 @@ export default function AdminSidebar({ mobileOpen = false, onClose }: AdminSideb
 
         <button
           onClick={() => signOut({ callbackUrl: '/login' })}
-          className="w-full flex items-center justify-center space-x-2 px-3 py-2 text-xs font-semibold rounded-xl text-emerald-200 bg-emerald-900/80 hover:bg-red-950/80 hover:text-red-200 hover:border-red-800/60 border border-emerald-800 transition-colors"
+          className="w-full flex items-center justify-center space-x-2 px-3 py-2 text-xs font-semibold rounded-xl text-[#F7F2EA] bg-[#352A25] hover:bg-red-950/80 hover:text-red-200 border border-[#A47750]/30 transition-colors cursor-pointer"
         >
           <LogOut className="w-3.5 h-3.5" />
           <span>Sign Out Safely</span>

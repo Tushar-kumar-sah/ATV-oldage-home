@@ -84,7 +84,7 @@ const INITIAL_CHECKERS = [
   { id: 'AD-EC-003', name: 'Col. Virendra Saxena (Retd.)', city: 'Noida', time: '1 hour ago', spot: '#03 VIP' },
   { id: 'AD-EC-004', name: 'Meenakshi Sundaram', city: 'Bengaluru', time: '2 hours ago', spot: '#04 VIP' },
   { id: 'AD-EC-005', name: 'Rajesh & Priti Patel', city: 'Ahmedabad', time: '3 hours ago', spot: '#05 VIP' },
-  { id: 'AD-EC-006', name: 'Ananya Deshmukh', city: 'Pune', time: '4 hours ago', spot: '#06 VIP' },
+  { id: 'AD-EC-006', name: 'Ananya Sengupta', city: 'Kolkata', time: '4 hours ago', spot: '#06 VIP' },
 ];
 
 interface ScanExperienceProps {
@@ -296,17 +296,17 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
   };
 
   return (
-    <div className="min-h-screen bg-[#0A1811] text-white flex flex-col justify-between selection:bg-amber-500 selection:text-black font-sans relative overflow-x-hidden">
-      {/* Ambient background glow elements */}
+    <div className="min-h-screen bg-[#F7F2EA] text-[#352A25] flex flex-col justify-between selection:bg-[#78836A]/20 selection:text-[#352A25] font-sans relative overflow-x-hidden">
+      {/* Ambient background glow elements in Warm Clay & Sage */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-        <div className="absolute -top-32 -left-32 w-96 h-96 bg-emerald-600/15 rounded-full blur-[100px]" />
-        <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-amber-600/15 rounded-full blur-[100px]" />
+        <div className="absolute -top-32 -left-32 w-96 h-96 bg-[#78836A]/10 rounded-full blur-[100px]" />
+        <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-[#A47750]/10 rounded-full blur-[100px]" />
       </div>
 
       {/* Top micro-navigation */}
-      <header className="relative z-20 w-full max-w-6xl mx-auto px-4 py-4 flex items-center justify-between border-b border-emerald-900/30">
+      <header className="relative z-20 w-full max-w-6xl mx-auto px-4 py-4 flex items-center justify-between border-b border-[#352A25]/15">
         <div className="flex items-center gap-2.5">
-          <div className="h-10 px-2 rounded-xl overflow-hidden border border-emerald-500/40 relative shadow-md bg-black flex items-center justify-center">
+          <div className="h-10 px-2 rounded-xl overflow-hidden border border-[#352A25]/15 relative shadow-xs bg-white flex items-center justify-center">
             <Image
               src="/images/obokash-logo.png"
               alt="OBOKASH - SENIOR LIVING Logo"
@@ -317,25 +317,25 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
             />
           </div>
           <div>
-            <span className="font-serif font-bold text-base tracking-wide text-white block leading-none">
+            <span className="font-serif font-bold text-base tracking-wide text-[#352A25] block leading-none">
               OBOKASH
             </span>
-            <span className="text-[10px] uppercase tracking-widest text-amber-400 font-semibold">
+            <span className="text-[10px] uppercase tracking-widest text-[#A47750] font-semibold">
               Senior Living
             </span>
           </div>
         </div>
 
         {/* Phase step indicator */}
-        <div className="flex items-center gap-1.5 text-xs text-emerald-400/80 bg-emerald-950/60 px-3 py-1.5 rounded-full border border-emerald-800/40">
+        <div className="flex items-center gap-1.5 text-xs text-[#352A25] bg-white px-3 py-1.5 rounded-full border border-[#78836A]/30 shadow-xs">
           <span
             className={`w-2 h-2 rounded-full ${
               phase === 'scan'
-                ? 'bg-amber-400 animate-ping'
-                : 'bg-emerald-400'
+                ? 'bg-[#A47750] animate-ping'
+                : 'bg-[#78836A]'
             }`}
           />
-          <span className="font-medium text-[11px] sm:text-xs">
+          <span className="font-semibold text-[11px] sm:text-xs">
             {phase === 'scan' && 'Scanning Code...'}
             {phase === 'step1_questions' && 'Step 1: Perspectives'}
             {phase === 'step1_loading' && 'Step 1: Loading Sanctuary'}
@@ -353,45 +353,45 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
         {/* PHASE 0: SCAN IN PROGRESS / JUST COMPLETED                                */}
         {/* ========================================================================= */}
         {phase === 'scan' && (
-          <div className="w-full max-w-md text-center py-12 px-6 bg-emerald-950/40 border border-emerald-500/20 rounded-3xl backdrop-blur-xl shadow-2xl relative overflow-hidden">
+          <div className="w-full max-w-md text-center py-12 px-6 bg-white border border-[#352A25]/15 rounded-3xl shadow-warm-lg relative overflow-hidden">
             {/* Scanner laser animation */}
-            <div className="relative w-48 h-48 mx-auto mb-8 bg-black/60 rounded-2xl border-2 border-emerald-500/40 p-4 flex items-center justify-center overflow-hidden shadow-inner">
-              <QrCode className="w-36 h-36 text-emerald-400/70" />
+            <div className="relative w-48 h-48 mx-auto mb-8 bg-[#F7F2EA] rounded-2xl border-2 border-[#352A25]/20 p-4 flex items-center justify-center overflow-hidden shadow-inner">
+              <QrCode className="w-36 h-36 text-[#352A25]/75" />
 
               {/* Laser line moving vertically */}
               <div
-                className="absolute left-0 right-0 h-1 bg-gradient-to-r from-transparent via-amber-400 to-transparent shadow-[0_0_15px_#F59E0B] transition-all duration-100 ease-linear"
+                className="absolute left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#78836A] to-transparent shadow-[0_0_12px_#78836A] transition-all duration-100 ease-linear"
                 style={{ top: `${scanProgress}%` }}
               />
 
-              {/* Viewfinder corner brackets */}
-              <div className="absolute top-2 left-2 w-4 h-4 border-t-2 border-l-2 border-amber-400" />
-              <div className="absolute top-2 right-2 w-4 h-4 border-t-2 border-r-2 border-amber-400" />
-              <div className="absolute bottom-2 left-2 w-4 h-4 border-b-2 border-l-2 border-amber-400" />
-              <div className="absolute bottom-2 right-2 w-4 h-4 border-b-2 border-r-2 border-amber-400" />
+              {/* Viewfinder corner brackets in Warm Clay */}
+              <div className="absolute top-2 left-2 w-4 h-4 border-t-2 border-l-2 border-[#A47750]" />
+              <div className="absolute top-2 right-2 w-4 h-4 border-t-2 border-r-2 border-[#A47750]" />
+              <div className="absolute bottom-2 left-2 w-4 h-4 border-b-2 border-l-2 border-[#A47750]" />
+              <div className="absolute bottom-2 right-2 w-4 h-4 border-b-2 border-r-2 border-[#A47750]" />
             </div>
 
             <div className="space-y-3">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-semibold">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#78836A]/10 border border-[#78836A]/30 text-[#78836A] text-xs font-semibold">
                 {scanComplete ? (
                   <>
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                    <CheckCircle2 className="w-3.5 h-3.5 text-[#78836A]" />
                     <span>Scan Verified & Profile Loaded</span>
                   </>
                 ) : (
                   <>
-                    <Loader2 className="w-3.5 h-3.5 animate-spin text-amber-400" />
+                    <Loader2 className="w-3.5 h-3.5 animate-spin text-[#A47750]" />
                     <span>Reading Obokash Smart QR...</span>
                   </>
                 )}
               </div>
 
-              <h2 className="text-xl sm:text-2xl font-serif font-bold text-white">
+              <h2 className="text-xl sm:text-2xl font-serif font-bold text-[#352A25]">
                 {scanComplete
                   ? 'Welcome to OBOKASH - SENIOR LIVING'
                   : 'Scanning Sanctuary Beacon...'}
               </h2>
-              <p className="text-xs sm:text-sm text-stone-400 max-w-sm mx-auto">
+              <p className="text-xs sm:text-sm text-[#352A25]/80 max-w-sm mx-auto">
                 Opening your personalized discovery journey. Please hold for a
                 moment.
               </p>
@@ -400,7 +400,7 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
               <div className="pt-4">
                 <button
                   onClick={() => setPhase('step1_questions')}
-                  className="text-xs text-amber-400/80 hover:text-amber-300 underline underline-offset-4 cursor-pointer"
+                  className="text-xs text-[#A47750] hover:text-[#8E623E] font-medium underline underline-offset-4 cursor-pointer"
                 >
                   Scan done? Proceed directly →
                 </button>
@@ -415,20 +415,20 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
         {phase === 'step1_questions' && (
           <div className="w-full max-w-3xl text-center py-12 px-4 sm:px-8 relative">
             {/* Tagline that STAYS prominently */}
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-bold uppercase tracking-widest mb-8 shadow-sm">
-              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#A47750]/10 border border-[#A47750]/30 text-[#A47750] text-xs font-bold uppercase tracking-widest mb-8 shadow-xs">
+              <Sparkles className="w-3.5 h-3.5 text-[#A47750]" />
               <span>Some Questions Changes Perspectives</span>
             </div>
 
             {/* Big quote mark */}
-            <div className="text-emerald-500/20 font-serif text-8xl leading-none select-none mb-2">
+            <div className="text-[#78836A]/20 font-serif text-8xl leading-none select-none mb-2">
               &ldquo;
             </div>
 
             {/* Rotating philosophical question */}
             <div className="min-h-[140px] flex items-center justify-center">
               <p
-                className={`text-2xl sm:text-4xl md:text-5xl font-serif font-light text-[#F7F4EE] leading-snug tracking-tight max-w-2xl mx-auto transition-all duration-500 ${
+                className={`text-2xl sm:text-4xl md:text-5xl font-serif font-light text-[#352A25] leading-snug tracking-tight max-w-2xl mx-auto transition-all duration-500 ${
                   qVisible
                     ? 'opacity-100 translate-y-0 scale-100'
                     : 'opacity-0 translate-y-4 scale-95'
@@ -446,8 +446,8 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
                   onClick={() => setQIndex(i)}
                   className={`h-1.5 rounded-full transition-all duration-500 ${
                     i === qIndex
-                      ? 'w-8 bg-amber-400 shadow-[0_0_8px_#F59E0B]'
-                      : 'w-2 bg-stone-700 hover:bg-stone-500'
+                      ? 'w-8 bg-[#A47750] shadow-xs'
+                      : 'w-2 bg-[#352A25]/20 hover:bg-[#352A25]/40'
                   }`}
                   aria-label={`Go to question ${i + 1}`}
                 />
@@ -465,19 +465,19 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
               <button
                 id="know-more-trigger-btn"
                 onClick={() => setPhase('step1_loading')}
-                className="group relative inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold text-base sm:text-lg shadow-xl shadow-emerald-950/60 hover:shadow-emerald-600/30 hover:scale-105 active:scale-95 transition cursor-pointer border border-emerald-400/30"
+                className="group relative inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-[#352A25] hover:bg-[#271E1A] text-[#F7F2EA] font-bold text-base sm:text-lg shadow-warm-lg hover:scale-105 active:scale-95 transition cursor-pointer border border-[#352A25]"
               >
                 {/* Ping glow ring around button */}
-                <span className="absolute -inset-1 rounded-2xl bg-amber-400/20 blur-sm group-hover:bg-amber-400/40 transition" />
+                <span className="absolute -inset-1 rounded-2xl bg-[#A47750]/20 blur-sm group-hover:bg-[#A47750]/40 transition" />
 
-                <div className="relative w-7 h-7 rounded-lg bg-amber-400/20 text-amber-300 flex items-center justify-center border border-amber-400/40">
+                <div className="relative w-7 h-7 rounded-lg bg-[#A47750] text-white flex items-center justify-center">
                   <Info className="w-4 h-4" />
                 </div>
                 <span className="relative">Know More</span>
-                <ChevronRight className="relative w-5 h-5 text-amber-300 group-hover:translate-x-1 transition" />
+                <ChevronRight className="relative w-5 h-5 text-[#A47750] group-hover:translate-x-1 transition" />
               </button>
 
-              <p className="text-xs text-stone-500 mt-3 font-medium">
+              <p className="text-xs text-[#352A25]/70 mt-3 font-medium">
                 Tap above to uncover the sanctuary story
               </p>
             </div>
@@ -488,9 +488,9 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
         {/* STEP 1 (SUB-PART): PEOPLE CLICK ON IT -> THE LOGO COMES UP + LOADING...    */}
         {/* ========================================================================= */}
         {phase === 'step1_loading' && (
-          <div className="w-full max-w-md text-center py-16 px-6 bg-emerald-950/30 border border-emerald-500/20 rounded-3xl backdrop-blur-xl shadow-2xl relative">
+          <div className="w-full max-w-md text-center py-16 px-6 bg-white border border-[#352A25]/15 rounded-3xl shadow-warm-lg relative">
             {/* The Logo zooms in */}
-            <div className="relative w-64 sm:w-72 h-32 mx-auto mb-6 rounded-2xl overflow-hidden border-2 border-amber-400/50 shadow-2xl shadow-amber-500/20 bg-black animate-in zoom-in-75 duration-700 flex items-center justify-center p-2">
+            <div className="relative w-64 sm:w-72 h-32 mx-auto mb-6 rounded-2xl overflow-hidden border-2 border-[#A47750]/50 shadow-md bg-white animate-in zoom-in-75 duration-700 flex items-center justify-center p-2">
               <Image
                 src="/images/obokash-logo.png"
                 alt="OBOKASH - SENIOR LIVING Logo"
@@ -500,31 +500,37 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
               />
             </div>
 
-            <h1 className="font-serif text-2xl sm:text-3xl font-bold text-white tracking-wide mb-1">
-              OBOKASH - SENIOR LIVING
+            <span className="text-[11px] font-bold tracking-widest uppercase text-[#A47750] block mb-1">
+              OBOKASH Senior Living
+            </span>
+            <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#352A25] tracking-wide mb-1">
+              A New Chapter of Life, Filled with Peace.
             </h1>
-            <p className="text-xs sm:text-sm text-amber-300 font-medium italic max-w-sm mx-auto mb-8 leading-relaxed">
+            <p className="text-xs sm:text-sm text-[#A47750] font-medium italic max-w-sm mx-auto mb-2 leading-relaxed font-serif">
               A Haven of Trust, Security, and Unparalleled Peace.
+            </p>
+            <p className="text-[11px] text-[#352A25]/70 max-w-md mx-auto mb-6">
+              📍 8769, SH 1, Kulpi, Chak Ramnath, West Bengal – 743351.
             </p>
 
             {/* Loading progress bar */}
             <div className="w-full max-w-xs mx-auto space-y-2">
-              <div className="flex justify-between text-xs text-stone-400 font-medium">
+              <div className="flex justify-between text-xs text-[#352A25]/70 font-medium">
                 <span>Loading Sanctuary Profile...</span>
-                <span className="font-mono text-amber-400">{loadProgress}%</span>
+                <span className="font-mono text-[#A47750] font-bold">{loadProgress}%</span>
               </div>
-              <div className="h-2 w-full bg-stone-900 rounded-full overflow-hidden border border-emerald-800/40">
+              <div className="h-2 w-full bg-[#F7F2EA] rounded-full overflow-hidden border border-[#352A25]/15">
                 <div
-                  className="h-full bg-gradient-to-r from-emerald-500 via-amber-400 to-amber-500 rounded-full shadow-[0_0_12px_#F59E0B] transition-all duration-150"
+                  className="h-full bg-gradient-to-r from-[#78836A] via-[#A47750] to-[#352A25] rounded-full transition-all duration-150"
                   style={{ width: `${loadProgress}%` }}
                 />
               </div>
             </div>
 
             <div className="flex justify-center gap-1.5 mt-6">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-bounce" />
-              <span className="w-2 h-2 rounded-full bg-amber-400 animate-bounce [animation-delay:0.2s]" />
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-bounce [animation-delay:0.4s]" />
+              <span className="w-2 h-2 rounded-full bg-[#78836A] animate-bounce" />
+              <span className="w-2 h-2 rounded-full bg-[#A47750] animate-bounce [animation-delay:0.2s]" />
+              <span className="w-2 h-2 rounded-full bg-[#352A25] animate-bounce [animation-delay:0.4s]" />
             </div>
           </div>
         )}
@@ -533,10 +539,10 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
         {/* STEP 2: SMALL PHOTO SLIDESHOW + TEXTUAL INFORMATION                       */}
         {/* ========================================================================= */}
         {phase === 'step2_slides' && (
-          <div className="w-full max-w-4xl bg-emerald-950/40 border border-emerald-700/30 rounded-3xl overflow-hidden shadow-2xl backdrop-blur-md">
+          <div className="w-full max-w-4xl bg-white border border-[#352A25]/15 rounded-3xl overflow-hidden shadow-warm-lg">
             <div className="grid grid-cols-1 md:grid-cols-12 min-h-[460px]">
               {/* Photo Slideshow Column (7 cols on desktop) */}
-              <div className="md:col-span-7 relative min-h-[260px] sm:min-h-[340px] md:min-h-full overflow-hidden bg-black/40">
+              <div className="md:col-span-7 relative min-h-[260px] sm:min-h-[340px] md:min-h-full overflow-hidden bg-stone-900">
                 {SLIDES.map((s, idx) => (
                   <div
                     key={idx}
@@ -553,61 +559,61 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
                       className="object-cover"
                       priority={idx === 0}
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#352A25]/80 via-transparent to-transparent" />
                   </div>
                 ))}
 
                 {/* Tag pill atop image */}
                 <div className="absolute top-4 left-4 z-20">
-                  <span className="px-3 py-1 rounded-full text-xs font-bold bg-amber-500 text-stone-950 shadow-md">
+                  <span className="px-3 py-1 rounded-full text-xs font-bold bg-[#A47750] text-white shadow-md">
                     {SLIDES[currentSlide].tag}
                   </span>
                 </div>
 
                 {/* Badge at bottom of image */}
                 <div className="absolute bottom-4 left-4 right-4 z-20 flex items-center justify-between">
-                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-black/70 backdrop-blur-md text-[11px] font-semibold text-emerald-300 border border-emerald-500/30">
-                    <Shield className="w-3.5 h-3.5 text-amber-400" />
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[#352A25]/90 backdrop-blur-md text-[11px] font-semibold text-[#F7F2EA] border border-[#352A25]/30">
+                    <Shield className="w-3.5 h-3.5 text-[#78836A]" />
                     <span>{SLIDES[currentSlide].badge}</span>
                   </div>
 
-                  <span className="text-xs font-mono font-bold bg-black/70 px-2.5 py-1 rounded-md text-amber-300">
+                  <span className="text-xs font-mono font-bold bg-[#352A25]/90 px-2.5 py-1 rounded-md text-[#F7F2EA]">
                     0{currentSlide + 1} / 0{SLIDES.length}
                   </span>
                 </div>
               </div>
 
               {/* Textual Information Column (5 cols on desktop) */}
-              <div className="md:col-span-5 p-6 sm:p-8 flex flex-col justify-between bg-gradient-to-br from-[#0D241A] to-[#0A1A12] border-t md:border-t-0 md:border-l border-emerald-800/30">
+              <div className="md:col-span-5 p-6 sm:p-8 flex flex-col justify-between bg-[#F7F2EA] border-t md:border-t-0 md:border-l border-[#352A25]/10">
                 <div>
-                  <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-amber-400 mb-2">
+                  <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#A47750] mb-2">
                     <Sparkles className="w-3.5 h-3.5" />
                     <span>Sanctuary Tour</span>
                   </div>
 
-                  <h3 className="font-serif text-xl sm:text-2xl font-bold text-white leading-snug mb-3">
+                  <h3 className="font-serif text-xl sm:text-2xl font-bold text-[#352A25] leading-snug mb-3">
                     {SLIDES[currentSlide].headline}
                   </h3>
 
-                  <p className="text-xs sm:text-sm text-stone-300 leading-relaxed">
+                  <p className="text-xs sm:text-sm text-[#352A25]/85 leading-relaxed">
                     {SLIDES[currentSlide].body}
                   </p>
 
                   {/* Highlights list */}
-                  <div className="mt-5 space-y-2 pt-4 border-t border-emerald-900/50">
-                    <div className="flex items-center gap-2 text-xs text-stone-300">
-                      <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                  <div className="mt-5 space-y-2 pt-4 border-t border-[#352A25]/10">
+                    <div className="flex items-center gap-2 text-xs text-[#352A25]/85">
+                      <Check className="w-3.5 h-3.5 text-[#78836A] shrink-0" />
                       <span>Dedicated geriatric personal companion</span>
                     </div>
-                    <div className="flex items-center gap-2 text-xs text-stone-300">
-                      <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                    <div className="flex items-center gap-2 text-xs text-[#352A25]/85">
+                      <Check className="w-3.5 h-3.5 text-[#78836A] shrink-0" />
                       <span>Regular family video calls & medical logs</span>
                     </div>
                   </div>
                 </div>
 
                 {/* Slideshow controls */}
-                <div className="pt-6 mt-4 border-t border-emerald-900/40">
+                <div className="pt-6 mt-4 border-t border-[#352A25]/10">
                   <div className="flex items-center justify-between gap-3">
                     <div className="flex gap-1.5">
                       {SLIDES.map((_, i) => (
@@ -619,8 +625,8 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
                           }}
                           className={`h-1.5 rounded-full transition-all ${
                             i === currentSlide
-                              ? 'w-6 bg-amber-400'
-                              : 'w-2 bg-stone-700'
+                              ? 'w-6 bg-[#A47750]'
+                              : 'w-2 bg-[#352A25]/20'
                           }`}
                           aria-label={`Slide ${i + 1}`}
                         />
@@ -635,7 +641,7 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
                             prev > 0 ? prev - 1 : SLIDES.length - 1
                           );
                         }}
-                        className="p-2 rounded-xl bg-emerald-900/40 hover:bg-emerald-800/60 text-stone-300 hover:text-white transition"
+                        className="p-2 rounded-xl bg-white hover:bg-[#FAF6F0] text-[#352A25] border border-[#352A25]/20 transition"
                         aria-label="Previous Slide"
                       >
                         <ChevronLeft className="w-4 h-4" />
@@ -647,7 +653,7 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
                             setAutoPlay(false);
                             setCurrentSlide((prev) => prev + 1);
                           }}
-                          className="px-4 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-semibold flex items-center gap-1.5 transition"
+                          className="px-4 py-2 rounded-xl bg-[#352A25] hover:bg-[#271E1A] text-[#F7F2EA] text-xs font-semibold flex items-center gap-1.5 transition"
                         >
                           Next <ChevronRight className="w-4 h-4" />
                         </button>
@@ -656,7 +662,7 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
                           onClick={() => {
                             setPhase('step4_list');
                           }}
-                          className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 text-xs font-bold flex items-center gap-1.5 transition shadow-md shadow-amber-500/20"
+                          className="px-4 py-2 rounded-xl bg-[#352A25] hover:bg-[#A47750] text-[#F7F2EA] text-xs font-bold flex items-center gap-1.5 transition shadow-warm-sm"
                         >
                           Continue to Early Checkers <ChevronRight className="w-4 h-4" />
                         </button>
@@ -673,31 +679,31 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
         {/* STEP 4: YOU CLICK ON IT YOU GET TO THE EARLY CHECKERS LIST                */}
         {/* ========================================================================= */}
         {phase === 'step4_list' && (
-          <div className="w-full max-w-3xl bg-[#0D241A] border border-emerald-600/30 rounded-3xl p-6 sm:p-8 shadow-2xl backdrop-blur-xl">
+          <div className="w-full max-w-3xl bg-white border border-[#352A25]/15 rounded-3xl p-6 sm:p-8 shadow-warm-lg">
             {/* Header banner */}
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-emerald-800/40">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-[#352A25]/15">
               <div>
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-bold uppercase tracking-wider mb-2">
-                  <Award className="w-3.5 h-3.5 text-amber-400" />
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#A47750]/10 border border-[#A47750]/30 text-[#A47750] text-xs font-bold uppercase tracking-wider mb-2">
+                  <Award className="w-3.5 h-3.5 text-[#A47750]" />
                   <span>Founding VIP Cohort</span>
                 </div>
-                <h2 className="text-2xl sm:text-3xl font-serif font-bold text-white tracking-tight">
+                <h2 className="text-2xl sm:text-3xl font-serif font-bold text-[#352A25] tracking-tight">
                   Early Checkers List
                 </h2>
-                <p className="text-xs sm:text-sm text-stone-300 mt-1">
+                <p className="text-xs sm:text-sm text-[#352A25]/75 mt-1">
                   Verified roster of families and individuals who scanned early and reserved VIP priority.
                 </p>
               </div>
 
               {/* Spots Counter Badge */}
-              <div className="bg-amber-400/10 border border-amber-400/30 rounded-2xl p-3.5 text-center shrink-0">
-                <span className="text-[10px] uppercase tracking-wider text-amber-300 font-bold block">
+              <div className="bg-[#F7F2EA] border border-[#A47750]/30 rounded-2xl p-3.5 text-center shrink-0">
+                <span className="text-[10px] uppercase tracking-wider text-[#A47750] font-bold block">
                   Limited Spots Left
                 </span>
-                <span className="font-mono text-3xl font-black text-amber-400">
+                <span className="font-mono text-3xl font-black text-[#A47750]">
                   {spotsLeft} / 100
                 </span>
-                <span className="text-[10px] text-stone-400 block mt-0.5">
+                <span className="text-[10px] text-[#352A25]/60 block mt-0.5">
                   53 already claimed
                 </span>
               </div>
@@ -705,64 +711,64 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
 
             {/* VIP Privileges for Early Checkers */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 my-6">
-              <div className="bg-emerald-950/40 border border-emerald-800/30 rounded-xl p-3.5 text-center">
-                <Ticket className="w-5 h-5 text-amber-400 mx-auto mb-1.5" />
-                <h4 className="text-xs font-bold text-white">Free Day Pass</h4>
-                <p className="text-[11px] text-stone-400 mt-0.5">
+              <div className="bg-[#F7F2EA] border border-[#352A25]/10 rounded-xl p-3.5 text-center">
+                <Ticket className="w-5 h-5 text-[#A47750] mx-auto mb-1.5" />
+                <h4 className="text-xs font-bold text-[#352A25]">Free Day Pass</h4>
+                <p className="text-[11px] text-[#352A25]/75 mt-0.5">
                   Full access & lunch for 2 guests
                 </p>
               </div>
-              <div className="bg-emerald-950/40 border border-emerald-800/30 rounded-xl p-3.5 text-center">
-                <Shield className="w-5 h-5 text-emerald-400 mx-auto mb-1.5" />
-                <h4 className="text-xs font-bold text-white">₹0 Reg. Fee</h4>
-                <p className="text-[11px] text-stone-400 mt-0.5">
+              <div className="bg-[#F7F2EA] border border-[#352A25]/10 rounded-xl p-3.5 text-center">
+                <Shield className="w-5 h-5 text-[#78836A] mx-auto mb-1.5" />
+                <h4 className="text-xs font-bold text-[#352A25]">₹0 Reg. Fee</h4>
+                <p className="text-[11px] text-[#352A25]/75 mt-0.5">
                   100% waiver on registration
                 </p>
               </div>
-              <div className="bg-emerald-950/40 border border-emerald-800/30 rounded-xl p-3.5 text-center">
-                <Star className="w-5 h-5 text-amber-400 mx-auto mb-1.5" />
-                <h4 className="text-xs font-bold text-white">Suite Selection</h4>
-                <p className="text-[11px] text-stone-400 mt-0.5">
+              <div className="bg-[#F7F2EA] border border-[#352A25]/10 rounded-xl p-3.5 text-center">
+                <Star className="w-5 h-5 text-[#A47750] mx-auto mb-1.5" />
+                <h4 className="text-xs font-bold text-[#352A25]">Suite Selection</h4>
+                <p className="text-[11px] text-[#352A25]/75 mt-0.5">
                   First pick of garden suites
                 </p>
               </div>
             </div>
 
             {/* The Live Early Checkers Feed / Table */}
-            <div className="bg-black/30 border border-emerald-900/40 rounded-2xl p-4 mb-6">
-              <div className="flex items-center justify-between text-xs text-stone-400 font-semibold mb-3 px-1">
+            <div className="bg-[#F7F2EA] border border-[#352A25]/15 rounded-2xl p-4 mb-6">
+              <div className="flex items-center justify-between text-xs text-[#352A25]/70 font-semibold mb-3 px-1">
                 <span>Recent Early Checkers</span>
-                <span className="text-emerald-400 flex items-center gap-1">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="text-[#78836A] flex items-center gap-1 font-medium">
+                  <span className="w-2 h-2 rounded-full bg-[#78836A] animate-pulse" />
                   Live Sync
                 </span>
               </div>
 
-              <div className="divide-y divide-emerald-900/30 max-h-56 overflow-y-auto pr-1">
+              <div className="divide-y divide-[#352A25]/10 max-h-56 overflow-y-auto pr-1">
                 {INITIAL_CHECKERS.map((checker) => (
                   <div
                     key={checker.id}
-                    className="py-2.5 px-2 flex items-center justify-between hover:bg-emerald-900/20 rounded-lg transition"
+                    className="py-2.5 px-2 flex items-center justify-between hover:bg-white/80 rounded-lg transition"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-7 h-7 rounded-full bg-emerald-800/60 text-emerald-200 text-xs font-bold flex items-center justify-center">
+                      <div className="w-7 h-7 rounded-full bg-[#78836A] text-white text-xs font-bold flex items-center justify-center">
                         {checker.name.charAt(0)}
                       </div>
                       <div>
-                        <div className="text-xs font-semibold text-white">
+                        <div className="text-xs font-semibold text-[#352A25]">
                           {checker.name}
                         </div>
-                        <div className="text-[10px] text-stone-400">
+                        <div className="text-[10px] text-[#352A25]/60">
                           {checker.city} • {checker.time}
                         </div>
                       </div>
                     </div>
 
                     <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-mono font-bold bg-amber-400/10 text-amber-400 px-2 py-0.5 rounded border border-amber-400/20">
+                      <span className="text-[10px] font-mono font-bold bg-[#A47750]/15 text-[#A47750] px-2 py-0.5 rounded border border-[#A47750]/30">
                         {checker.spot}
                       </span>
-                      <Check className="w-3.5 h-3.5 text-emerald-400" />
+                      <Check className="w-3.5 h-3.5 text-[#78836A]" />
                     </div>
                   </div>
                 ))}
@@ -774,13 +780,13 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
               <button
                 id="join-early-checkers-list-btn"
                 onClick={() => setPhase('step5_form')}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-2xl bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-500 text-stone-950 font-black text-base tracking-wide uppercase shadow-xl shadow-amber-500/30 hover:scale-105 active:scale-95 transition cursor-pointer"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-2xl bg-[#352A25] hover:bg-[#A47750] text-[#F7F2EA] font-black text-base tracking-wide uppercase shadow-warm-md hover:scale-105 active:scale-95 transition cursor-pointer"
               >
-                <Sparkles className="w-5 h-5 fill-stone-950" />
-                <span>Join Early Checkers — Enter Details</span>
-                <ChevronRight className="w-5 h-5" />
+                <Sparkles className="w-5 h-5 text-[#A47750]" />
+                <span>Register Your Interest — Claim VIP Pass</span>
+                <ChevronRight className="w-5 h-5 text-[#F7F2EA]" />
               </button>
-              <p className="text-xs text-stone-400 mt-2">
+              <p className="text-xs text-[#352A25]/60 mt-2">
                 Takes 30 seconds • No credit card or payment required
               </p>
             </div>
@@ -791,34 +797,37 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
         {/* STEP 5: SIGN UP PAGE WHICH HAVE THE FORM AND THEY SUBMIT                  */}
         {/* ========================================================================= */}
         {phase === 'step5_form' && (
-          <div className="w-full max-w-xl bg-[#0D241A] border border-emerald-600/30 rounded-3xl p-6 sm:p-8 shadow-2xl backdrop-blur-xl">
+          <div className="w-full max-w-xl bg-white border border-[#352A25]/15 rounded-3xl p-6 sm:p-8 shadow-warm-lg">
             <div className="text-center mb-6">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-bold uppercase tracking-wider mb-2">
-                <Ticket className="w-3.5 h-3.5 text-amber-400" />
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#78836A]/10 border border-[#78836A]/30 text-[#78836A] text-xs font-bold uppercase tracking-wider mb-2">
+                <Ticket className="w-3.5 h-3.5 text-[#78836A]" />
                 <span>Step 4: Visitor Registration</span>
               </div>
-              <h2 className="text-2xl sm:text-3xl font-serif font-bold text-white tracking-tight">
-                Enter Your Details
+              <h2 className="text-2xl sm:text-3xl font-serif font-bold text-[#352A25] tracking-tight">
+                Register Your Interest
               </h2>
-              <p className="text-xs sm:text-sm text-stone-300 mt-1">
-                Provide your details to secure spot #{101 - spotsLeft} on the Early Checkers roster. Your information is securely saved to our database.
+              <p className="text-xs sm:text-sm text-[#352A25]/75 mt-1 leading-relaxed max-w-md mx-auto">
+                OBOKASH is an evolving vision for senior living, built around dignity, comfort, companionship, and peace of mind. Provide your details below.
+              </p>
+              <p className="text-[11px] text-[#A47750] font-semibold mt-1">
+                📍 8769, SH 1, Kulpi, Chak Ramnath, West Bengal – 743351.
               </p>
             </div>
 
             {formError && (
-              <div className="mb-4 p-3 rounded-xl bg-red-950/60 border border-red-500/40 text-red-200 text-xs flex items-center gap-2">
-                <X className="w-4 h-4 text-red-400 shrink-0" />
+              <div className="mb-4 p-3 rounded-xl bg-red-50 border border-red-300 text-red-800 text-xs flex items-center gap-2">
+                <X className="w-4 h-4 text-red-600 shrink-0" />
                 <span>{formError}</span>
               </div>
             )}
 
             <form onSubmit={handleFormSubmit} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-stone-300 mb-1.5">
-                  Full Name <span className="text-amber-400">*</span>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-[#352A25] mb-1.5">
+                  Full Name <span className="text-[#A47750]">*</span>
                 </label>
                 <div className="relative">
-                  <User className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <User className="w-4 h-4 text-[#352A25]/50 absolute left-3.5 top-1/2 -translate-y-1/2" />
                   <input
                     type="text"
                     required
@@ -827,18 +836,18 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
                     onChange={(e) =>
                       setFormData({ ...formData, name: e.target.value })
                     }
-                    className="w-full pl-10 pr-4 py-3 rounded-xl bg-black/40 border border-emerald-800/60 text-white placeholder:text-stone-500 text-sm focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition"
+                    className="w-full pl-10 pr-4 py-3 rounded-xl bg-[#F7F2EA] border border-[#352A25]/20 text-[#352A25] placeholder:text-[#352A25]/40 text-sm focus:outline-none focus:border-[#A47750] focus:ring-1 focus:ring-[#A47750] transition"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-stone-300 mb-1.5">
-                    Email Address <span className="text-amber-400">*</span>
+                  <label className="block text-xs font-semibold uppercase tracking-wider text-[#352A25] mb-1.5">
+                    Email Address <span className="text-[#A47750]">*</span>
                   </label>
                   <div className="relative">
-                    <Mail className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                    <Mail className="w-4 h-4 text-[#352A25]/50 absolute left-3.5 top-1/2 -translate-y-1/2" />
                     <input
                       type="email"
                       required
@@ -847,17 +856,17 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
                       onChange={(e) =>
                         setFormData({ ...formData, email: e.target.value })
                       }
-                      className="w-full pl-10 pr-4 py-3 rounded-xl bg-black/40 border border-emerald-800/60 text-white placeholder:text-stone-500 text-sm focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition"
+                      className="w-full pl-10 pr-4 py-3 rounded-xl bg-[#F7F2EA] border border-[#352A25]/20 text-[#352A25] placeholder:text-[#352A25]/40 text-sm focus:outline-none focus:border-[#A47750] focus:ring-1 focus:ring-[#A47750] transition"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-stone-300 mb-1.5">
+                  <label className="block text-xs font-semibold uppercase tracking-wider text-[#352A25] mb-1.5">
                     Phone / WhatsApp Number
                   </label>
                   <div className="relative">
-                    <Phone className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                    <Phone className="w-4 h-4 text-[#352A25]/50 absolute left-3.5 top-1/2 -translate-y-1/2" />
                     <input
                       type="tel"
                       placeholder="e.g. +91 98765 43210"
@@ -865,14 +874,14 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
                       onChange={(e) =>
                         setFormData({ ...formData, phone: e.target.value })
                       }
-                      className="w-full pl-10 pr-4 py-3 rounded-xl bg-black/40 border border-emerald-800/60 text-white placeholder:text-stone-500 text-sm focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition"
+                      className="w-full pl-10 pr-4 py-3 rounded-xl bg-[#F7F2EA] border border-[#352A25]/20 text-[#352A25] placeholder:text-[#352A25]/40 text-sm focus:outline-none focus:border-[#A47750] focus:ring-1 focus:ring-[#A47750] transition"
                     />
                   </div>
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-stone-300 mb-1.5">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-[#352A25] mb-1.5">
                   Looking For?
                 </label>
                 <select
@@ -880,7 +889,7 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
                   onChange={(e) =>
                     setFormData({ ...formData, reason: e.target.value })
                   }
-                  className="w-full px-4 py-3 rounded-xl bg-black/40 border border-emerald-800/60 text-white text-sm focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition"
+                  className="w-full px-4 py-3 rounded-xl bg-[#F7F2EA] border border-[#352A25]/20 text-[#352A25] text-sm focus:outline-none focus:border-[#A47750] focus:ring-1 focus:ring-[#A47750] transition"
                 >
                   <option value="parents">For Elderly Parents / Relatives</option>
                   <option value="myself">For Myself & Partner (Retirement Living)</option>
@@ -890,7 +899,7 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
               </div>
 
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-stone-300 mb-1.5">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-[#352A25] mb-1.5">
                   Specific Care or Medical Preferences (Optional)
                 </label>
                 <textarea
@@ -900,7 +909,7 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
                   onChange={(e) =>
                     setFormData({ ...formData, notes: e.target.value })
                   }
-                  className="w-full px-4 py-2.5 rounded-xl bg-black/40 border border-emerald-800/60 text-white placeholder:text-stone-500 text-sm focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition"
+                  className="w-full px-4 py-2.5 rounded-xl bg-[#F7F2EA] border border-[#352A25]/20 text-[#352A25] placeholder:text-[#352A25]/40 text-sm focus:outline-none focus:border-[#A47750] focus:ring-1 focus:ring-[#A47750] transition"
                 />
               </div>
 
@@ -909,23 +918,23 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
                   id="submit-early-checker-form-btn"
                   type="submit"
                   disabled={submitting}
-                  className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-500 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-base tracking-wide shadow-xl shadow-emerald-950/60 hover:scale-[1.01] active:scale-98 transition flex items-center justify-center gap-2 cursor-pointer border border-emerald-400/40 disabled:opacity-50"
+                  className="w-full py-4 px-6 rounded-2xl bg-[#352A25] hover:bg-[#A47750] text-[#F7F2EA] font-bold text-base tracking-wide shadow-warm-md hover:scale-[1.01] active:scale-98 transition flex items-center justify-center gap-2 cursor-pointer border border-[#352A25] disabled:opacity-50"
                 >
                   {submitting ? (
                     <>
-                      <Loader2 className="w-5 h-5 animate-spin text-amber-400" />
+                      <Loader2 className="w-5 h-5 animate-spin text-[#F7F2EA]" />
                       <span>Saving Your Details in Database...</span>
                     </>
                   ) : (
                     <>
-                      <CheckCircle2 className="w-5 h-5 text-amber-300" />
-                      <span>Submit Details & Confirm Registration</span>
+                      <CheckCircle2 className="w-5 h-5 text-[#F7F2EA]" />
+                      <span>Register Your Interest & Confirm Pass</span>
                     </>
                   )}
                 </button>
               </div>
 
-              <p className="text-[11px] text-stone-400 text-center">
+              <p className="text-[11px] text-[#352A25]/60 text-center">
                 🔒 Your information is saved directly to the Obokash Admin
                 Database.
               </p>
@@ -937,34 +946,34 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
         {/* STEP 5 SUCCESS: VERIFIED EARLY CHECKER PASS ISSUED                        */}
         {/* ========================================================================= */}
         {phase === 'step5_success' && (
-          <div className="w-full max-w-md bg-[#0D241A] border-2 border-amber-400/60 rounded-3xl p-6 sm:p-8 text-center shadow-[0_0_50px_rgba(245,158,11,0.2)]">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-500 text-white flex items-center justify-center mx-auto mb-4 shadow-lg shadow-emerald-900/50">
+          <div className="w-full max-w-md bg-white border-2 border-[#A47750] rounded-3xl p-6 sm:p-8 text-center shadow-warm-lg">
+            <div className="w-16 h-16 rounded-2xl bg-[#78836A] text-white flex items-center justify-center mx-auto mb-4 shadow-sm">
               <Check className="w-8 h-8" />
             </div>
 
-            <span className="inline-block px-3 py-1 rounded-full bg-amber-400/10 border border-amber-400/30 text-amber-300 text-xs font-bold uppercase tracking-wider mb-2">
+            <span className="inline-block px-3 py-1 rounded-full bg-[#78836A]/10 border border-[#78836A]/30 text-[#78836A] text-xs font-bold uppercase tracking-wider mb-2">
               Registration Successful
             </span>
 
-            <h2 className="text-2xl font-serif font-bold text-white">
+            <h2 className="text-2xl font-serif font-bold text-[#352A25]">
               VIP Pass Confirmed!
             </h2>
-            <p className="text-xs text-stone-300 mt-1 mb-6">
+            <p className="text-xs text-[#352A25]/80 mt-1 mb-6">
               Welcome to the Obokash Senior Living family, <strong>{issuedPass?.name}</strong>.
             </p>
 
             {/* Digital Pass Card */}
-            <div className="bg-gradient-to-br from-[#1A3326] to-[#0A1A12] border border-amber-400/40 rounded-2xl p-4 text-left relative overflow-hidden mb-6 shadow-inner">
+            <div className="bg-[#F7F2EA] border border-[#A47750]/50 rounded-2xl p-4 text-left relative overflow-hidden mb-6 shadow-inner">
               <div className="flex justify-between items-start mb-3">
                 <div>
-                  <span className="text-[10px] text-amber-400 font-bold uppercase tracking-widest block">
+                  <span className="text-[10px] text-[#A47750] font-bold uppercase tracking-widest block">
                     OBOKASH VIP Pass
                   </span>
-                  <span className="font-mono text-base font-bold text-white">
+                  <span className="font-mono text-base font-bold text-[#352A25]">
                     {issuedPass?.passId}
                   </span>
                 </div>
-                <div className="w-12 h-7 rounded-lg overflow-hidden border border-emerald-500/40 relative bg-black flex items-center justify-center p-1">
+                <div className="w-14 h-8 rounded-lg overflow-hidden border border-[#352A25]/15 relative bg-white flex items-center justify-center p-1">
                   <Image
                     src="/images/obokash-logo.png"
                     alt="OBOKASH Logo"
@@ -974,18 +983,18 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
                 </div>
               </div>
 
-              <div className="space-y-1 text-xs border-t border-emerald-900/50 pt-2 text-stone-300">
+              <div className="space-y-1 text-xs border-t border-[#352A25]/10 pt-2 text-[#352A25]">
                 <div className="flex justify-between">
-                  <span className="text-stone-500">Holder:</span>
-                  <span className="font-semibold text-white">{issuedPass?.name}</span>
+                  <span className="text-[#352A25]/60">Holder:</span>
+                  <span className="font-semibold text-[#352A25]">{issuedPass?.name}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-stone-500">Status:</span>
-                  <span className="text-emerald-400 font-bold">✓ VERIFIED EARLY CHECKER</span>
+                  <span className="text-[#352A25]/60">Status:</span>
+                  <span className="text-[#78836A] font-bold">✓ VERIFIED EARLY CHECKER</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-stone-500">Access:</span>
-                  <span className="text-amber-300 font-medium">Free 1-Day Trial + Tariff Lock</span>
+                  <span className="text-[#352A25]/60">Access:</span>
+                  <span className="text-[#A47750] font-medium">Free 1-Day Trial + Tariff Lock</span>
                 </div>
               </div>
             </div>
@@ -993,15 +1002,15 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
             <div className="space-y-3">
               <button
                 onClick={handleExitToMain}
-                className="w-full inline-flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-500 text-stone-950 font-bold text-sm shadow-md hover:scale-[1.02] active:scale-95 transition cursor-pointer"
+                className="w-full inline-flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl bg-[#352A25] hover:bg-[#A47750] text-[#F7F2EA] font-bold text-sm shadow-warm-md hover:scale-[1.02] active:scale-95 transition cursor-pointer"
               >
-                <span>Enter Full Sanctuary Website</span>
+                <span>Discover OBOKASH — Enter Sanctuary Website</span>
                 <ChevronRight className="w-4 h-4" />
               </button>
 
               <button
                 onClick={() => setPhase('step1_questions')}
-                className="text-xs text-stone-400 hover:text-stone-200 underline underline-offset-2 block mx-auto cursor-pointer"
+                className="text-xs text-[#352A25]/60 hover:text-[#352A25] underline underline-offset-2 block mx-auto cursor-pointer"
               >
                 Replay discovery sequence
               </button>
@@ -1011,7 +1020,7 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
       </main>
 
       {/* Footer copyright */}
-      <footer className="relative z-10 w-full max-w-6xl mx-auto px-4 py-4 text-center text-xs text-stone-500 border-t border-emerald-950/60">
+      <footer className="relative z-10 w-full max-w-6xl mx-auto px-4 py-4 text-center text-xs text-[#352A25]/60 border-t border-[#352A25]/15">
         © {new Date().getFullYear()} OBOKASH - SENIOR LIVING. All rights reserved.
       </footer>
     </div>

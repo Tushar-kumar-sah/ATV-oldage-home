@@ -8,75 +8,159 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Deep Noble Emerald & Forest Teal (Medical Safety, Tranquility & Life)
-        emeraldTheme: {
-          50: '#F0FDF4',
-          100: '#DCFCE7',
-          200: '#BBF7D0',
-          300: '#86EFAC',
-          400: '#4ADE80',
-          500: '#22C55E',
-          600: '#16A34A',
-          700: '#15803D',
-          800: '#166534',
-          900: '#14532D',
-          950: '#052E16',
+        // OBOKASH Four-Colour Approved Brand Palette
+        // 1. Espresso #352A25 (Primary dark: header/footer, headings, navigation, primary buttons)
+        espresso: {
+          DEFAULT: '#352A25',
+          50: '#F6F4F3',
+          100: '#ECE8E6',
+          200: '#D9D1CE',
+          300: '#BFB2AD',
+          400: '#8E7C74',
+          500: '#5F5049',
+          600: '#473B35',
+          700: '#3D312C',
+          800: '#352A25', // Approved Espresso
+          900: '#271E1A',
+          950: '#17110E',
         },
-        // Warm Sunlit Gold & Honey Amber (Family Warmth, Compassion & Dignity)
-        amberTheme: {
-          50: '#FFFBEB',
-          100: '#FEF3C7',
-          200: '#FDE68A',
-          300: '#FCD34D',
-          400: '#FBBF24',
-          500: '#F59E0B',
-          600: '#D97706',
-          700: '#B45309',
-          800: '#92400E',
-          900: '#78350F',
-          950: '#451A03',
+        // 2. Ivory #F7F2EA (Main page background, large content areas, and calm reading surfaces)
+        ivory: {
+          DEFAULT: '#F7F2EA',
+          50: '#FCFAF7',
+          100: '#FAF6F0',
+          200: '#F7F2EA', // Approved Ivory
+          300: '#EFE7DA',
+          400: '#E4D7C2',
+          500: '#D2C0A3',
+          600: '#B8A381',
+          700: '#948060',
+          800: '#6C5D44',
+          900: '#473E2E',
         },
-        // Warm Cashmere & Pearl Ivory (Soft, calming, premium canvas)
-        ivoryTheme: {
-          50: '#FDFBF7',
-          100: '#FAF7F0',
-          200: '#F4EFE4',
-          300: '#EAE2D2',
-          400: '#DDD2BD',
-          500: '#C9BBA2',
+        // 3. Warm Clay #A47750 (Accent colour for highlights, small decorative elements, and selected emphasis)
+        clay: {
+          DEFAULT: '#A47750',
+          50: '#FAF5F1',
+          100: '#F4ECE4',
+          200: '#E7D5C5',
+          300: '#D7BAA1',
+          400: '#C09877',
+          500: '#A47750', // Approved Warm Clay
+          600: '#8E623E',
+          700: '#734E30',
+          800: '#5A3D25',
+          900: '#422C1A',
         },
-        // Retain sage/cream/terracotta for backwards compatibility in admin components
+        // 4. Sage #78836A (Supporting accent for nature, reassurance, progress, and secondary UI details)
         sage: {
-          50: '#F2F7F4',
-          100: '#E2EBE5',
-          200: '#C7D9CB',
-          300: '#A4C0AA',
-          400: '#7E9F86',
-          500: '#5F8268',
-          600: '#4A6952',
-          700: '#3A5240',
-          800: '#2F4234',
-          900: '#1E3326',
-          950: '#0F1E16',
+          DEFAULT: '#78836A',
+          50: '#F5F6F4',
+          100: '#EBEEE9',
+          200: '#D8DDD3',
+          300: '#BEC6B6',
+          400: '#9DA893',
+          500: '#78836A', // Approved Sage
+          600: '#626B56',
+          700: '#4D5443',
+          800: '#3A4032',
+          900: '#2A2E24',
+          950: '#1B1E17',
         },
+
+        // Backward compatibility mappings strictly aligned to the 4 brand colors:
         cream: {
-          50: '#FDFCF9',
-          100: '#FAF8F3',
-          200: '#F4EFE6',
-          300: '#EBE3D3',
-          400: '#DFCFA8',
-          500: '#CBB78C',
+          50: '#FCFAF7',
+          100: '#F7F2EA', // Approved Ivory
+          200: '#EFE7DA',
+          300: '#E4D7C2',
+          400: '#D2C0A3',
+          500: '#B8A381',
+        },
+        emeraldTheme: {
+          50: '#F5F6F4',
+          100: '#EBEEE9',
+          200: '#D8DDD3',
+          300: '#BEC6B6',
+          400: '#9DA893',
+          500: '#78836A', // Sage
+          600: '#626B56',
+          700: '#4D5443',
+          800: '#352A25', // Espresso
+          900: '#271E1A',
+          950: '#17110E',
+        },
+        amberTheme: {
+          50: '#FAF5F1',
+          100: '#F4ECE4',
+          200: '#E7D5C5',
+          300: '#D7BAA1',
+          400: '#C09877',
+          500: '#A47750', // Warm Clay
+          600: '#8E623E',
+          700: '#734E30',
+          800: '#5A3D25',
+          900: '#352A25', // Espresso
+          950: '#17110E',
+        },
+        ivoryTheme: {
+          50: '#FCFAF7',
+          100: '#FAF6F0',
+          200: '#F7F2EA', // Ivory
+          300: '#EFE7DA',
+          400: '#E4D7C2',
+          500: '#D2C0A3',
         },
         terracotta: {
-          50: '#FFF7ED',
-          100: '#FFEDD5',
-          200: '#FED7AA',
-          300: '#FDBA74',
-          400: '#FB923C',
-          500: '#F97316',
-          600: '#EA580C',
-          700: '#C2410C',
-          800: '#9A3412',
+          50: '#FAF5F1',
+          100: '#F4ECE4',
+          200: '#E7D5C5',
+          300: '#D7BAA1',
+          400: '#C09877',
+          500: '#A47750', // Warm Clay
+          600: '#8E623E',
+          700: '#734E30',
+          800: '#5A3D25',
+        },
+        // Harmonize generic Tailwind colors with approved palette
+        emerald: {
+          50: '#F5F6F4',
+          100: '#EBEEE9',
+          200: '#D8DDD3',
+          300: '#BEC6B6',
+          400: '#9DA893',
+          500: '#78836A', // Sage
+          600: '#626B56',
+          700: '#4D5443',
+          800: '#352A25', // Espresso
+          900: '#271E1A',
+          950: '#17110E',
+        },
+        amber: {
+          50: '#FAF5F1',
+          100: '#F4ECE4',
+          200: '#E7D5C5',
+          300: '#D7BAA1',
+          400: '#C09877',
+          500: '#A47750', // Warm Clay
+          600: '#8E623E',
+          700: '#734E30',
+          800: '#5A3D25',
+          900: '#352A25', // Espresso
+          950: '#17110E',
+        },
+        stone: {
+          50: '#FCFAF7',
+          100: '#F7F2EA', // Ivory
+          200: '#EFE7DA',
+          300: '#D9D1CE',
+          400: '#A69B94',
+          500: '#7B6F67',
+          600: '#534741',
+          700: '#423731',
+          800: '#352A25', // Espresso
+          900: '#271E1A',
+          950: '#17110E',
         }
       },
       fontFamily: {
@@ -84,9 +168,9 @@ module.exports = {
         serif: ['Merriweather', 'Georgia', 'Cambria', 'serif'],
       },
       boxShadow: {
-        'warm-sm': '0 2px 8px -2px rgba(180, 83, 9, 0.08), 0 1px 4px -1px rgba(0, 0, 0, 0.04)',
-        'warm-md': '0 8px 24px -4px rgba(180, 83, 9, 0.12), 0 4px 12px -2px rgba(0, 0, 0, 0.06)',
-        'warm-lg': '0 16px 36px -6px rgba(180, 83, 9, 0.16), 0 8px 16px -4px rgba(0, 0, 0, 0.08)',
+        'warm-sm': '0 2px 8px -2px rgba(53, 42, 37, 0.08), 0 1px 4px -1px rgba(0, 0, 0, 0.04)',
+        'warm-md': '0 8px 24px -4px rgba(53, 42, 37, 0.12), 0 4px 12px -2px rgba(0, 0, 0, 0.06)',
+        'warm-lg': '0 16px 36px -6px rgba(53, 42, 37, 0.16), 0 8px 16px -4px rgba(0, 0, 0, 0.08)',
       }
     },
   },

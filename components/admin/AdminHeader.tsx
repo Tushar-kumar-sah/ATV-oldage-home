@@ -34,28 +34,28 @@ export default function AdminHeader({ onMenuToggle }: AdminHeaderProps) {
   const isSuperAdmin = session?.user?.role === 'super_admin';
 
   return (
-    <header className="h-16 bg-white border-b border-stone-200 px-4 sm:px-6 flex items-center justify-between sticky top-0 z-30 shadow-2xs">
+    <header className="h-16 bg-white border-b border-[#352A25]/15 px-4 sm:px-6 flex items-center justify-between sticky top-0 z-30 shadow-2xs">
       {/* Left: Mobile Hamburger & Live status */}
       <div className="flex items-center space-x-2 sm:space-x-3">
         {onMenuToggle && (
           <button
             type="button"
             onClick={onMenuToggle}
-            className="md:hidden p-2 rounded-xl text-stone-700 hover:text-emerald-900 hover:bg-stone-100 transition-colors"
+            className="md:hidden p-2 rounded-xl text-[#352A25] hover:text-[#A47750] hover:bg-black/5 transition-colors"
             aria-label="Open navigation sidebar"
           >
             <Menu className="w-5 h-5" />
           </button>
         )}
 
-        <span className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-full text-[11px] sm:text-xs font-semibold bg-emerald-50 text-emerald-900 border border-emerald-200">
-          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-full text-[11px] sm:text-xs font-semibold bg-[#78836A]/10 text-[#78836A] border border-[#78836A]/30">
+          <span className="w-2 h-2 rounded-full bg-[#78836A] animate-pulse"></span>
           <span>Live Operations</span>
         </span>
 
         {isSuperAdmin && (
-          <span className="hidden sm:inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-50 text-amber-900 border border-amber-200">
-            <Shield className="w-3.5 h-3.5 text-amber-700" />
+          <span className="hidden sm:inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-[#A47750]/10 text-[#A47750] border border-[#A47750]/30">
+            <Shield className="w-3.5 h-3.5 text-[#A47750]" />
             <span>Super Admin</span>
           </span>
         )}
@@ -67,9 +67,9 @@ export default function AdminHeader({ onMenuToggle }: AdminHeaderProps) {
         {isSuperAdmin && stats && stats.pendingApprovals > 0 && (
           <Link
             href="/admin/users"
-            className="hidden sm:flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-amber-50 text-amber-900 border border-amber-300 hover:bg-amber-100 transition-colors"
+            className="hidden sm:flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-[#A47750]/10 text-[#A47750] border border-[#A47750]/30 hover:bg-[#A47750]/20 transition-colors"
           >
-            <Bell className="w-3.5 h-3.5 text-amber-700 animate-bounce" />
+            <Bell className="w-3.5 h-3.5 text-[#A47750] animate-bounce" />
             <span>{stats.pendingApprovals} Pending</span>
           </Link>
         )}
@@ -78,9 +78,9 @@ export default function AdminHeader({ onMenuToggle }: AdminHeaderProps) {
         {stats && stats.newInquiries > 0 && (
           <Link
             href="/admin/inquiries"
-            className="flex items-center space-x-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-semibold bg-emerald-50 text-emerald-900 border border-emerald-200 hover:bg-emerald-100 transition-colors"
+            className="flex items-center space-x-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-semibold bg-[#78836A]/10 text-[#78836A] border border-[#78836A]/30 hover:bg-[#78836A]/20 transition-colors"
           >
-            <span className="w-2 h-2 rounded-full bg-amber-500 inline-block"></span>
+            <span className="w-2 h-2 rounded-full bg-[#A47750] inline-block"></span>
             <span>{stats.newInquiries} <span className="hidden xs:inline">New Queries</span></span>
           </Link>
         )}
@@ -88,7 +88,7 @@ export default function AdminHeader({ onMenuToggle }: AdminHeaderProps) {
         {/* Primary Action: Admit Resident */}
         <Link
           href="/admin/residents/new"
-          className="flex items-center space-x-1.5 px-3 sm:px-4 py-2 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-emerald-800 to-emerald-700 hover:from-emerald-900 hover:to-emerald-800 shadow-xs transition-all"
+          className="flex items-center space-x-1.5 px-3 sm:px-4 py-2 rounded-xl text-xs font-bold text-[#F7F2EA] bg-[#352A25] hover:bg-[#A47750] shadow-xs transition-all"
         >
           <UserPlus className="w-3.5 h-3.5" />
           <span>+ <span className="hidden sm:inline">Admit </span>Resident</span>

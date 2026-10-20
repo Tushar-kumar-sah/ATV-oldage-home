@@ -4,41 +4,41 @@
 
 @layer base {
   :root {
-    --background: 40 40% 98%;
-    --foreground: 150 20% 15%;
+    --background: 38 41% 94%; /* #F7F2EA Ivory */
+    --foreground: 22 18% 18%; /* #352A25 Espresso */
   }
 
   body {
-    background-color: #FDFAF4;
-    color: #29372D;
+    background-color: #F7F2EA;
+    color: #352A25;
     font-feature-settings: "rlig" 1, "calt" 1;
     -webkit-font-smoothing: antialiased;
   }
 
-  /* Accessible focus indicators */
+  /* Accessible focus indicators using Sage #78836A or Warm Clay #A47750 */
   :focus-visible {
-    outline: 2px solid #5F8268;
+    outline: 2px solid #78836A;
     outline-offset: 2px;
   }
 }
 
-/* Custom smooth scrollbar */
+/* Custom smooth scrollbar with approved palette */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #F3F6F4;
+  background: #F7F2EA;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #C8D9CC;
+  background: #78836A;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #A5C0AB;
+  background: #A47750;
 }
 
 /* Print styles for resident profiles / medical summaries */

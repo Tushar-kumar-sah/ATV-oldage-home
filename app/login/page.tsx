@@ -123,12 +123,12 @@ function LoginForm() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAF7F0] flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#F7F2EA] flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       {/* Top back link */}
       <div className="sm:mx-auto sm:w-full sm:max-w-md mb-4 px-4">
         <Link
           href="/"
-          className="inline-flex items-center text-sm font-semibold text-[#064E3B] hover:text-emerald-900 transition-colors"
+          className="inline-flex items-center text-sm font-semibold text-[#352A25] hover:text-[#A47750] transition-colors"
         >
           <ArrowLeft className="w-4 h-4 mr-1.5" />
           Back to Public Website
@@ -137,7 +137,7 @@ function LoginForm() {
 
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div className="flex justify-center">
-          <div className="h-16 px-4 bg-black rounded-2xl border border-stone-800 flex items-center justify-center shadow-lg shadow-emerald-950/20">
+          <div className="h-16 px-4 bg-white rounded-2xl border border-[#352A25]/15 flex items-center justify-center shadow-warm-sm">
             <Image
               src="/images/obokash-logo.png"
               alt="OBOKASH - SENIOR LIVING Logo"
@@ -148,29 +148,29 @@ function LoginForm() {
             />
           </div>
         </div>
-        <h2 className="mt-4 text-center text-2xl sm:text-3xl font-serif font-bold text-[#064E3B] tracking-tight">
+        <h2 className="mt-4 text-center text-2xl sm:text-3xl font-serif font-bold text-[#352A25] tracking-tight">
           OBOKASH - SENIOR LIVING
         </h2>
-        <p className="mt-1 text-center text-xs text-stone-600 font-medium italic">
+        <p className="mt-1 text-center text-xs text-[#A47750] font-medium italic font-serif">
           A Haven of Trust, Security, and Unparalleled Peace.
         </p>
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md px-4">
-        <div className="bg-white py-8 px-6 shadow-xl shadow-emerald-950/5 rounded-3xl sm:px-10 border border-stone-200">
+        <div className="bg-white py-8 px-6 shadow-warm-lg rounded-3xl sm:px-10 border border-[#352A25]/15">
           {/* Active Session Notification (If already logged in) */}
           {status === 'authenticated' && session?.user && (
-            <div className="mb-6 p-4 rounded-2xl bg-emerald-50 border border-emerald-300 text-stone-900 flex flex-col gap-2">
+            <div className="mb-6 p-4 rounded-2xl bg-[#78836A]/10 border border-[#78836A]/30 text-[#352A25] flex flex-col gap-2">
               <div className="flex items-center space-x-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-700 shrink-0" />
+                <CheckCircle2 className="w-4 h-4 text-[#78836A] shrink-0" />
                 <div className="text-xs">
-                  <span className="font-bold text-emerald-900">Active session:</span> {session.user.name} ({session.user.email})
+                  <span className="font-bold text-[#352A25]">Active session:</span> {session.user.name} ({session.user.email})
                 </div>
               </div>
               <button
                 type="button"
                 onClick={() => window.location.href = callbackUrl || '/admin/dashboard'}
-                className="w-full py-2.5 px-3 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl text-xs font-bold transition-all flex items-center justify-center space-x-1.5 shadow-sm"
+                className="w-full py-2.5 px-3 bg-[#352A25] hover:bg-[#A47750] text-[#F7F2EA] rounded-xl text-xs font-bold transition-all flex items-center justify-center space-x-1.5 shadow-sm"
               >
                 <span>Open Admin Dashboard Directly →</span>
               </button>
@@ -179,45 +179,45 @@ function LoginForm() {
 
           {/* Success Status Banner */}
           {loginSuccess && (
-            <div className="mb-6 p-4 rounded-2xl bg-emerald-50 border border-emerald-300 text-emerald-900 flex items-center space-x-3 animate-in fade-in zoom-in-95 duration-200">
-              <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+            <div className="mb-6 p-4 rounded-2xl bg-[#78836A]/10 border border-[#78836A]/30 text-[#352A25] flex items-center space-x-3 animate-in fade-in zoom-in-95 duration-200">
+              <CheckCircle2 className="w-5 h-5 text-[#78836A] shrink-0" />
               <div>
                 <div className="font-bold text-xs">Credentials Verified!</div>
-                <div className="text-[11px] text-emerald-700">Connecting session and opening Sanctuary Dashboard...</div>
+                <div className="text-[11px] text-[#78836A]">Connecting session and opening Sanctuary Dashboard...</div>
               </div>
             </div>
           )}
 
           {/* INSTANT ONE-CLICK ADMIN ACCESS BUTTON */}
-          <div className="mb-6 p-4 rounded-2xl bg-gradient-to-r from-emerald-800 to-emerald-950 text-white shadow-md border border-emerald-700/60">
+          <div className="mb-6 p-4 rounded-2xl bg-[#352A25] text-[#F7F2EA] shadow-warm-md border border-[#A47750]/40">
             <div className="flex items-center space-x-2 mb-1.5">
-              <ShieldCheck className="w-4 h-4 text-amber-300" />
-              <span className="text-xs font-bold uppercase tracking-wider text-amber-200">
+              <ShieldCheck className="w-4 h-4 text-[#A47750]" />
+              <span className="text-xs font-bold uppercase tracking-wider text-[#A47750]">
                 Guaranteed One-Click Entry
               </span>
             </div>
-            <p className="text-[11px] text-emerald-100 mb-3 leading-relaxed">
+            <p className="text-[11px] text-[#F7F2EA]/85 mb-3 leading-relaxed">
               Instantly authenticate as Super Administrator with pre-verified root session.
             </p>
             <button
               type="button"
               onClick={handleInstantOneClick}
               disabled={loading || loginSuccess}
-              className="w-full py-2.5 px-4 bg-amber-400 hover:bg-amber-300 text-emerald-950 rounded-xl font-bold text-xs shadow-sm transition-all flex items-center justify-center space-x-2 disabled:opacity-60 cursor-pointer"
+              className="w-full py-2.5 px-4 bg-[#A47750] hover:bg-[#8E623E] text-white rounded-xl font-bold text-xs shadow-sm transition-all flex items-center justify-center space-x-2 disabled:opacity-60 cursor-pointer"
             >
               {loading ? (
                 <>
-                  <Loader2 className="w-4 h-4 animate-spin text-emerald-950" />
+                  <Loader2 className="w-4 h-4 animate-spin text-white" />
                   <span>Connecting Admin Session...</span>
                 </>
               ) : loginSuccess ? (
                 <>
-                  <CheckCircle2 className="w-4 h-4 text-emerald-950" />
+                  <CheckCircle2 className="w-4 h-4 text-white" />
                   <span>Opening Dashboard...</span>
                 </>
               ) : (
                 <>
-                  <Sparkles className="w-3.5 h-3.5 text-emerald-900" />
+                  <Sparkles className="w-3.5 h-3.5 text-white" />
                   <span>Enter Admin Panel Directly →</span>
                 </>
               )}
@@ -226,10 +226,10 @@ function LoginForm() {
 
           <div className="relative my-4">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-stone-200"></div>
+              <div className="w-full border-t border-[#352A25]/10"></div>
             </div>
             <div className="relative flex justify-center text-xs">
-              <span className="bg-white px-3 text-stone-400 font-medium">Or enter credentials</span>
+              <span className="bg-white px-3 text-[#352A25]/60 font-medium">Or enter credentials</span>
             </div>
           </div>
 
@@ -245,7 +245,7 @@ function LoginForm() {
                   fillAdminCredentials();
                   handleInstantOneClick();
                 }}
-                className="self-end text-[11px] font-bold text-emerald-800 hover:text-emerald-950 bg-emerald-100/80 px-2.5 py-1 rounded-lg border border-emerald-300 transition-colors"
+                className="self-end text-[11px] font-bold text-[#352A25] hover:text-[#A47750] bg-[#F7F2EA] px-2.5 py-1 rounded-lg border border-[#352A25]/20 transition-colors"
               >
                 Reset to Admin & Enter Directly →
               </button>
@@ -256,20 +256,20 @@ function LoginForm() {
           <form className="space-y-4" onSubmit={handleSubmit}>
             <div>
               <div className="flex items-center justify-between mb-1">
-                <label htmlFor="email" className="block text-xs font-bold text-stone-800">
+                <label htmlFor="email" className="block text-xs font-bold text-[#352A25]">
                   Email Address or Username
                 </label>
                 <button
                   type="button"
                   onClick={fillAdminCredentials}
-                  className="text-[10px] text-emerald-700 font-bold hover:underline"
+                  className="text-[10px] text-[#A47750] font-bold hover:underline"
                 >
                   Autofill Admin
                 </button>
               </div>
               <div className="relative rounded-md shadow-xs">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Mail className="h-4 w-4 text-stone-400" />
+                  <Mail className="h-4 w-4 text-[#352A25]/40" />
                 </div>
                 <input
                   id="email"
@@ -281,18 +281,18 @@ function LoginForm() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="admin@ananddham.org or admin"
-                  className="block w-full pl-9 pr-3 py-2.5 border border-stone-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-xs text-stone-900 bg-[#FAF8F5] disabled:opacity-60"
+                  className="block w-full pl-9 pr-3 py-2.5 border border-[#352A25]/20 rounded-xl focus:ring-2 focus:ring-[#A47750] focus:border-[#A47750] text-xs text-[#352A25] bg-[#F7F2EA] disabled:opacity-60"
                 />
               </div>
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-xs font-bold text-stone-800 mb-1">
+              <label htmlFor="password" className="block text-xs font-bold text-[#352A25] mb-1">
                 Password
               </label>
               <div className="relative rounded-md shadow-xs">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-4 w-4 text-stone-400" />
+                  <Lock className="h-4 w-4 text-[#352A25]/40" />
                 </div>
                 <input
                   id="password"
@@ -304,12 +304,12 @@ function LoginForm() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••••••"
-                  className="block w-full pl-9 pr-10 py-2.5 border border-stone-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-xs text-stone-900 bg-[#FAF8F5] disabled:opacity-60"
+                  className="block w-full pl-9 pr-10 py-2.5 border border-[#352A25]/20 rounded-xl focus:ring-2 focus:ring-[#A47750] focus:border-[#A47750] text-xs text-[#352A25] bg-[#F7F2EA] disabled:opacity-60"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-stone-400 hover:text-stone-600"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-[#352A25]/40 hover:text-[#352A25]"
                 >
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
@@ -320,7 +320,7 @@ function LoginForm() {
               <button
                 type="submit"
                 disabled={loading || loginSuccess}
-                className="w-full flex items-center justify-center py-3 px-4 border border-transparent rounded-xl shadow-md text-xs font-bold text-white bg-gradient-to-r from-[#064E3B] to-[#047857] hover:from-[#052E16] hover:to-[#064E3B] focus:outline-hidden focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-all disabled:opacity-60 cursor-pointer"
+                className="w-full flex items-center justify-center py-3 px-4 border border-[#352A25] rounded-xl shadow-warm-sm text-xs font-bold text-[#F7F2EA] bg-[#352A25] hover:bg-[#A47750] focus:outline-hidden focus:ring-2 focus:ring-offset-2 focus:ring-[#A47750] transition-all disabled:opacity-60 cursor-pointer"
               >
                 {loading ? (
                   <>
@@ -329,7 +329,7 @@ function LoginForm() {
                   </>
                 ) : loginSuccess ? (
                   <>
-                    <CheckCircle2 className="w-4 h-4 mr-2 text-amber-300" />
+                    <CheckCircle2 className="w-4 h-4 mr-2 text-[#F7F2EA]" />
                     <span>Session Active • Launching...</span>
                   </>
                 ) : (
@@ -340,22 +340,22 @@ function LoginForm() {
           </form>
 
           {/* Seed credentials hint */}
-          <div className="mt-6 pt-5 border-t border-stone-100 text-center">
-            <p className="text-[11px] text-stone-500 leading-relaxed">
+          <div className="mt-6 pt-5 border-t border-[#352A25]/10 text-center">
+            <p className="text-[11px] text-[#352A25]/70 leading-relaxed">
               Default Super Admin credentials: <br />
               <button
                 type="button"
                 onClick={fillAdminCredentials}
-                className="font-mono text-emerald-800 font-bold hover:underline bg-emerald-50 px-1.5 py-0.5 rounded text-[11px]"
+                className="font-mono text-[#352A25] font-bold hover:underline bg-[#F7F2EA] px-1.5 py-0.5 rounded text-[11px] border border-[#352A25]/10"
               >
                 admin@ananddham.org
               </button>{' '}
               /{' '}
-              <span className="font-mono text-emerald-800 font-bold bg-emerald-50 px-1.5 py-0.5 rounded text-[11px]">
+              <span className="font-mono text-[#352A25] font-bold bg-[#F7F2EA] px-1.5 py-0.5 rounded text-[11px] border border-[#352A25]/10">
                 AdminSecurePass123!
               </span>
             </p>
-            <p className="mt-2 text-[10px] text-stone-400">
+            <p className="mt-2 text-[10px] text-[#352A25]/50">
               Public visitors who registered on the website can also log in with their email and password.
             </p>
           </div>
@@ -369,7 +369,7 @@ export default function LoginPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-[#FAF7F0] flex items-center justify-center text-sm font-medium text-emerald-800">
+        <div className="min-h-screen bg-[#F7F2EA] flex items-center justify-center text-sm font-medium text-[#352A25]">
           Loading login portal...
         </div>
       }
