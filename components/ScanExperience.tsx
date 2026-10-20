@@ -313,12 +313,12 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
       {/* Top micro-navigation */}
       <header className="relative z-20 w-full max-w-6xl mx-auto px-4 py-4 flex items-center justify-between border-b border-[#352A25]/15">
         <div className="flex items-center gap-2.5">
-          <div className="h-10 px-2 rounded-xl overflow-hidden border border-[#352A25]/15 relative shadow-xs bg-white flex items-center justify-center">
+          <div className="h-10 px-2.5 rounded-xl overflow-hidden border border-[#352A25]/15 relative shadow-xs bg-white flex items-center justify-center">
             <Image
-              src="/images/obokash-bengali-logo.png"
+              src="/images/obokash-logo.png"
               alt="OBOKASH - SENIOR LIVING Logo"
-              width={110}
-              height={36}
+              width={120}
+              height={50}
               className="h-8 w-auto object-contain"
               priority
             />
@@ -497,9 +497,9 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
         {phase === 'step1_loading' && (
           <div className="w-full max-w-md text-center py-16 px-6 bg-white border border-[#352A25]/15 rounded-3xl shadow-warm-lg relative">
             {/* The Logo zooms in */}
-            <div className="relative w-64 sm:w-72 h-32 mx-auto mb-6 rounded-2xl overflow-hidden border-2 border-[#A47750]/50 shadow-md bg-white animate-in zoom-in-75 duration-700 flex items-center justify-center p-2">
+            <div className="relative w-72 sm:w-80 h-32 mx-auto mb-6 rounded-2xl overflow-hidden border-2 border-[#A47750]/50 shadow-md bg-white animate-in zoom-in-75 duration-700 flex items-center justify-center p-3">
               <Image
-                src="/images/obokash-bengali-logo.png"
+                src="/images/obokash-logo.png"
                 alt="OBOKASH - SENIOR LIVING Logo"
                 fill
                 className="object-contain p-2"

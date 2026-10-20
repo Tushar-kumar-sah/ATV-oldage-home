@@ -78,13 +78,13 @@ export default function AdminSidebar({ mobileOpen = false, onClose }: AdminSideb
       {/* Brand Header */}
       <div className="p-4 sm:p-5 border-b border-[#F7F2EA]/10 flex items-center justify-between">
         <div className="flex items-center space-x-2.5">
-          <div className="h-10 px-2 bg-white rounded-xl border border-[#352A25]/15 flex items-center justify-center shadow-md shrink-0">
+          <div className="h-10 px-2.5 bg-white rounded-xl border border-[#352A25]/15 flex items-center justify-center shadow-md shrink-0">
             <Image
               src="/images/obokash-logo.png"
               alt="OBOKASH Logo"
-              width={95}
-              height={34}
-              className="h-6 w-auto object-contain"
+              width={110}
+              height={45}
+              className="h-7 w-auto object-contain"
             />
           </div>
           <div>

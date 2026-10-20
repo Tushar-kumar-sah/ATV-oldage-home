@@ -471,12 +471,12 @@ export default function LandingPage() {
       <header className="sticky top-0 z-40 bg-[#F7F2EA]/95 backdrop-blur-md border-b border-[#352A25]/15 shadow-warm-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-8 h-20 flex items-center justify-between">
           <Link href="/" className="flex items-center space-x-3 group">
-            <div className="h-12 px-2.5 bg-white rounded-xl border border-[#352A25]/15 flex items-center justify-center shadow-xs group-hover:scale-105 transition-transform">
+            <div className="h-12 px-3 bg-white rounded-xl border border-[#352A25]/15 flex items-center justify-center shadow-xs group-hover:scale-105 transition-transform">
               <Image
-                src="/images/obokash-bengali-logo.png"
+                src="/images/obokash-logo.png"
                 alt="OBOKASH - SENIOR LIVING Logo"
-                width={130}
-                height={42}
+                width={140}
+                height={58}
                 className="h-9 w-auto object-contain"
                 priority
               />
@@ -1537,12 +1537,12 @@ export default function LandingPage() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="space-y-4 md:col-span-2">
               <div className="flex items-center space-x-3">
-                <div className="h-11 px-2.5 bg-white rounded-xl border border-[#352A25]/15 flex items-center justify-center shadow-sm">
+                <div className="h-11 px-3 bg-white rounded-xl border border-[#352A25]/15 flex items-center justify-center shadow-sm">
                   <Image
-                    src="/images/obokash-bengali-logo.png"
+                    src="/images/obokash-logo.png"
                     alt="OBOKASH - SENIOR LIVING Logo"
-                    width={120}
-                    height={40}
+                    width={130}
+                    height={54}
                     className="h-8 w-auto object-contain"
                   />
                 </div>
@@ -1617,13 +1617,13 @@ export default function LandingPage() {
 
             {/* Modal Header */}
             <div className="text-center mb-5">
-              <div className="h-12 px-3 py-1 bg-white rounded-2xl border border-[#352A25]/15 flex items-center justify-center mx-auto shadow-xs mb-2.5 w-fit">
+              <div className="h-14 px-4 py-1.5 bg-white rounded-2xl border border-[#352A25]/15 flex items-center justify-center mx-auto shadow-xs mb-2.5 w-fit">
                 <Image
-                  src="/images/obokash-bengali-logo.png"
+                  src="/images/obokash-logo.png"
                   alt="OBOKASH - SENIOR LIVING Logo"
-                  width={120}
-                  height={40}
-                  className="h-8 w-auto object-contain"
+                  width={150}
+                  height={62}
+                  className="h-9 w-auto object-contain"
                 />
               </div>
               <h3 className="font-serif font-bold text-xl sm:text-2xl text-[#352A25]">
