@@ -1,6 +1,26 @@
 {
   "registeredUsers": [
     {
+      "_id": "reg-1792514011263",
+      "name": "ttttt",
+      "email": "tt@tt",
+      "phone": "98765433333",
+      "password": "",
+      "authProvider": "early-checker",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+      "createdAt": "2026-10-20T16:33:31.263Z"
+    },
+    {
+      "_id": "reg-1792513173121",
+      "name": "bbbsbjchjsn@jkwaas",
+      "email": "bbbsbjchjsn@jkwaas",
+      "phone": "33333333333333333",
+      "password": "",
+      "authProvider": "early-checker",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+      "createdAt": "2026-10-20T16:19:33.121Z"
+    },
+    {
       "_id": "reg-1792438164712",
       "name": "vbv@wefnnb@sb",
       "email": "g@gg",
@@ -70,6 +90,28 @@
     }
   ],
   "loginRecords": [
+    {
+      "_id": "log-1792514011265-opql",
+      "email": "tt@tt",
+      "name": "ttttt",
+      "role": "visitor",
+      "status": "SUCCESS",
+      "method": "credentials",
+      "ipAddress": "::1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+      "timestamp": "2026-10-20T16:33:31.265Z"
+    },
+    {
+      "_id": "log-1792513173123-2z3u",
+      "email": "bbbsbjchjsn@jkwaas",
+      "name": "bbbsbjchjsn@jkwaas",
+      "role": "visitor",
+      "status": "SUCCESS",
+      "method": "credentials",
+      "ipAddress": "::1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+      "timestamp": "2026-10-20T16:19:33.123Z"
+    },
     {
       "_id": "log-1792438164716-283k",
       "email": "g@gg",
@@ -186,6 +228,32 @@
   "staff": [],
   "visitors": [],
   "activityLogs": [
+    {
+      "_id": "act-1792514011269-vm95",
+      "userName": "ttttt",
+      "userEmail": "tt@tt",
+      "userRole": "visitor",
+      "action": "VISITOR_REGISTER",
+      "entityType": "User",
+      "entityId": "",
+      "details": "Website visitor \"ttttt\" registered via EARLY-CHECKER (Phone: 98765433333).",
+      "ipAddress": "::1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+      "createdAt": "2026-10-20T16:33:31.269Z"
+    },
+    {
+      "_id": "act-1792513173127-ydlo",
+      "userName": "bbbsbjchjsn@jkwaas",
+      "userEmail": "bbbsbjchjsn@jkwaas",
+      "userRole": "visitor",
+      "action": "VISITOR_REGISTER",
+      "entityType": "User",
+      "entityId": "",
+      "details": "Website visitor \"bbbsbjchjsn@jkwaas\" registered via EARLY-CHECKER (Phone: 33333333333333333).",
+      "ipAddress": "::1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+      "createdAt": "2026-10-20T16:19:33.127Z"
+    },
     {
       "_id": "act-1792438164719-oyc3",
       "userName": "vbv@wefnnb@sb",
