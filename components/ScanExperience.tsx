@@ -84,14 +84,14 @@ const SLIDES = [
   },
 ];
 
-// Pre-seeded early checkers roster to showcase social proof
-const INITIAL_CHECKERS = [
-  { id: 'AD-EC-001', name: 'Dr. Ramesh Chandra Verma', city: 'South Delhi', time: '12 mins ago', spot: '#01 VIP' },
-  { id: 'AD-EC-002', name: 'Sunita & Ashok Kapoor', city: 'Gurugram', time: '34 mins ago', spot: '#02 VIP' },
-  { id: 'AD-EC-003', name: 'Col. Virendra Saxena (Retd.)', city: 'Noida', time: '1 hour ago', spot: '#03 VIP' },
-  { id: 'AD-EC-004', name: 'Meenakshi Sundaram', city: 'Bengaluru', time: '2 hours ago', spot: '#04 VIP' },
-  { id: 'AD-EC-005', name: 'Rajesh & Priti Patel', city: 'Ahmedabad', time: '3 hours ago', spot: '#05 VIP' },
-  { id: 'AD-EC-006', name: 'Ananya Sengupta', city: 'Kolkata', time: '4 hours ago', spot: '#06 VIP' },
+// Pre-seeded early applicants roster to showcase social proof
+const INITIAL_APPLICANTS = [
+  { id: 'OB-EA-001', name: 'Dr. Ramesh Chandra Verma', city: 'South Delhi', time: '12 mins ago', spot: '#01 Early Applicant' },
+  { id: 'OB-EA-002', name: 'Sunita & Ashok Kapoor', city: 'Gurugram', time: '34 mins ago', spot: '#02 Early Applicant' },
+  { id: 'OB-EA-003', name: 'Col. Virendra Saxena (Retd.)', city: 'Noida', time: '1 hour ago', spot: '#03 Early Applicant' },
+  { id: 'OB-EA-004', name: 'Meenakshi Sundaram', city: 'Bengaluru', time: '2 hours ago', spot: '#04 Early Applicant' },
+  { id: 'OB-EA-005', name: 'Rajesh & Priti Patel', city: 'Ahmedabad', time: '3 hours ago', spot: '#05 Early Applicant' },
+  { id: 'OB-EA-006', name: 'Ananya Sengupta', city: 'Kolkata', time: '4 hours ago', spot: '#06 Early Applicant' },
 ];
 
 interface ScanExperienceProps {
@@ -138,7 +138,7 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
   const [slideFade, setSlideFade] = useState(true);
   const [autoPlay, setAutoPlay] = useState(true);
 
-  // Step 4: Early Checkers List state
+  // Step 4: Early Applicants List state
   const [spotsLeft] = useState(47);
 
   // Step 5: Sign Up Form state
@@ -151,7 +151,7 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
   });
   const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState('');
-  const [issuedPass, setIssuedPass] = useState<{ passId: string; name: string } | null>(null);
+  const [issuedApplication, setIssuedApplication] = useState<{ applicationId: string; name: string } | null>(null);
 
   // -------------------------------------------------------------
   // SCAN PHASE: Auto-run scanner animation
@@ -238,7 +238,7 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
           setSlideFade(true);
         }, 400);
       } else {
-        // After final slide, proceed directly to Early Checkers List
+        // After final slide, proceed directly to Early Applicants List
         setPhase('step4_list');
       }
     }, 4500);
@@ -254,12 +254,12 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
     setFormError('');
 
     if (!formData.name.trim() || !formData.email.trim()) {
-      setFormError('Please provide your name and email to secure your early checker pass.');
+      setFormError('Please provide your name and email to submit your early application.');
       return;
     }
 
     setSubmitting(true);
-    const passNumber = `AD-EC-${Math.floor(1000 + Math.random() * 9000)}`;
+    const appNumber = `OB-EA-${Math.floor(1000 + Math.random() * 9000)}`;
 
     try {
       // 1. Save user to central registered users registry (Admin Panel)
@@ -271,7 +271,7 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
           email: formData.email.trim(),
           phone: formData.phone.trim() || '',
           password: '',
-          authProvider: 'early-checker',
+          authProvider: 'early-applicant',
           action: 'register',
         }),
       });
@@ -285,15 +285,15 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
             name: formData.name.trim(),
             email: formData.email.trim(),
             phone: formData.phone.trim() || '',
-            subject: `Early Checker Pass Claimed (${formData.reason})`,
+            subject: `Early Application Received (${formData.reason})`,
             message: formData.notes
               ? `[Reason: ${formData.reason}] Notes: ${formData.notes}`
-              : `Claimed Early Checker Pass ${passNumber} for ${formData.reason}.`,
+              : `Submitted early application ${appNumber} for ${formData.reason}.`,
           }),
         }).catch(() => {});
       }
 
-      setIssuedPass({ passId: passNumber, name: formData.name.trim() });
+      setIssuedApplication({ applicationId: appNumber, name: formData.name.trim() });
       setPhase('step5_success');
     } catch {
       setFormError('Submission failed. Please check your network and try again.');
@@ -347,9 +347,9 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
             {phase === 'step1_questions' && 'Step 1: Perspectives'}
             {phase === 'step1_loading' && 'Step 1: Loading Sanctuary'}
             {phase === 'step2_slides' && 'Step 2: Sanctuary Experience'}
-            {phase === 'step4_list' && 'Step 3: Early Checkers List'}
-            {phase === 'step5_form' && 'Step 4: Register Details'}
-            {phase === 'step5_success' && 'Registration Confirmed ✓'}
+            {phase === 'step4_list' && 'Step 3: Early Applicants List'}
+            {phase === 'step5_form' && 'Step 4: Be an Early Applicant'}
+            {phase === 'step5_success' && 'Application Confirmed ✓'}
           </span>
         </div>
       </header>
@@ -675,7 +675,7 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
                           }}
                           className="px-4 py-2 rounded-xl bg-[#352A25] hover:bg-[#A47750] text-[#F7F2EA] text-xs font-bold flex items-center gap-1.5 transition shadow-warm-sm"
                         >
-                          Continue to Early Checkers <ChevronRight className="w-4 h-4" />
+                          Continue to Early Applicants <ChevronRight className="w-4 h-4" />
                         </button>
                       )}
                     </div>
@@ -687,7 +687,7 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
         )}
 
         {/* ========================================================================= */}
-        {/* STEP 4: YOU CLICK ON IT YOU GET TO THE EARLY CHECKERS LIST                */}
+        {/* STEP 4: YOU CLICK ON IT YOU GET TO THE EARLY APPLICANTS LIST              */}
         {/* ========================================================================= */}
         {phase === 'step4_list' && (
           <div className="w-full max-w-3xl bg-white border border-[#352A25]/15 rounded-3xl p-6 sm:p-8 shadow-warm-lg">
@@ -696,13 +696,13 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
               <div>
                 <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#A47750]/10 border border-[#A47750]/30 text-[#A47750] text-xs font-bold uppercase tracking-wider mb-2">
                   <Award className="w-3.5 h-3.5 text-[#A47750]" />
-                  <span>Founding VIP Cohort</span>
+                  <span>Early Applicant Priority</span>
                 </div>
                 <h2 className="text-2xl sm:text-3xl font-serif font-bold text-[#352A25] tracking-tight">
-                  Early Checkers List
+                  Early Applicants List
                 </h2>
                 <p className="text-xs sm:text-sm text-[#352A25]/75 mt-1">
-                  Verified roster of families and individuals who scanned early and reserved VIP priority.
+                  Verified roster of families and individuals who registered early to secure priority admission.
                 </p>
               </div>
 
@@ -720,35 +720,35 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
               </div>
             </div>
 
-            {/* VIP Privileges for Early Checkers */}
+            {/* Privileges for Early Applicants */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 my-6">
               <div className="bg-[#F7F2EA] border border-[#352A25]/10 rounded-xl p-3.5 text-center">
                 <Ticket className="w-5 h-5 text-[#A47750] mx-auto mb-1.5" />
-                <h4 className="text-xs font-bold text-[#352A25]">Free Day Pass</h4>
+                <h4 className="text-xs font-bold text-[#352A25]">Complimentary Visit</h4>
                 <p className="text-[11px] text-[#352A25]/75 mt-0.5">
-                  Full access & lunch for 2 guests
+                  Campus tour & consultation for 2 guests
                 </p>
               </div>
               <div className="bg-[#F7F2EA] border border-[#352A25]/10 rounded-xl p-3.5 text-center">
                 <Shield className="w-5 h-5 text-[#78836A] mx-auto mb-1.5" />
-                <h4 className="text-xs font-bold text-[#352A25]">₹0 Reg. Fee</h4>
+                <h4 className="text-xs font-bold text-[#352A25]">₹0 Application Fee</h4>
                 <p className="text-[11px] text-[#352A25]/75 mt-0.5">
-                  100% waiver on registration
+                  100% waiver on initial registration
                 </p>
               </div>
               <div className="bg-[#F7F2EA] border border-[#352A25]/10 rounded-xl p-3.5 text-center">
                 <Star className="w-5 h-5 text-[#A47750] mx-auto mb-1.5" />
-                <h4 className="text-xs font-bold text-[#352A25]">Suite Selection</h4>
+                <h4 className="text-xs font-bold text-[#352A25]">Priority Suite Choice</h4>
                 <p className="text-[11px] text-[#352A25]/75 mt-0.5">
-                  First pick of garden suites
+                  First pick of premier garden suites
                 </p>
               </div>
             </div>
 
-            {/* The Live Early Checkers Feed / Table */}
+            {/* The Live Early Applicants Feed / Table */}
             <div className="bg-[#F7F2EA] border border-[#352A25]/15 rounded-2xl p-4 mb-6">
               <div className="flex items-center justify-between text-xs text-[#352A25]/70 font-semibold mb-3 px-1">
-                <span>Recent Early Checkers</span>
+                <span>Recent Early Applicants</span>
                 <span className="text-[#78836A] flex items-center gap-1 font-medium">
                   <span className="w-2 h-2 rounded-full bg-[#78836A] animate-pulse" />
                   Live Sync
@@ -756,28 +756,28 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
               </div>
 
               <div className="divide-y divide-[#352A25]/10 max-h-56 overflow-y-auto pr-1">
-                {INITIAL_CHECKERS.map((checker) => (
+                {INITIAL_APPLICANTS.map((applicant) => (
                   <div
-                    key={checker.id}
+                    key={applicant.id}
                     className="py-2.5 px-2 flex items-center justify-between hover:bg-white/80 rounded-lg transition"
                   >
                     <div className="flex items-center gap-3">
                       <div className="w-7 h-7 rounded-full bg-[#78836A] text-white text-xs font-bold flex items-center justify-center">
-                        {checker.name.charAt(0)}
+                        {applicant.name.charAt(0)}
                       </div>
                       <div>
                         <div className="text-xs font-semibold text-[#352A25]">
-                          {checker.name}
+                          {applicant.name}
                         </div>
                         <div className="text-[10px] text-[#352A25]/60">
-                          {checker.city} • {checker.time}
+                          {applicant.city} • {applicant.time}
                         </div>
                       </div>
                     </div>
 
                     <div className="flex items-center gap-2">
                       <span className="text-[10px] font-mono font-bold bg-[#A47750]/15 text-[#A47750] px-2 py-0.5 rounded border border-[#A47750]/30">
-                        {checker.spot}
+                        {applicant.spot}
                       </span>
                       <Check className="w-3.5 h-3.5 text-[#78836A]" />
                     </div>
@@ -789,12 +789,12 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
             {/* BUTTON PROCEEDING TO SIGN UP PAGE */}
             <div className="text-center pt-2">
               <button
-                id="join-early-checkers-list-btn"
+                id="join-early-applicants-list-btn"
                 onClick={() => setPhase('step5_form')}
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-2xl bg-[#352A25] hover:bg-[#A47750] text-[#F7F2EA] font-black text-base tracking-wide uppercase shadow-warm-md hover:scale-105 active:scale-95 transition cursor-pointer"
               >
                 <Sparkles className="w-5 h-5 text-[#A47750]" />
-                <span>Register Your Interest — Claim VIP Pass</span>
+                <span>Be an Early Applicant</span>
                 <ChevronRight className="w-5 h-5 text-[#F7F2EA]" />
               </button>
               <p className="text-xs text-[#352A25]/60 mt-2">
@@ -811,11 +811,11 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
           <div className="w-full max-w-xl bg-white border border-[#352A25]/15 rounded-3xl p-6 sm:p-8 shadow-warm-lg">
             <div className="text-center mb-6">
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#78836A]/10 border border-[#78836A]/30 text-[#78836A] text-xs font-bold uppercase tracking-wider mb-2">
-                <Ticket className="w-3.5 h-3.5 text-[#78836A]" />
-                <span>Step 4: Visitor Registration</span>
+                <Sparkles className="w-3.5 h-3.5 text-[#78836A]" />
+                <span>Step 4: Early Application</span>
               </div>
               <h2 className="text-2xl sm:text-3xl font-serif font-bold text-[#352A25] tracking-tight">
-                Register Your Interest
+                Be an Early Applicant
               </h2>
               <p className="text-xs sm:text-sm text-[#352A25]/75 mt-1 leading-relaxed max-w-md mx-auto">
                 OBOKASH is an evolving vision for senior living, built around dignity, comfort, companionship, and peace of mind. Provide your details below.
@@ -926,7 +926,7 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
 
               <div className="pt-2">
                 <button
-                  id="submit-early-checker-form-btn"
+                  id="submit-early-applicant-form-btn"
                   type="submit"
                   disabled={submitting}
                   className="w-full py-4 px-6 rounded-2xl bg-[#352A25] hover:bg-[#A47750] text-[#F7F2EA] font-bold text-base tracking-wide shadow-warm-md hover:scale-[1.01] active:scale-98 transition flex items-center justify-center gap-2 cursor-pointer border border-[#352A25] disabled:opacity-50"
@@ -934,12 +934,12 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
                   {submitting ? (
                     <>
                       <Loader2 className="w-5 h-5 animate-spin text-[#F7F2EA]" />
-                      <span>Saving Your Details in Database...</span>
+                      <span>Submitting Your Application...</span>
                     </>
                   ) : (
                     <>
                       <CheckCircle2 className="w-5 h-5 text-[#F7F2EA]" />
-                      <span>Register Your Interest & Confirm Pass</span>
+                      <span>Be an Early Applicant — Submit Application</span>
                     </>
                   )}
                 </button>
@@ -954,7 +954,7 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
         )}
 
         {/* ========================================================================= */}
-        {/* STEP 5 SUCCESS: VERIFIED EARLY CHECKER PASS ISSUED                        */}
+        {/* STEP 5 SUCCESS: VERIFIED EARLY APPLICANT CONFIRMATION                     */}
         {/* ========================================================================= */}
         {phase === 'step5_success' && (
           <div className="w-full max-w-md bg-white border-2 border-[#A47750] rounded-3xl p-6 sm:p-8 text-center shadow-warm-lg">
@@ -967,21 +967,21 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
             </span>
 
             <h2 className="text-2xl font-serif font-bold text-[#352A25]">
-              VIP Pass Confirmed!
+              Early Application Confirmed!
             </h2>
             <p className="text-xs text-[#352A25]/80 mt-1 mb-6">
-              Welcome to the Obokash Senior Living family, <strong>{issuedPass?.name}</strong>.
+              Welcome to the Obokash Senior Living family, <strong>{issuedApplication?.name}</strong>.
             </p>
 
-            {/* Digital Pass Card */}
+            {/* Digital Application Card */}
             <div className="bg-[#F7F2EA] border border-[#A47750]/50 rounded-2xl p-4 text-left relative overflow-hidden mb-6 shadow-inner">
               <div className="flex justify-between items-start mb-3">
                 <div>
                   <span className="text-[10px] text-[#A47750] font-bold uppercase tracking-widest block">
-                    OBOKASH VIP Pass
+                    OBOKASH Early Applicant
                   </span>
                   <span className="font-mono text-base font-bold text-[#352A25]">
-                    {issuedPass?.passId}
+                    {issuedApplication?.applicationId}
                   </span>
                 </div>
                 <div className="w-14 h-8 rounded-lg overflow-hidden border border-[#352A25]/15 relative bg-white flex items-center justify-center p-1">
@@ -996,16 +996,16 @@ export default function ScanExperience({ onEnterMainWebsite }: ScanExperiencePro
 
               <div className="space-y-1 text-xs border-t border-[#352A25]/10 pt-2 text-[#352A25]">
                 <div className="flex justify-between">
-                  <span className="text-[#352A25]/60">Holder:</span>
-                  <span className="font-semibold text-[#352A25]">{issuedPass?.name}</span>
+                  <span className="text-[#352A25]/60">Applicant:</span>
+                  <span className="font-semibold text-[#352A25]">{issuedApplication?.name}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-[#352A25]/60">Status:</span>
-                  <span className="text-[#78836A] font-bold">✓ VERIFIED EARLY CHECKER</span>
+                  <span className="text-[#78836A] font-bold">✓ VERIFIED EARLY APPLICANT</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-[#352A25]/60">Access:</span>
-                  <span className="text-[#A47750] font-medium">Free 1-Day Trial + Tariff Lock</span>
+                  <span className="text-[#352A25]/60">Privilege:</span>
+                  <span className="text-[#A47750] font-medium">Complimentary Visit + Priority Allocation</span>
                 </div>
               </div>
             </div>
